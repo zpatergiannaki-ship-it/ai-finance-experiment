@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post-Survey — AI Financial Assistant Study</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <div class="progress-bar-wrapper">
+    <div class="progress-bar" style="width: calc(5/6 * 100%);"></div>
+  </div>
+  <div class="progress-label">Step 5 of 6</div>
+
+  <div class="container">
+    <div class="card">
+      <h1>Post-Study Questions</h1>
+      <p>Please answer all questions based on your experience during this study. All items use a 1–7 scale (1 = Strongly disagree, 7 = Strongly agree) unless noted.</p>
+    </div>
+
+    <form id="postsurvey-form" novalidate>
+
+      <!-- Trust in AI -->
+      <div class="card">
+        <h2>Trust in AI</h2>
+        <div id="likert-items-trust"></div>
+      </div>
+
+      <!-- Anthropomorphism -->
+      <div class="card">
+        <h2>Perception of the AI</h2>
+        <div id="likert-items-anthro"></div>
+      </div>
+
+      <!-- Delegation -->
+      <div class="card">
+        <h2>Delegation &amp; Autonomy</h2>
+        <div id="likert-items-deleg"></div>
+      </div>
+
+      <!-- Self-regulation -->
+      <div class="card">
+        <h2>Self-Regulation</h2>
+        <div id="likert-items-selfreg"></div>
+      </div>
+
+      <!-- Overall experience -->
+      <div class="card">
+        <h2>Overall Experience</h2>
+        <div id="likert-items-overall"></div>
+      </div>
+
+      <button type="submit" id="submit-btn" class="btn btn-primary btn-full" disabled>Submit</button>
+    </form>
+  </div>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../assets/app.js" defer></script>
+  <script src="../assets/supabase-client.js" defer></script>
+  <script defer>
+    const QUESTIONS = [
+      { name: 'trust_ai_1',      group: 'trust',   text: '1. I trust the AI assistant\'s recommendations.' },
+      { name: 'trust_ai_2',      group: 'trust',   text: '2. The AI assistant seemed reliable.' },
+      { name: 'trust_ai_3',      group: 'trust',   text: '3. I would follow the AI assistant\'s advice in real life.' },
+      { name: 'anthro_1',        group: 'anthro',  text: '4. The AI assistant felt human-like.' },
+      { name: 'anthro_2',        group: 'anthro',  text: '5. The AI assistant seemed to have a personality.' },
+      { name: 'anthro_3',        group: 'anthro',  text: '6. The AI assistant communicated in a warm and friendly way.' },
+      { name: 'deleg_1',         group: 'deleg',   text: '7. I preferred to let the AI make decisions for me.' },
+      { name: 'deleg_2',         group: 'deleg',   text: '8. I felt comfortable delegating choices to the AI.' },
+      { name: 'selfreg_1',       group: 'selfreg', text: '9. I carefully evaluated the AI\'s recommendations before accepting them.' },
+      { name: 'selfreg_2',       group: 'selfreg', text: '10. I made my decisions independently of the AI.' },
+      { name: 'overall_1',       group: 'overall', text: '11. The AI assistant was helpful.' },
+      { name: 'overall_2',       group: 'overall', text: '12. I would use an AI financial assistant in the future.' },
+    ];
+
+    const GROUP_CONTAINERS = {
+      trust:   'likert-items-trust',
+      anthro:  'likert-items-anthro',
+      deleg:   'likert-items-deleg',
+      selfreg: 'likert-items-selfreg',
+      overall: 'likert-items-overall',
+    };
+
+    function buildLikert(q) {
+      const div = document.createElement('div');
+      div.className = 'likert-group';
+      div.id = 'group-' + q.name;
+
+      const lbl = document.createElement('span');
+      lbl.className = 'likert-label';
+      lbl.textContent = q.text;
+      div.appendChild(lbl);
+
+      const opts = document.createElement('div');
+      opts.className = 'likert-options';
+      for (let v = 1; v <= 7; v++) {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = q.name;
+        input.value = String(v);
+        const span = document.createElement('span');
+        span.textContent = String(v);
+        label.appendChild(input);
+        label.appendChild(span);
+        opts.appendChild(label);
+      }
+      div.appendChild(opts);
+
+      const ends = document.createElement('div');
+      ends.className = 'likert-end-labels';
+      ends.innerHTML = '<span>Strongly disagree</span><span>Strongly agree</span>';
+      div.appendChild(ends);
+
+      return div;
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('postsurvey-form');
+      const submitBtn = document.getElementById('submit-btn');
+
+      // Build Likert items
+      QUESTIONS.forEach(function (q) {
+        const container = document.getElementById(GROUP_CONTAINERS[q.group]);
+        if (container) container.appendChild(buildLikert(q));
+      });
+
+      function allAnswered() {
+        return QUESTIONS.every(function (q) {
+          return form.querySelector('input[name="' + q.name + '"]:checked');
+        });
+      }
+
+      form.addEventListener('change', function () {
+        submitBtn.disabled = !allAnswered();
+      });
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (!allAnswered()) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Saving…';
+
+        const responses = {};
+        QUESTIONS.forEach(function (q) {
+          const checked = form.querySelector('input[name="' + q.name + '"]:checked');
+          if (checked) responses[q.name] = parseInt(checked.value);
+        });
+
+        const pid = window.AppUtils.getParticipantId();
+        await window.SupabaseUtils.insertPostsurvey(pid, responses);
+        window.AppUtils.goTo('complete');
+      });
+    });
+  </script>
+</body>
+</html>

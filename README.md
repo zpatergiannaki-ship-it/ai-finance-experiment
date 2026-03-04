@@ -1,10 +1,133 @@
 # AI Finance Experiment
 
-Backend for AI Financial Assistant Academic Experiment.
+Full-stack research experiment: an Express.js backend deployed on Render and a plain HTML/CSS/JS frontend hosted on GitHub Pages.
 
-This repository hosts the Express.js backend for an online unmoderated academic experiment involving two financial scenarios and two AI tone conditions (low vs. high anthropomorphism).
+This repository hosts both the **Express.js backend** and the **static frontend** for an online unmoderated academic experiment involving two financial scenarios and two AI tone conditions (low vs. high anthropomorphism).
 
-## Setup
+---
+
+## Frontend Setup (GitHub Pages)
+
+### 1. Create a Supabase project
+
+1. Go to [https://supabase.com](https://supabase.com) and sign in (free tier is sufficient).
+2. Click **New project**, fill in a name and database password, then click **Create new project**.
+
+### 2. Run the database schema
+
+1. In your Supabase project dashboard, click **SQL Editor** in the left sidebar.
+2. Click **New query**, paste the contents of [`supabase_schema.sql`](./supabase_schema.sql), and click **Run**.
+3. All tables, RLS policies, and the helper view will be created automatically.
+
+### 3. Get your Supabase credentials
+
+1. In the Supabase dashboard, go to **Project Settings → API**.
+2. Copy the **Project URL** (e.g. `https://abcdefgh.supabase.co`).
+3. Copy the **anon / public** key (starts with `eyJ…`). **Never use the service_role key in frontend code.**
+
+### 4. Configure the frontend
+
+Open `assets/supabase-client.js` and replace the placeholder values at the top:
+
+```js
+const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';  // ← your Project URL
+const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';                // ← your anon key
+```
+
+The backend URL in `assets/app.js` is already configured:
+
+```js
+const BACKEND_URL = 'https://ai-finance-experiment.onrender.com';
+```
+
+If you deploy your own backend, update `BACKEND_URL` to match your Render URL.
+
+### 5. Enable GitHub Pages
+
+1. In your GitHub repository, go to **Settings → Pages**.
+2. Under **Source**, select **Deploy from a branch**.
+3. Choose branch: `main`, folder: `/ (root)`, then click **Save**.
+4. After a minute your site will be live at `https://YOUR_USERNAME.github.io/REPO_NAME/`.
+
+### 6. Test locally
+
+```bash
+# Option 1 — VS Code Live Server extension (recommended)
+# Right-click index.html → Open with Live Server
+
+# Option 2 — Python
+python -m http.server 8080
+# Then open http://localhost:8080
+```
+
+### 7. Deploy
+
+Push to `main` — GitHub Pages will automatically redeploy within ~1 minute.
+
+---
+
+## Exporting Data from Supabase
+
+### Option A — Table Editor (GUI)
+
+1. Open **Table Editor** in the Supabase dashboard.
+2. Select a table (e.g. `participants`).
+3. Click **Export → CSV**.
+
+### Option B — SQL Editor (recommended for analysis)
+
+Use the pre-built view for a single joined export:
+
+```sql
+SELECT * FROM experiment_summary;
+```
+
+Or export individual tables with a custom join:
+
+```sql
+SELECT
+  p.participant_id,
+  p.condition,
+  p.created_at,
+  s1.choice          AS scenario1_choice,
+  s2.round_number,
+  s2.allocation,
+  s2.confidence,
+  s2.trust_rating,
+  post.responses
+FROM participants p
+LEFT JOIN scenario1_decision   s1   ON s1.participant_id = p.participant_id
+LEFT JOIN scenario2_rounds     s2   ON s2.participant_id = p.participant_id
+LEFT JOIN postsurvey_responses post ON post.participant_id = p.participant_id
+ORDER BY p.created_at, s2.round_number;
+```
+
+---
+
+## Repo Structure
+
+```
+index.html                   ← Entry point / router
+pages/
+  intro.html                 ← Step 1/6: Introduction + Consent
+  presurvey.html             ← Step 2/6: Pre-Survey
+  scenario1.html             ← Step 3/6: Financing Choice
+  scenario2.html             ← Step 4/6: Investment Simulation (4 rounds)
+  postsurvey.html            ← Step 5/6: Post-Survey
+  complete.html              ← Step 6/6: Completion + debriefing
+assets/
+  style.css                  ← Responsive styles
+  app.js                     ← Shared utilities (participantId, condition, navigation)
+  supabase-client.js         ← Supabase CDN client + insert helpers
+  chat.js                    ← Chat widget logic
+supabase_schema.sql          ← Database schema + RLS policies
+server.js                    ← Express backend (deployed on Render)
+scenarios.js                 ← Scenario data for the backend
+```
+
+---
+
+## Backend Setup
 
 1. **Install dependencies**:
    ```bash

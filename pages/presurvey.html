@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pre-Survey — AI Financial Assistant Study</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <div class="progress-bar-wrapper">
+    <div class="progress-bar" style="width: calc(2/6 * 100%);"></div>
+  </div>
+  <div class="progress-label">Step 2 of 6</div>
+
+  <div class="container">
+    <div class="card">
+      <h1>Background Questions</h1>
+      <p>Please answer all questions before proceeding. Your answers help us understand our study participants.</p>
+    </div>
+
+    <div class="card">
+      <form id="presurvey-form" novalidate>
+
+        <!-- Q1: Age -->
+        <div class="form-group">
+          <label for="age">1. Age</label>
+          <input type="number" id="age" name="age" min="18" max="99" placeholder="Enter your age" />
+        </div>
+
+        <!-- Q2: Gender -->
+        <div class="form-group">
+          <label for="gender">2. Gender</label>
+          <select id="gender" name="gender">
+            <option value="">— Select —</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="nonbinary">Non-binary</option>
+            <option value="prefer_not">Prefer not to say</option>
+          </select>
+        </div>
+
+        <!-- Q3: Education -->
+        <div class="form-group">
+          <label for="education">3. Highest level of education</label>
+          <select id="education" name="education">
+            <option value="">— Select —</option>
+            <option value="highschool">High school</option>
+            <option value="bachelor">Bachelor's degree</option>
+            <option value="master">Master's degree</option>
+            <option value="phd">PhD</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <!-- Q4: Employment -->
+        <div class="form-group">
+          <label for="employment">4. Current employment status</label>
+          <select id="employment" name="employment">
+            <option value="">— Select —</option>
+            <option value="employed">Employed</option>
+            <option value="self_employed">Self-employed</option>
+            <option value="student">Student</option>
+            <option value="unemployed">Unemployed</option>
+            <option value="retired">Retired</option>
+          </select>
+        </div>
+
+        <!-- Q5: Financial literacy -->
+        <div class="likert-group" id="group-fin_literacy">
+          <span class="likert-label">5. How would you rate your financial knowledge?</span>
+          <div class="likert-options">
+            <label><input type="radio" name="fin_literacy" value="1" /><span>1</span></label>
+            <label><input type="radio" name="fin_literacy" value="2" /><span>2</span></label>
+            <label><input type="radio" name="fin_literacy" value="3" /><span>3</span></label>
+            <label><input type="radio" name="fin_literacy" value="4" /><span>4</span></label>
+            <label><input type="radio" name="fin_literacy" value="5" /><span>5</span></label>
+            <label><input type="radio" name="fin_literacy" value="6" /><span>6</span></label>
+            <label><input type="radio" name="fin_literacy" value="7" /><span>7</span></label>
+          </div>
+          <div class="likert-end-labels"><span>Very low</span><span>Very high</span></div>
+        </div>
+
+        <!-- Q6: Prior AI experience -->
+        <div class="likert-group" id="group-ai_experience">
+          <span class="likert-label">6. How often do you use AI tools?</span>
+          <div class="likert-options">
+            <label><input type="radio" name="ai_experience" value="1" /><span>1</span></label>
+            <label><input type="radio" name="ai_experience" value="2" /><span>2</span></label>
+            <label><input type="radio" name="ai_experience" value="3" /><span>3</span></label>
+            <label><input type="radio" name="ai_experience" value="4" /><span>4</span></label>
+            <label><input type="radio" name="ai_experience" value="5" /><span>5</span></label>
+            <label><input type="radio" name="ai_experience" value="6" /><span>6</span></label>
+            <label><input type="radio" name="ai_experience" value="7" /><span>7</span></label>
+          </div>
+          <div class="likert-end-labels"><span>Never</span><span>Very often</span></div>
+        </div>
+
+        <!-- Q7: Trust in technology -->
+        <div class="likert-group" id="group-tech_trust">
+          <span class="likert-label">7. I generally trust technology to help me make decisions.</span>
+          <div class="likert-options">
+            <label><input type="radio" name="tech_trust" value="1" /><span>1</span></label>
+            <label><input type="radio" name="tech_trust" value="2" /><span>2</span></label>
+            <label><input type="radio" name="tech_trust" value="3" /><span>3</span></label>
+            <label><input type="radio" name="tech_trust" value="4" /><span>4</span></label>
+            <label><input type="radio" name="tech_trust" value="5" /><span>5</span></label>
+            <label><input type="radio" name="tech_trust" value="6" /><span>6</span></label>
+            <label><input type="radio" name="tech_trust" value="7" /><span>7</span></label>
+          </div>
+          <div class="likert-end-labels"><span>Strongly disagree</span><span>Strongly agree</span></div>
+        </div>
+
+        <button type="submit" id="next-btn" class="btn btn-primary btn-full" disabled>Next</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../assets/app.js" defer></script>
+  <script src="../assets/supabase-client.js" defer></script>
+  <script defer>
+    window.addEventListener('DOMContentLoaded', function () {
+      const nextBtn = document.getElementById('next-btn');
+      const form = document.getElementById('presurvey-form');
+
+      function isComplete() {
+        const age = document.getElementById('age').value;
+        if (!age || parseInt(age) < 18 || parseInt(age) > 99) return false;
+
+        const selects = ['gender', 'education', 'employment'];
+        for (const id of selects) {
+          if (!document.getElementById(id).value) return false;
+        }
+
+        const likerts = ['fin_literacy', 'ai_experience', 'tech_trust'];
+        for (const name of likerts) {
+          if (!form.querySelector('input[name="' + name + '"]:checked')) return false;
+        }
+        return true;
+      }
+
+      form.addEventListener('change', function () {
+        nextBtn.disabled = !isComplete();
+      });
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (!isComplete()) return;
+
+        nextBtn.disabled = true;
+        nextBtn.textContent = 'Saving…';
+
+        const responses = {
+          age: parseInt(document.getElementById('age').value),
+          gender: document.getElementById('gender').value,
+          education: document.getElementById('education').value,
+          employment: document.getElementById('employment').value,
+          fin_literacy: parseInt(form.querySelector('input[name="fin_literacy"]:checked').value),
+          ai_experience: parseInt(form.querySelector('input[name="ai_experience"]:checked').value),
+          tech_trust: parseInt(form.querySelector('input[name="tech_trust"]:checked').value),
+        };
+
+        const pid = window.AppUtils.getParticipantId();
+        await window.SupabaseUtils.insertPresurvey(pid, responses);
+        window.AppUtils.goTo('scenario1');
+      });
+    });
+  </script>
+</body>
+</html>
