@@ -1,49 +1,42 @@
+// server.js
 const express = require('express');
 const bodyParser = require('body-parser');
-const OpenAI = require('openai');
-
 const app = express();
-const port = process.env.PORT || 3000;
-const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
+const port = 3000;
 
 app.use(bodyParser.json());
 
-app.post('/api/message', async (req, res) => {
-    const { message, condition, participantDetails } = req.body;
+// LOW and HIGH anthropomorphism prompts
+const lowAnthropomorphismPrompt = 'You are a basic chat interface.';
+const highAnthropomorphismPrompt = 'You are a friendly and empathetic chat assistant.';
 
-    // Validate message field
-    if (!message || typeof message !== 'string') {
-        return res.status(400).json({ error: 'Invalid message field.' });
+// Endpoint for chat
+app.post('/chat', (req, res) => {
+    const { participantId, scenarioId, condition, round, message } = req.body;
+
+    // Validate fields
+    if (!participantId || !scenarioId || !condition || !round || !message) {
+        return res.status(400).json({ error: 'All fields are required.' });
     }
 
-    // Select system prompt based on condition
-    let systemPrompt;
+    console.log(`Received message from Participant: ${participantId}, Scenario: ${scenarioId}, Condition: ${condition}, Round: ${round}`);
+    console.log(`Message: ${message}`);
+
+    // Process the message based on the condition
+    let responseMessage;
     if (condition === 'LOW') {
-        systemPrompt = 'You are a helpful assistant with limited personality.';
+        responseMessage = lowAnthropomorphismPrompt + ' ' + message;
     } else if (condition === 'HIGH') {
-        systemPrompt = 'You are a friendly and engaging assistant.';
+        responseMessage = highAnthropomorphismPrompt + ' ' + message;
     } else {
-        return res.status(400).json({ error: 'Invalid condition. Use LOW or HIGH.' });
+        return res.status(400).json({ error: 'Invalid condition.' });
     }
 
-    console.log(`Participant Details: ${JSON.stringify(participantDetails)}`);
-
-    // Call OpenAI GPT-4o-Mini model
-    try {
-        const response = await openai.chat.completions.create({
-            model: 'gpt-4o-mini',
-            messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: message }]
-        });
-
-        // Log and return the reply
-        const reply = response.choices[0].message.content;
-        return res.json({ reply });
-    } catch (error) {
-        console.error('Error communicating with OpenAI:', error);
-        return res.status(500).json({ error: 'Internal Server Error.' });
-    }
+    res.json({ response: responseMessage });
 });
 
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Server running at http://localhost:${port}`);
 });
+
+// Full experiment instructions go here.
