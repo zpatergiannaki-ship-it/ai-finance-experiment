@@ -1,42 +1,154 @@
 # AI Finance Experiment
 
-This repository hosts the backend for a financial AI assistant academic experiment. Below are instructions on how to install dependencies, run the project locally, and deploy it on Render.com.
+Backend for AI Financial Assistant Academic Experiment.
 
-## Table of Contents
-- [Installation](#installation)
-- [Running Locally](#running-locally)
-- [Deployment on Render.com](#deployment-on-rendercom)
+This repository hosts the Express.js backend for an online unmoderated academic experiment involving two financial scenarios and two AI tone conditions (low vs. high anthropomorphism).
 
-## Installation
-To set up the project, follow these steps:
+## Setup
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/zpatergiannaki-ship-it/ai-finance-experiment.git
-   cd ai-finance-experiment
-   ```
-2. **Install dependencies**:
+1. **Install dependencies**:
    ```bash
    npm install
    ```
 
-## Running Locally
-To run the application locally, use the following command:
-```bash
-npm start
+2. **Set environment variable**:
+   ```bash
+   export OPENAI_API_KEY=your_openai_api_key_here
+   ```
+
+3. **Start the server**:
+   ```bash
+   npm start
+   ```
+
+The server will be available at `http://localhost:3000`.
+
+## API Documentation
+
+### GET /
+
+Returns service status.
+
+**Response:**
+```json
+{ "status": "ok", "service": "ai-finance-experiment" }
 ```
 
-The application will be available at `http://localhost:3000`.
+---
 
-## Deployment on Render.com
-To deploy your project on Render.com, follow these steps:
+### GET /health
 
-1. **Create an account** on Render.com if you haven't already.
-2. **Create a new web service** on Render and connect your GitHub repository.
-3. **Configure the build command** (if necessary) and the start command:
-   - Build command: `npm install`
-   - Start command: `npm start`
-4. **Set your environment variables** in the Render dashboard (if needed).
-5. **Deploy** your service and monitor the logs for any issues.
+Health check endpoint.
 
-By following these instructions, you should be able to successfully install, run, and deploy the financial AI assistant backend. Happy coding!
+**Response:**
+```json
+{ "status": "ok" }
+```
+
+---
+
+### POST /chat
+
+Send a participant message to the AI assistant for a given scenario and condition.
+
+**Request body (JSON):**
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `participantId` | string | Yes | Unique participant identifier |
+| `scenarioId` | string | Yes | `"scenario1"` or `"scenario2"` |
+| `condition` | string | Yes | `"lowAnthropomorphism"` or `"highAnthropomorphism"` |
+| `message` | string | Yes | The participant's message/question |
+| `roundNumber` | number | Required for scenario2 | Round number: `1`, `2`, `3`, or `4` |
+
+**Success response (HTTP 200):**
+```json
+{ "reply": "<AI assistant message>" }
+```
+
+**Validation error response (HTTP 400):**
+```json
+{ "error": "...", "details": "..." }
+```
+
+Validation errors are returned for:
+- Missing `participantId`
+- Missing or invalid `scenarioId` (must be `"scenario1"` or `"scenario2"`)
+- Missing or invalid `condition` (must be `"lowAnthropomorphism"` or `"highAnthropomorphism"`)
+- Missing or empty `message`
+- Missing or invalid `roundNumber` when `scenarioId` is `"scenario2"` (must be a number in `[1, 2, 3, 4]`)
+
+**Server error response (HTTP 500):**
+```json
+{ "error": "Failed to get AI response." }
+```
+
+---
+
+## Test Curl Commands
+
+**Test GET /health:**
+```bash
+curl https://your-render-url.onrender.com/health
+```
+
+**Test scenario1 (lowAnthropomorphism):**
+```bash
+curl -X POST https://your-render-url.onrender.com/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "participantId": "test-001",
+    "scenarioId": "scenario1",
+    "condition": "lowAnthropomorphism",
+    "message": "Which option has the lower interest rate?"
+  }'
+```
+
+**Test scenario1 (highAnthropomorphism):**
+```bash
+curl -X POST https://your-render-url.onrender.com/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "participantId": "test-002",
+    "scenarioId": "scenario1",
+    "condition": "highAnthropomorphism",
+    "message": "Which option has the lower interest rate?"
+  }'
+```
+
+**Test scenario2 round 1:**
+```bash
+curl -X POST https://your-render-url.onrender.com/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "participantId": "test-003",
+    "scenarioId": "scenario2",
+    "condition": "lowAnthropomorphism",
+    "roundNumber": 1,
+    "message": "Why did you recommend 30% in stocks?"
+  }'
+```
+
+**Test scenario2 round 3:**
+```bash
+curl -X POST https://your-render-url.onrender.com/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "participantId": "test-004",
+    "scenarioId": "scenario2",
+    "condition": "highAnthropomorphism",
+    "roundNumber": 3,
+    "message": "Do you think this allocation is optimal?"
+  }'
+```
+
+**Test validation (missing condition — should return 400):**
+```bash
+curl -X POST https://your-render-url.onrender.com/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "participantId": "test-005",
+    "scenarioId": "scenario1",
+    "message": "Hello"
+  }'
+```

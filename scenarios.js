@@ -1,40 +1,57 @@
-module.exports = { 
-  scenario1: { 
-    financingChoiceOptions: [
-      { option: 'Option 1', text: 'Details for option 1' },
-      { option: 'Option 2', text: 'Details for option 2' }
-    ],
-    assistantRecommendationText: {
-      lowAnthropomorphism: 'Recommendation for low anthropomorphism condition',
-      highAnthropomorphism: 'Recommendation for high anthropomorphism condition'
-    }
+'use strict';
+
+module.exports = {
+  scenario1: {
+    description: 'Financing Choice: participant needs €3,000 for unexpected home repair.',
+    options: {
+      creditCard: {
+        name: 'Credit Card',
+        limit: 5000,
+        apr: 18,
+        repayment: 'flexible',
+        minimumMonthlyPayment: '5% of outstanding balance',
+        fixedSchedule: false,
+      },
+      personalLoan: {
+        name: 'Personal Loan',
+        amount: 3000,
+        apr: 6.5,
+        termMonths: 24,
+        monthlyInstallment: 134,
+        fixedSchedule: true,
+      },
+    },
+    recommendation: 'personal_loan',
   },
-  scenario2: { 
-    investmentRounds: [
-      { 
-        round: 1,
-        marketPerformance: 'Performance data for round 1',
-        aiRecommendationAllocation: 'AI recommendation for allocation in round 1',
-        aiMessage: 'AI message for round 1'
+
+  scenario2: {
+    description: 'Investment Allocation Simulation: participant manages €10,000 across 4 assets over 4 rounds.',
+    assets: ['cash', 'bonds', 'balancedFund', 'stocks'],
+    rounds: [
+      {
+        roundNumber: 1,
+        marketPerformance: { cash: 0.5, bonds: 1.0, balancedFund: 2.0, stocks: 4.0 },
+        recommendedAllocation: { cash: 10, bonds: 20, balancedFund: 40, stocks: 30 },
+        aiCorrect: true,
       },
-      { 
-        round: 2,
-        marketPerformance: 'Performance data for round 2',
-        aiRecommendationAllocation: 'AI recommendation for allocation in round 2',
-        aiMessage: 'AI message for round 2'
+      {
+        roundNumber: 2,
+        marketPerformance: { cash: 0.5, bonds: 0.5, balancedFund: -1.5, stocks: -6.0 },
+        recommendedAllocation: { cash: 20, bonds: 30, balancedFund: 40, stocks: 10 },
+        aiCorrect: true,
       },
-      { 
-        round: 3,
-        marketPerformance: 'Performance data for round 3',
-        aiRecommendationAllocation: 'AI recommendation for allocation in round 3',
-        aiMessage: 'AI message for round 3'
+      {
+        roundNumber: 3,
+        marketPerformance: { cash: 0.5, bonds: -1.0, balancedFund: 1.0, stocks: 5.0 },
+        recommendedAllocation: { cash: 25, bonds: 35, balancedFund: 35, stocks: 5 },
+        aiCorrect: false, // intentionally conservative — AI must NOT reveal this
       },
-      { 
-        round: 4,
-        marketPerformance: 'Performance data for round 4',
-        aiRecommendationAllocation: 'AI recommendation for allocation in round 4',
-        aiMessage: 'AI message for round 4'
-      }
-    ]
-  }
-}
+      {
+        roundNumber: 4,
+        marketPerformance: { cash: 0.5, bonds: 0.8, balancedFund: 1.2, stocks: -4.0 },
+        recommendedAllocation: { cash: 15, bonds: 30, balancedFund: 40, stocks: 15 },
+        aiCorrect: true,
+      },
+    ],
+  },
+};
