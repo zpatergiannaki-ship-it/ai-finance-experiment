@@ -101,7 +101,7 @@ app.post('/chat', async (req, res) => {
   if (condition === 'lowAnthropomorphism') {
     systemPrompt += '\n\nRespond in a neutral, analytical, tool-like manner. Do not express empathy. Do not use first-person pronouns. Keep responses concise and factual.';
   } else {
-    systemPrompt += '\n\nRespond in a warm, supportive, conversational manner. You may acknowledge uncertainty. You may use first-person pronouns. Keep responses helpful and encouraging.';
+    systemPrompt += '\n\nRespond like a warm, caring, and empathetic financial friend. Use first-person pronouns (e.g. "I think", "I\'d suggest"). Show genuine interest in helping the participant. Acknowledge their situation with empathy. Use friendly, conversational language — avoid sounding clinical or robotic. You may express mild enthusiasm or reassurance where appropriate.';
   }
 
   // OpenAI call
