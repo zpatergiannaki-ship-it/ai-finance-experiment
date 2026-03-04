@@ -1,36 +1,39 @@
-// Import necessary packages
+'use strict';
+
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
-
 const app = express();
+const port = process.env.PORT || 3000;
 
-// Middleware for logging method and path
-app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path}`);
-    next();
-});
-
-// Verbose logging middleware after app creation
-app.use((req, res, next) => {
-    console.log('Received request:', { method: req.method, path: req.path, headers: req.headers });
-    next();
-});
-
-// Middleware to parse JSON bodies
+// Middleware
+app.use(cors());
 app.use(bodyParser.json());
 
-// Your existing routes and middleware here...
-
-// Detailed logging in the POST /chat endpoint
-app.post('/chat', (req, res) => {
-    console.log('Content-Type:', req.headers['content-type']);
-    console.log('Request Body:', req.body);
-    // Existing /chat functionality
-    res.send('Chat response');
+// Request logging middleware
+app.use((req, res, next) => {
+    console.log(`INCOMING: ${req.method} ${req.path}`);
+    next();
 });
 
-// Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+// Health check route
+app.get('/health', (req, res) => {
+    res.send('OK');
+});
+
+// Root route
+app.get('/', (req, res) => {
+    res.send('Welcome to the AI Finance Experiment!');
+});
+
+// Chat endpoint
+app.post('/chat', (req, res) => {
+    console.log(`Content-Type: ${req.headers['content-type']}`);
+    console.log(`Body: ${JSON.stringify(req.body, null, 2)}`);
+    // Handle chat logic here
+    res.send({ reply: 'Your message has been received!' });
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
