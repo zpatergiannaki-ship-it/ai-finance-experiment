@@ -1,27 +1,36 @@
-const express = require('express');  // Assuming express is already installed
-const app = express();
+// Import necessary packages
+const express = require('express');
 const bodyParser = require('body-parser');
 
-app.use(bodyParser.json()); // Middleware to parse JSON request bodies
+const app = express();
 
-// Middleware for logging method and path of each request
+// Middleware for logging method and path
 app.use((req, res, next) => {
     console.log(`${req.method} ${req.path}`);
     next();
 });
 
-// POST /chat endpoint with logging
-app.post('/chat', (req, res) => {
-    console.log('Content-Type:', req.headers['content-type']); // Log Content-Type header
-    console.log('Request Body:', req.body); // Log full request body
-
-    // ... existing functionality for handling chat ...
-    const response = { message: 'Chat response' }; // Example response
-    res.json(response);
+// Verbose logging middleware after app creation
+app.use((req, res, next) => {
+    console.log('Received request:', { method: req.method, path: req.path, headers: req.headers });
+    next();
 });
 
-// ... any other existing routes and functionalities ...
+// Middleware to parse JSON bodies
+app.use(bodyParser.json());
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+// Your existing routes and middleware here...
+
+// Detailed logging in the POST /chat endpoint
+app.post('/chat', (req, res) => {
+    console.log('Content-Type:', req.headers['content-type']);
+    console.log('Request Body:', req.body);
+    // Existing /chat functionality
+    res.send('Chat response');
+});
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
