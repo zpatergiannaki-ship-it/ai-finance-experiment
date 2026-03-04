@@ -1,58 +1,46 @@
 const express = require('express');
-const cors = require('cors');
-const OpenAI = require('openai');
+const bodyParser = require('body-parser');
+const { OpenAI } = require('openai');
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+const openai = new OpenAI({ apiKey: 'YOUR_API_KEY' });
 
-const PORT = process.env.PORT || 3000;
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: OPENAI_API_KEY,
-});
+app.use(bodyParser.json());
 
 app.post('/chat', async (req, res) => {
-  const { participantId, scenarioId, condition, round, message } = req.body;
+    const { message, anthropomorphism } = req.body;
 
-  // Validate required field
-  if (!message) {
-    return res.status(400).json({ error: 'Missing required field: message' });
-  }
+    // Validate message
+    if (!message || typeof message !== 'string') {
+        return res.status(400).json({ error: 'Invalid message' });
+    }
 
-  console.log(`Participant ID: ${participantId}, Scenario ID: ${scenarioId}, Condition: ${condition}, Round: ${round}`);
+    // Select system prompt based on anthropomorphism
+    const systemPrompt = anthropomorphism === 'high' 
+        ? 'You are a friendly and relatable assistant.' 
+        : 'You are a precise and professional assistant.';
 
-  try {
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a financial assistant used in an academic experiment. Your role is to provide helpful financial information and analysis based on the scenarios presented. Maintain professional and objective responses.',
-        },
-        {
-          role: 'user',
-          content: message,
-        },
-      ],
-    });
+    // Log required fields
+    console.log('Message:', message);
+    console.log('Anthropomorphism Level:', anthropomorphism);
 
-    const reply = response.choices[0].message.content;
-    res.json({ reply });
+    // Call OpenAI gpt-4o-mini
+    try {
+        const response = await openai.chat.completions.create({
+            model: 'gpt-4o-mini',
+            messages: [{ role: 'user', content: message }],
+            system: systemPrompt
+        });
 
-  } catch (error) {
-    console.error('Full error details from OpenAI API:');
-    console.error('Error message:', error.message);
-    console.error('Error status:', error.status);
-    console.error('Error type:', error.type);
-    console.error('Full error object:', error);
-    
-    res.status(500).json({ error: 'Failed to get response from AI assistant.' });
-  }
+        const assistantReply = response.choices[0].message.content;
+        return res.json({ reply: assistantReply });
+    } catch (error) {
+        console.error('OpenAI Error:', error);
+        return res.status(500).json({ error: 'Failed to generate response' });
+    }
 });
 
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
