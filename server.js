@@ -1,49 +1,46 @@
-const { OpenAI } = require('openai');
+'use strict';
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: 'your-api-key', // Set your API key here
+const express = require('express');
+const cors = require('cors');
+const OpenAI = require('openai');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Initialize OpenAI API
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// Routes
+app.get('/', (req, res) => {
+  res.send('AI Finance Experiment Backend');
 });
 
-// Function to validate scenario
-function validateScenario(scenario) {
-    // Validate scenario for required fields and values
-    // Implement your validation logic here
-    return true; // Return true if valid
-}
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK' });
+});
 
-// Function to dynamically generate system prompts
-function getSystemPrompt(scenario) {
-    switch (scenario) {
-        case 'scenario1':
-            return 'This is the prompt for scenario 1.';
-        case 'scenario2':
-            return 'This is the prompt for scenario 2.';
-        default:
-            return 'Unknown scenario.';
-    }
-}
+app.post('/chat', async (req, res) => {
+  const { message } = req.body;
+  if (!message) {
+    return res.status(400).json({ error: 'Message is required' });
+  }
 
-// Function to handle chat completion
-async function getResponse(scenario) {
-    if (!validateScenario(scenario)) {
-        throw new Error('Invalid scenario');
-    }
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: message }],
+    });
+    res.json(completion.choices[0].message);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred while processing your request.' });
+  }
+});
 
-    const systemPrompt = getSystemPrompt(scenario);
-
-    try {
-        const response = await openai.chat.completions.create({
-            model: 'gpt-4',
-            messages: [{ role: 'system', content: systemPrompt }],
-        });
-        return response;
-    } catch (error) {
-        console.error('Error communicating with OpenAI:', error);
-    }
-}
-
-// Example usage
-getResponse('scenario1').then(response => {
-    console.log(response);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
