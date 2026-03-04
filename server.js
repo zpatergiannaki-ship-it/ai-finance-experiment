@@ -1,66 +1,49 @@
-// server.js
-const express = require('express');
-const bodyParser = require('body-parser');
-const { OpenAIApi, Configuration } = require('openai');
+const { OpenAI } = require('openai');
 
-const app = express();
-const port = process.env.PORT || 3000;
-
-app.use(bodyParser.json());
-
-// Initialize OpenAI API
-const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
-
-// Health check route
-app.get('/health', (req, res) => {
-    res.status(200).send({ status: 'OK' });
+// Initialize OpenAI client
+const openai = new OpenAI({
+  apiKey: 'your-api-key', // Set your API key here
 });
 
-// Chat route
-app.post('/chat', async (req, res) => {
-    const { prompt, scenarioType } = req.body;
+// Function to validate scenario
+function validateScenario(scenario) {
+    // Validate scenario for required fields and values
+    // Implement your validation logic here
+    return true; // Return true if valid
+}
 
-    // Validate request body
-    if (!prompt || !scenarioType) {
-        return res.status(400).send({ error: 'Prompt and scenarioType are required.' });
-    }
-
-    const systemPrompt = generateSystemPrompt(scenarioType);
-    
-    try {
-        const response = await openai.createChatCompletion({
-            model: 'gpt-3.5-turbo',
-            messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: prompt }],
-        });
-
-        res.status(200).send({ response: response.data.choices[0].message.content });
-    } catch (error) {
-        console.error('Error from OpenAI API:', error);
-        res.status(500).send({ error: 'Error communicating with OpenAI API' });
-    }
-});
-
-// Function to generate dynamic system prompts based on scenario type
-function generateSystemPrompt(scenarioType) {
-    switch(scenarioType) {
+// Function to dynamically generate system prompts
+function getSystemPrompt(scenario) {
+    switch (scenario) {
         case 'scenario1':
-            return 'You are a financial advisor. Please assist with money management advice.';
+            return 'This is the prompt for scenario 1.';
         case 'scenario2':
-            return 'You are an investment analyst. Provide insights into stock market trends.';
+            return 'This is the prompt for scenario 2.';
         default:
-            return 'You are a helpful assistant.';
+            return 'Unknown scenario.';
     }
 }
 
-// Main route
-app.get('/', (req, res) => {
-    res.send('Welcome to the AI Finance Experiment API!');
-});
+// Function to handle chat completion
+async function getResponse(scenario) {
+    if (!validateScenario(scenario)) {
+        throw new Error('Invalid scenario');
+    }
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    const systemPrompt = getSystemPrompt(scenario);
+
+    try {
+        const response = await openai.chat.completions.create({
+            model: 'gpt-4',
+            messages: [{ role: 'system', content: systemPrompt }],
+        });
+        return response;
+    } catch (error) {
+        console.error('Error communicating with OpenAI:', error);
+    }
+}
+
+// Example usage
+getResponse('scenario1').then(response => {
+    console.log(response);
 });
