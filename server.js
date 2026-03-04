@@ -1,62 +1,52 @@
-// server.js
+'use strict';
 
 const express = require('express');
+const cors = require('cors');
+const { Configuration, OpenAIApi } = require('openai');
+const scenarios = require('./scenarios');
 const bodyParser = require('body-parser');
-const { OpenAIApi, Configuration } = require('openai');
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
+app.use(cors());
 app.use(bodyParser.json());
 
-// OpenAI configuration
+// Initialize OpenAI API
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
-// Request validation middleware
-function validateRequest(req, res, next) {
-  const { scenario, userInput } = req.body;
-  if (!scenario || !userInput) {
-    return res.status(400).json({ error: 'Scenario and user input are required.' });
-  }
-  next();
-}
-
-// Scenario engine
-function getScenarioResponse(scenario) {
-  // Define scenarios based on user input
-  const scenarios = {
-    greeting: 'Hello! How can I assist you today?',
-    finance: 'What financial questions do you have?',
-    // Add more scenarios as needed
-  };
-  return scenarios[scenario] || 'I am not sure how to help with that.';
-}
-
-// Chatbot logic
-app.post('/chat', validateRequest, async (req, res) => {
-  const { scenario, userInput } = req.body;
-  const scenarioResponse = getScenarioResponse(scenario);
-  let chatbotResponse;
-
-  try {
-    const response = await openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: `${scenarioResponse} ${userInput}`,
-      max_tokens: 150,
-    });
-    chatbotResponse = response.data.choices[0].text.trim();
-  } catch (error) {
-    // Fallback mode if OpenAI API fails
-    chatbotResponse = 'I am currently having trouble connecting to our service. Can you please rephrase your question?';
-  }
-
-  res.json({ response: chatbotResponse });
+// Routes
+app.get('/', (req, res) => {
+  res.send('AI Finance Experiment Backend');
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK' });
+});
+
+app.post('/chat', async (req, res) => {
+  const { message } = req.body;
+  if (!message) {
+    return res.status(400).json({ error: 'Message is required' });
+  }
+
+  try {
+    // Here, you can include dynamic system prompts logic
+    const completion = await openai.createChatCompletion({
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: message }],
+    });
+    res.json(completion.data.choices[0].message);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred while processing your request.' });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
