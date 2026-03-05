@@ -217,6 +217,10 @@
         nextBtn.disabled = !isComplete();
       });
 
+      form.addEventListener('input', function () {
+        nextBtn.disabled = !isComplete();
+      });
+
       form.addEventListener('submit', async function (e) {
         e.preventDefault();
         if (!isComplete()) return;
