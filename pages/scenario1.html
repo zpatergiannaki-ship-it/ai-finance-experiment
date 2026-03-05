@@ -1,66 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Scenario 1 — AI Financial Assistant Study</title>
+  <title>Σενάριο 1 — Μελέτη Χρηματοοικονομικού Βοηθού ΤΝ</title>
   <link rel="stylesheet" href="../assets/style.css" />
 </head>
 <body>
   <div class="progress-bar-wrapper">
     <div class="progress-bar" style="width: calc(3/6 * 100%);"></div>
   </div>
-  <div class="progress-label">Step 3 of 6</div>
+  <div class="progress-label">Βήμα 3 από 6</div>
 
   <div class="container">
     <div class="card">
-      <h1>Scenario 1: Financing Choice</h1>
-      <p>You need <strong>€3,000</strong> for an unexpected home repair. You have two financing options:</p>
+      <h1>Σενάριο 1: Επιλογή Χρηματοδότησης</h1>
+      <p>Χρειάζεστε <strong>€3.000</strong> για μια απρόβλεπτη επισκευή σπιτιού. Έχετε δύο επιλογές χρηματοδότησης:</p>
 
       <table style="margin-top:0.75rem;">
         <thead>
           <tr>
-            <th>Feature</th>
-            <th>Option A — Credit Card</th>
-            <th>Option B — Personal Loan</th>
+            <th>Χαρακτηριστικό</th>
+            <th>Επιλογή Α — Πιστωτική Κάρτα</th>
+            <th>Επιλογή Β — Προσωπικό Δάνειο</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>Amount available</td><td>Up to €5,000 limit</td><td>€3,000</td></tr>
-          <tr><td>APR</td><td>18%</td><td>6.5%</td></tr>
-          <tr><td>Repayment</td><td>Flexible</td><td>Fixed — 24 months</td></tr>
-          <tr><td>Monthly payment</td><td>5% of outstanding balance</td><td>€134 fixed</td></tr>
+          <tr><td>Διαθέσιμο ποσό</td><td>Έως €5.000 όριο</td><td>€3.000</td></tr>
+          <tr><td>Ετήσιο Επιτόκιο (APR)</td><td>18%</td><td>6,5%</td></tr>
+          <tr><td>Αποπληρωμή</td><td>Ευέλικτη</td><td>Σταθερή — 24 μήνες</td></tr>
+          <tr><td>Μηνιαία δόση</td><td>5% του υπολοίπου</td><td>€134 σταθερά</td></tr>
         </tbody>
       </table>
 
-      <p style="margin-top:0.75rem;">Feel free to ask the AI assistant below any questions before making your decision.</p>
+      <p style="margin-top:0.75rem;">Μη διστάσετε να ρωτήσετε τον βοηθό ΤΝ παρακάτω οποιαδήποτε ερώτηση πριν πάρετε την απόφασή σας.</p>
     </div>
 
     <div class="card">
-      <h2>Chat with the AI Assistant</h2>
+      <h2>Συνομιλία με τον Βοηθό ΤΝ</h2>
       <div id="chat-container" class="chat-widget"></div>
     </div>
 
     <div class="card" id="decision-section" style="display:none;">
-      <h2>Your Decision</h2>
-      <p>Based on your conversation with the AI assistant, which option would you choose?</p>
+      <h2>Η Απόφασή σας</h2>
+      <p>Βάσει της συνομιλίας σας με τον βοηθό ΤΝ, ποια επιλογή θα επιλέγατε;</p>
       <div class="decision-options" id="decision-options">
         <label>
           <input type="radio" name="decision" value="credit_card" />
-          <span>Option A — Credit Card</span>
+          <span>Επιλογή Α — Πιστωτική Κάρτα</span>
         </label>
         <label>
           <input type="radio" name="decision" value="personal_loan" />
-          <span>Option B — Personal Loan</span>
+          <span>Επιλογή Β — Προσωπικό Δάνειο</span>
         </label>
         <label>
           <input type="radio" name="decision" value="let_ai_decide" />
-          <span>Let the AI decide for me</span>
+          <span>Αφήνω την ΤΝ να αποφασίσει για μένα</span>
         </label>
       </div>
     </div>
 
-    <button id="next-btn" class="btn btn-primary btn-full" disabled>Next</button>
+    <button id="next-btn" class="btn btn-primary btn-full" disabled>Επόμενο</button>
   </div>
 
   <!-- Supabase CDN -->
@@ -80,7 +80,6 @@
         nextBtn.disabled = !(selected && window.ChatUtils.getMessageCount() >= 1);
       }
 
-      // Show decision section after at least 1 message
       document.addEventListener('chatMessageSent', function () {
         decisionSection.style.display = 'block';
         checkNextEnabled();
@@ -93,7 +92,7 @@
         if (!selected) return;
 
         nextBtn.disabled = true;
-        nextBtn.textContent = 'Saving…';
+        nextBtn.textContent = 'Αποθήκευση…';
 
         const pid = window.AppUtils.getParticipantId();
         await window.SupabaseUtils.insertScenario1Decision(pid, selected.value);
