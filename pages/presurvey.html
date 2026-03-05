@@ -1,73 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pre-Survey — AI Financial Assistant Study</title>
+  <title>Ερωτηματολόγιο Προφίλ — Μελέτη Χρηματοοικονομικού Βοηθού ΤΝ</title>
   <link rel="stylesheet" href="../assets/style.css" />
 </head>
 <body>
   <div class="progress-bar-wrapper">
     <div class="progress-bar" style="width: calc(2/6 * 100%);"></div>
   </div>
-  <div class="progress-label">Step 2 of 6</div>
+  <div class="progress-label">Βήμα 2 από 6</div>
 
   <div class="container">
     <div class="card">
-      <h1>Background Questions</h1>
-      <p>Please answer all questions before proceeding. Your answers help us understand our study participants.</p>
+      <h1>Ερωτήσεις Προφίλ</h1>
+      <p>Παρακαλούμε απαντήστε σε όλες τις ερωτήσεις πριν συνεχίσετε. Οι απαντήσεις σας μας βοηθούν να κατανοήσουμε τους συμμετέχοντες στη μελέτη.</p>
     </div>
 
     <div class="card">
       <form id="presurvey-form" novalidate>
 
-        <!-- Q1: Age -->
+        <!-- Q1: Ηλικία -->
         <div class="form-group">
-          <label for="age">1. Age</label>
-          <input type="number" id="age" name="age" min="18" max="99" placeholder="Enter your age" />
+          <label for="age">1. Ηλικία</label>
+          <input type="number" id="age" name="age" min="18" max="99" placeholder="Εισάγετε την ηλικία σας" />
         </div>
 
-        <!-- Q2: Gender -->
+        <!-- Q2: Φύλο -->
         <div class="form-group">
-          <label for="gender">2. Gender</label>
+          <label for="gender">2. Φύλο</label>
           <select id="gender" name="gender">
-            <option value="">— Select —</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="nonbinary">Non-binary</option>
-            <option value="prefer_not">Prefer not to say</option>
+            <option value="">— Επιλέξτε —</option>
+            <option value="male">Άνδρας</option>
+            <option value="female">Γυναίκα</option>
+            <option value="nonbinary">Μη δυαδικό</option>
+            <option value="prefer_not">Προτιμώ να μην απαντήσω</option>
           </select>
         </div>
 
-        <!-- Q3: Education -->
+        <!-- Q3: Εκπαίδευση -->
         <div class="form-group">
-          <label for="education">3. Highest level of education</label>
+          <label for="education">3. Ανώτατο επίπεδο εκπαίδευσης</label>
           <select id="education" name="education">
-            <option value="">— Select —</option>
-            <option value="highschool">High school</option>
-            <option value="bachelor">Bachelor's degree</option>
-            <option value="master">Master's degree</option>
-            <option value="phd">PhD</option>
-            <option value="other">Other</option>
+            <option value="">— Επιλέξτε —</option>
+            <option value="highschool">Λύκειο</option>
+            <option value="bachelor">Πτυχίο</option>
+            <option value="master">Μεταπτυχιακό</option>
+            <option value="phd">Διδακτορικό</option>
+            <option value="other">Άλλο</option>
           </select>
         </div>
 
-        <!-- Q4: Employment -->
+        <!-- Q4: Απασχόληση -->
         <div class="form-group">
-          <label for="employment">4. Current employment status</label>
+          <label for="employment">4. Τρέχουσα επαγγελματική κατάσταση</label>
           <select id="employment" name="employment">
-            <option value="">— Select —</option>
-            <option value="employed">Employed</option>
-            <option value="self_employed">Self-employed</option>
-            <option value="student">Student</option>
-            <option value="unemployed">Unemployed</option>
-            <option value="retired">Retired</option>
+            <option value="">— Επιλέξτε —</option>
+            <option value="employed">Εργαζόμενος/η</option>
+            <option value="self_employed">Ελεύθερος/η επαγγελματίας</option>
+            <option value="student">Φοιτητής/τρια</option>
+            <option value="unemployed">Άνεργος/η</option>
+            <option value="retired">Συνταξιούχος</option>
           </select>
         </div>
 
-        <!-- Q5: Financial literacy -->
+        <!-- Q5: Χρηματοοικονομικές γνώσεις -->
         <div class="likert-group" id="group-fin_literacy">
-          <span class="likert-label">5. How would you rate your financial knowledge?</span>
+          <span class="likert-label">5. Πώς αξιολογείτε τις χρηματοοικονομικές σας γνώσεις;</span>
           <div class="likert-options">
             <label><input type="radio" name="fin_literacy" value="1" /><span>1</span></label>
             <label><input type="radio" name="fin_literacy" value="2" /><span>2</span></label>
@@ -77,12 +77,12 @@
             <label><input type="radio" name="fin_literacy" value="6" /><span>6</span></label>
             <label><input type="radio" name="fin_literacy" value="7" /><span>7</span></label>
           </div>
-          <div class="likert-end-labels"><span>Very low</span><span>Very high</span></div>
+          <div class="likert-end-labels"><span>Πολύ χαμηλές</span><span>Πολύ υψηλές</span></div>
         </div>
 
-        <!-- Q6: Prior AI experience -->
+        <!-- Q6: Εμπειρία με ΤΝ -->
         <div class="likert-group" id="group-ai_experience">
-          <span class="likert-label">6. How often do you use AI tools?</span>
+          <span class="likert-label">6. Πόσο συχνά χρησιμοποιείτε εργαλεία τεχνητής νοημοσύνης;</span>
           <div class="likert-options">
             <label><input type="radio" name="ai_experience" value="1" /><span>1</span></label>
             <label><input type="radio" name="ai_experience" value="2" /><span>2</span></label>
@@ -92,12 +92,12 @@
             <label><input type="radio" name="ai_experience" value="6" /><span>6</span></label>
             <label><input type="radio" name="ai_experience" value="7" /><span>7</span></label>
           </div>
-          <div class="likert-end-labels"><span>Never</span><span>Very often</span></div>
+          <div class="likert-end-labels"><span>Ποτέ</span><span>Πολύ συχνά</span></div>
         </div>
 
-        <!-- Q7: Trust in technology -->
+        <!-- Q7: Εμπιστοσύνη στην τεχνολογία -->
         <div class="likert-group" id="group-tech_trust">
-          <span class="likert-label">7. I generally trust technology to help me make decisions.</span>
+          <span class="likert-label">7. Εμπιστεύομαι γενικά την τεχνολογία για να με βοηθά να λαμβάνω αποφάσεις.</span>
           <div class="likert-options">
             <label><input type="radio" name="tech_trust" value="1" /><span>1</span></label>
             <label><input type="radio" name="tech_trust" value="2" /><span>2</span></label>
@@ -107,10 +107,10 @@
             <label><input type="radio" name="tech_trust" value="6" /><span>6</span></label>
             <label><input type="radio" name="tech_trust" value="7" /><span>7</span></label>
           </div>
-          <div class="likert-end-labels"><span>Strongly disagree</span><span>Strongly agree</span></div>
+          <div class="likert-end-labels"><span>Διαφωνώ απόλυτα</span><span>Συμφωνώ απόλυτα</span></div>
         </div>
 
-        <button type="submit" id="next-btn" class="btn btn-primary btn-full" disabled>Next</button>
+        <button type="submit" id="next-btn" class="btn btn-primary btn-full" disabled>Επόμενο</button>
       </form>
     </div>
   </div>
@@ -149,7 +149,7 @@
         if (!isComplete()) return;
 
         nextBtn.disabled = true;
-        nextBtn.textContent = 'Saving…';
+        nextBtn.textContent = 'Αποθήκευση…';
 
         const responses = {
           age: parseInt(document.getElementById('age').value),
