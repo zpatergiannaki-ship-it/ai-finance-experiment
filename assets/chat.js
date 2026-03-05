@@ -5,7 +5,15 @@ let _scenarioId = null;
 let _roundNumber = null;
 let _messageCount = 0;
 
-function initChat(containerId, scenarioId, roundNumber) {
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
   _chatContainerId = containerId;
   _scenarioId = scenarioId;
   _roundNumber = roundNumber || null;
@@ -14,14 +22,22 @@ function initChat(containerId, scenarioId, roundNumber) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  container.innerHTML = `
-    <div class="chat-messages" id="chat-messages-${containerId}"></div>
-    <div class="chat-input-row">
-      <input type="text" id="chat-input-${containerId}" class="chat-input" placeholder="Ask the AI assistant a question…" maxlength="500" />
-      <button id="chat-send-${containerId}" class="btn btn-primary chat-send-btn">Send</button>
-    </div>
-    <div id="chat-error-${containerId}" class="chat-error" style="display:none;"></div>
-  `;
+  const predefinedHtml = (Array.isArray(predefinedQuestions) && predefinedQuestions.length > 0)
+    ? '<div class="chat-predefined-questions" id="chat-predefined-' + containerId + '">' +
+        predefinedQuestions.map(function (q) {
+          return '<button class="btn btn-secondary chat-predefined-btn" data-question="' + escapeHtml(q) + '">' + escapeHtml(q) + '</button>';
+        }).join('') +
+      '</div>'
+    : '';
+
+  container.innerHTML =
+    predefinedHtml +
+    '<div class="chat-messages" id="chat-messages-' + containerId + '"></div>' +
+    '<div class="chat-input-row">' +
+      '<input type="text" id="chat-input-' + containerId + '" class="chat-input" placeholder="Κάντε μια ερώτηση στον βοηθό…" maxlength="500" />' +
+      '<button id="chat-send-' + containerId + '" class="btn btn-primary chat-send-btn">Αποστολή</button>' +
+    '</div>' +
+    '<div id="chat-error-' + containerId + '" class="chat-error" style="display:none;"></div>';
 
   const sendBtn = document.getElementById('chat-send-' + containerId);
   const inputEl = document.getElementById('chat-input-' + containerId);
@@ -41,6 +57,18 @@ function initChat(containerId, scenarioId, roundNumber) {
       sendMessage(msg);
     }
   });
+
+  const predefinedContainer = document.getElementById('chat-predefined-' + containerId);
+  if (predefinedContainer) {
+    predefinedContainer.addEventListener('click', function (e) {
+      const btn = e.target.closest('.chat-predefined-btn');
+      if (!btn || btn.disabled) return;
+      const question = btn.getAttribute('data-question');
+      const input = document.getElementById('chat-input-' + containerId);
+      if (input) input.value = '';
+      sendMessage(question);
+    });
+  }
 }
 
 async function sendMessage(message) {
@@ -60,6 +88,8 @@ async function sendMessage(message) {
   // Disable input while waiting
   if (sendBtn) sendBtn.disabled = true;
   if (inputEl) inputEl.disabled = true;
+  const predefinedBtns = document.querySelectorAll('#chat-predefined-' + _chatContainerId + ' .chat-predefined-btn');
+  predefinedBtns.forEach(function (btn) { btn.disabled = true; });
 
   // Show loading indicator
   const loadingId = 'loading-' + Date.now();
@@ -102,7 +132,7 @@ async function sendMessage(message) {
     if (loadingNode) loadingNode.remove();
 
     if (!response.ok || data.error) {
-      const errMsg = (data && data.error) ? data.error : 'Failed to get a response from the AI assistant. Please try again.';
+      const errMsg = (data && data.error) ? data.error : 'Αποτυχία λήψης απάντησης από τον βοηθό. Δοκιμάστε ξανά.';
       if (errorEl) {
         errorEl.textContent = errMsg;
         errorEl.style.display = 'block';
@@ -124,26 +154,20 @@ async function sendMessage(message) {
     const loadingNode = document.getElementById(loadingId);
     if (loadingNode) loadingNode.remove();
     if (errorEl) {
-      errorEl.textContent = 'Could not reach the AI assistant. Please check your connection and try again.';
+      errorEl.textContent = 'Δεν ήταν δυνατή η επικοινωνία με τον βοηθό. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.';
       errorEl.style.display = 'block';
     }
   } finally {
     if (sendBtn) sendBtn.disabled = false;
     if (inputEl) inputEl.disabled = false;
     if (inputEl) inputEl.focus();
+    const predefinedBtns = document.querySelectorAll('#chat-predefined-' + _chatContainerId + ' .chat-predefined-btn');
+    predefinedBtns.forEach(function (btn) { btn.disabled = false; });
     if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
   }
 }
 
 function markdownToHtml(text) {
-  function escapeHtml(str) {
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
   function applyBold(str) {
     return escapeHtml(str).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   }
@@ -203,5 +227,6 @@ function getMessageCount() {
 
 window.ChatUtils = {
   initChat,
+  sendMessage,
   getMessageCount,
 };

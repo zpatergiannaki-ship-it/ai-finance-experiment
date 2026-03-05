@@ -161,21 +161,22 @@
           '</div>' +
           '<div class="allocation-row">' +
             '<label for="alloc-cash">Μετρητά %</label>' +
-            '<input type="number" id="alloc-cash" min="0" max="100" value="25" />' +
+            '<input type="number" id="alloc-cash" min="0" max="100" value="" />' +
           '</div>' +
           '<div class="allocation-row">' +
             '<label for="alloc-bonds">Ομόλογα %</label>' +
-            '<input type="number" id="alloc-bonds" min="0" max="100" value="25" />' +
+            '<input type="number" id="alloc-bonds" min="0" max="100" value="" />' +
           '</div>' +
           '<div class="allocation-row">' +
             '<label for="alloc-balanced">Μικτό Α/Κ %</label>' +
-            '<input type="number" id="alloc-balanced" min="0" max="100" value="25" />' +
+            '<input type="number" id="alloc-balanced" min="0" max="100" value="" />' +
           '</div>' +
           '<div class="allocation-row">' +
             '<label for="alloc-stocks">Μετοχικό ETF %</label>' +
-            '<input type="number" id="alloc-stocks" min="0" max="100" value="25" />' +
+            '<input type="number" id="alloc-stocks" min="0" max="100" value="" />' +
           '</div>' +
-          '<div class="allocation-sum sum-ok" id="alloc-sum">Σύνολο: 100% ✓</div>' +
+          '<div class="allocation-sum sum-bad" id="alloc-sum">Σύνολο: 0% (πρέπει να είναι 100%)</div>' +
+          '<p class="alloc-hint">Το σύνολο των ποσοστών πρέπει να ισούται με 100%.</p>' +
         '</div>' +
 
         // Block 6: Round measures (hidden until allocation === 100%)
@@ -198,7 +199,12 @@
         '</div>';
 
       // Wire up chat
-      window.ChatUtils.initChat('chat-container', 'scenario2', round.roundNumber);
+      window.ChatUtils.initChat('chat-container', 'scenario2', round.roundNumber, [
+        'Γιατί προτείνεται αυτή η κατανομή;',
+        'Ποια επιλογή έχει τον μεγαλύτερο κίνδυνο;',
+        'Ποια επιλογή έχει την μεγαλύτερη πιθανή απόδοση;',
+        'Ποια επιλογή θεωρείται πιο σταθερή;',
+      ]);
 
       // Skip and chatMessageSent unlock measures section if allocation already 100%
       function onChatInteraction() {
