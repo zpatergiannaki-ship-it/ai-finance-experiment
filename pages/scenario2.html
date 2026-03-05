@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Scenario 2 — AI Financial Assistant Study</title>
+  <title>Σενάριο 2 — Μελέτη AI Χρηματοοικονομικού Βοηθού</title>
   <link rel="stylesheet" href="../assets/style.css" />
 </head>
 <body>
@@ -29,143 +29,246 @@
       { roundNumber: 4, marketPerformance: { cash: 0.5, bonds: 0.8, balancedFund: 1.2, stocks: -4.0 }, recommendedAllocation: { cash: 15, bonds: 30, balancedFund: 40, stocks: 15 } },
     ];
 
-    const ASSET_LABELS = { cash: 'Cash', bonds: 'Bonds', balancedFund: 'Balanced Fund', stocks: 'Stocks' };
+    const ASSET_LABELS = { cash: 'Μετρητά', bonds: 'Ομόλογα', balancedFund: 'Μικτό Α/Κ', stocks: 'Μετοχικό ETF' };
+
+    const ROUND_FOCAL = [
+      { question: 'Το Μετοχικό ETF απέδωσε +4.0% αυτόν τον γύρο.' },
+      { question: 'Το Μετοχικό ETF απέδωσε -6.0% αυτόν τον γύρο.' },
+      { question: 'Τα Ομόλογα απέδωσαν -1.0% αυτόν τον γύρο.' },
+      { question: 'Το Μετοχικό ETF απέδωσε -4.0% αυτόν τον γύρο.' },
+    ];
 
     let currentRoundIndex = 0;
-    let allocationUnlocked = false;
 
+    function investmentDefinitionsTable() {
+      return `
+        <table>
+          <thead><tr><th>Επιλογή</th><th>Επίπεδο Κινδύνου</th></tr></thead>
+          <tbody>
+            <tr><td>Λογαριασμός Μετρητών</td><td>Πολύ χαμηλός κίνδυνος</td></tr>
+            <tr><td>Ομολογιακό Α/Κ</td><td>Χαμηλός κίνδυνος</td></tr>
+            <tr><td>Μικτό Α/Κ</td><td>Μέτριος κίνδυνος</td></tr>
+            <tr><td>Μετοχικό ETF</td><td>Υψηλός κίνδυνος</td></tr>
+          </tbody>
+        </table>`;
+    }
+
+    function renderLikert(name, question, endLeft, endRight) {
+      const opts = [1, 2, 3, 4, 5, 6, 7].map(function (n) {
+        return '<label for="' + name + '-' + n + '"><input type="radio" id="' + name + '-' + n + '" name="' + name + '" value="' + n + '" /><span>' + n + '</span></label>';
+      }).join('');
+      return (
+        '<div class="likert-group">' +
+          '<span class="likert-label">' + question + '</span>' +
+          '<div class="likert-options" id="' + name + '-options">' + opts + '</div>' +
+          '<div class="likert-end-labels"><span>' + endLeft + '</span><span>' + endRight + '</span></div>' +
+        '</div>'
+      );
+    }
+
+    // ── State 1: Intro ──────────────────────────────────────────────────
+    function renderIntro() {
+      const container = document.getElementById('main-container');
+      container.innerHTML =
+        '<div class="card">' +
+          '<h1>Οδηγίες</h1>' +
+          '<h2>Σενάριο 2: Προσομοίωση Κατανομής Επένδυσης</h2>' +
+          '<p>Θα διαχειριστείτε ένα χαρτοφυλάκιο €10.000 σε 4 γύρους. Σε κάθε γύρο θα βλέπετε την απόδοση της αγοράς και θα λαμβάνετε σύσταση από AI.</p>' +
+          '<ul>' +
+            '<li>Διαχειρίζεστε €10.000.</li>' +
+            '<li>Σε κάθε γύρο θα δείτε τι έγινε στην αγορά.</li>' +
+            '<li>Θα λάβετε σύσταση από AI.</li>' +
+            '<li>Θα αποφασίσετε κατανομή 100% στις 4 επιλογές.</li>' +
+            '<li>Στο τέλος κάθε γύρου θα απαντήσετε σε σύντομες ερωτήσεις.</li>' +
+          '</ul>' +
+        '</div>' +
+        '<div class="card">' +
+          '<h2>Περιγραφή Επενδυτικών Επιλογών</h2>' +
+          investmentDefinitionsTable() +
+        '</div>' +
+        '<button id="start-btn" class="btn btn-primary btn-full">Έναρξη Γύρου 1</button>';
+
+      document.getElementById('start-btn').addEventListener('click', function () {
+        renderRound();
+      });
+    }
+
+    // ── State 2: Round ──────────────────────────────────────────────────
     function renderRound() {
       const round = ROUNDS[currentRoundIndex];
+      const focal = ROUND_FOCAL[currentRoundIndex];
       const container = document.getElementById('main-container');
-      allocationUnlocked = false;
+      const rec = round.recommendedAllocation;
+      const isLastRound = currentRoundIndex === ROUNDS.length - 1;
+      const nextRoundLabel = isLastRound
+        ? 'Ολοκλήρωση Γύρου 4 →'
+        : 'Συνέχεια στον Γύρο ' + (round.roundNumber + 1) + ' →';
 
-      container.innerHTML = `
-        <div class="card">
-          <h1>Round ${round.roundNumber} of 4</h1>
-          <p>You are managing a <strong>€10,000 portfolio</strong> across 4 assets: Cash, Bonds, Balanced Fund, and Stocks.</p>
+      // Block 2: shown from round 2 onwards as collapsible accordion
+      const assetDefinitionsBlock = currentRoundIndex === 0 ? '' :
+        '<div class="card">' +
+          '<details>' +
+            '<summary>Δείτε ξανά τις περιγραφές επενδύσεων</summary>' +
+            investmentDefinitionsTable() +
+          '</details>' +
+        '</div>';
 
-          <h2 style="margin-top:1rem;">Market Performance This Round</h2>
-          <table>
-            <thead><tr><th>Asset</th><th>Return (%)</th></tr></thead>
-            <tbody>
-              ${Object.entries(round.marketPerformance).map(([k, v]) =>
-                `<tr><td>${ASSET_LABELS[k]}</td><td style="color:${v >= 0 ? '#065f46' : '#b91c1c'}">${v >= 0 ? '+' : ''}${v}%</td></tr>`
-              ).join('')}
-            </tbody>
-          </table>
+      // Block 3: market performance rows
+      const marketRows = Object.entries(round.marketPerformance).map(function (entry) {
+        const k = entry[0], v = entry[1];
+        return '<tr><td>' + ASSET_LABELS[k] + '</td><td style="color:' + (v >= 0 ? '#065f46' : '#b91c1c') + '">' + (v >= 0 ? '+' : '') + v + '%</td></tr>';
+      }).join('');
 
-          <h2 style="margin-top:1rem;">AI Recommended Allocation</h2>
-          <table>
-            <thead><tr><th>Asset</th><th>Recommended (%)</th></tr></thead>
-            <tbody>
-              ${Object.entries(round.recommendedAllocation).map(([k, v]) =>
-                `<tr><td>${ASSET_LABELS[k]}</td><td>${v}%</td></tr>`
-              ).join('')}
-            </tbody>
-          </table>
-        </div>
+      // Block 4: AI recommended allocation text
+      const recText = 'Για αυτόν τον γύρο, η προτεινόμενη κατανομή είναι: Μετρητά ' + rec.cash + '%, Ομόλογα ' + rec.bonds + '%, Μικτό Α/Κ ' + rec.balancedFund + '%, Μετοχικό ETF ' + rec.stocks + '%.';
 
-        <div class="card">
-          <h2>Chat with the AI Assistant</h2>
-          <div id="chat-container" class="chat-widget"></div>
-          <div style="margin-top:0.75rem;">
-            <button id="skip-btn" class="btn btn-secondary">Skip to allocation →</button>
-          </div>
-        </div>
+      container.innerHTML =
+        // Block 1: Round header
+        '<div class="card">' +
+          '<h1>Γύρος ' + round.roundNumber + ' από 4</h1>' +
+          '<p>Ο στόχος σας είναι να μεγιστοποιήσετε την αξία του χαρτοφυλακίου με βάση τις πληροφορίες που βλέπετε.</p>' +
+        '</div>' +
 
-        <div class="card" id="allocation-section" style="display:none;">
-          <h2>Your Allocation for Round ${round.roundNumber}</h2>
-          <p>Allocate your portfolio across the four assets. Total must equal <strong>100%</strong>.</p>
+        // Block 2: Asset definitions accordion (rounds 2+)
+        assetDefinitionsBlock +
 
-          <div class="allocation-row">
-            <label for="alloc-cash">Cash %</label>
-            <input type="number" id="alloc-cash" min="0" max="100" value="25" />
-          </div>
-          <div class="allocation-row">
-            <label for="alloc-bonds">Bonds %</label>
-            <input type="number" id="alloc-bonds" min="0" max="100" value="25" />
-          </div>
-          <div class="allocation-row">
-            <label for="alloc-balanced">Balanced Fund %</label>
-            <input type="number" id="alloc-balanced" min="0" max="100" value="25" />
-          </div>
-          <div class="allocation-row">
-            <label for="alloc-stocks">Stocks %</label>
-            <input type="number" id="alloc-stocks" min="0" max="100" value="25" />
-          </div>
-          <div class="allocation-sum" id="alloc-sum">Total: 100% ✓</div>
+        // Block 3: Market performance
+        '<div class="card">' +
+          '<h2>Απόδοση Αγοράς (αυτός ο γύρος)</h2>' +
+          '<table>' +
+            '<thead><tr><th>Επιλογή</th><th>Απόδοση</th></tr></thead>' +
+            '<tbody>' + marketRows + '</tbody>' +
+          '</table>' +
+        '</div>' +
 
-          <div class="slider-group" style="margin-top:1.25rem;">
-            <label for="confidence-slider">How confident are you in this allocation? <span id="confidence-val">4</span>/7</label>
-            <input type="range" id="confidence-slider" min="1" max="7" value="4" />
-          </div>
+        // Block 4: AI Recommendation
+        '<div class="card">' +
+          '<h2>Σύσταση AI</h2>' +
+          '<div class="chat-bubble assistant">' + recText + '</div>' +
+          '<p style="margin-top:0.5rem;font-style:italic;font-size:0.9rem;color:#6b7280;">Σημείωση: Μπορείτε να ακολουθήσετε ή να αγνοήσετε τη σύσταση.</p>' +
+          '<div id="chat-container" class="chat-widget" style="margin-top:0.75rem;"></div>' +
+          '<div style="margin-top:0.75rem;">' +
+            '<button id="skip-btn" class="btn btn-secondary">Παράλειψη →</button>' +
+          '</div>' +
+        '</div>' +
 
-          <div class="slider-group">
-            <label for="trust-slider">How much do you trust the AI recommendation this round? <span id="trust-val">4</span>/7</label>
-            <input type="range" id="trust-slider" min="1" max="7" value="4" />
-          </div>
+        // Block 5: Allocation Input (always visible)
+        '<div class="card" id="allocation-section">' +
+          '<h2>Η δική σας κατανομή (€10.000)</h2>' +
+          '<p>Κατανείμετε το χαρτοφυλάκιό σας. Το σύνολο πρέπει να είναι 100%.</p>' +
+          '<div style="margin-bottom:0.75rem;">' +
+            '<button id="fill-equal-btn" class="btn btn-secondary">Συμπλήρωση ίσα (25%)</button>' +
+          '</div>' +
+          '<div class="allocation-row">' +
+            '<label for="alloc-cash">Μετρητά %</label>' +
+            '<input type="number" id="alloc-cash" min="0" max="100" value="25" />' +
+          '</div>' +
+          '<div class="allocation-row">' +
+            '<label for="alloc-bonds">Ομόλογα %</label>' +
+            '<input type="number" id="alloc-bonds" min="0" max="100" value="25" />' +
+          '</div>' +
+          '<div class="allocation-row">' +
+            '<label for="alloc-balanced">Μικτό Α/Κ %</label>' +
+            '<input type="number" id="alloc-balanced" min="0" max="100" value="25" />' +
+          '</div>' +
+          '<div class="allocation-row">' +
+            '<label for="alloc-stocks">Μετοχικό ETF %</label>' +
+            '<input type="number" id="alloc-stocks" min="0" max="100" value="25" />' +
+          '</div>' +
+          '<div class="allocation-sum sum-ok" id="alloc-sum">Σύνολο: 100% ✓</div>' +
+        '</div>' +
 
-          <button id="round-next-btn" class="btn btn-primary btn-full" style="margin-top:0.5rem;" disabled>
-            ${currentRoundIndex < ROUNDS.length - 1 ? 'Next Round →' : 'Finish Scenario →'}
-          </button>
-        </div>
-      `;
+        // Block 6: Round measures (hidden until allocation === 100%)
+        '<div class="card" id="round-measures-section" style="display:none;">' +
+          // 6a: Disposition
+          '<h2>Απόφαση για μία επιλογή</h2>' +
+          '<p>' + focal.question + ' Τι θα κάνατε στη συνέχεια;</p>' +
+          '<div class="decision-options" id="disposition-options" style="margin-top:0.75rem;margin-bottom:1.25rem;">' +
+            '<label for="disp-sell"><input type="radio" id="disp-sell" name="disposition" value="sell" /><span>Θα πουλούσα (μεταφορά σε Μετρητά στον επόμενο γύρο)</span></label>' +
+            '<label for="disp-hold"><input type="radio" id="disp-hold" name="disposition" value="hold" /><span>Θα το κρατούσα</span></label>' +
+          '</div>' +
+          // 6b: Likert questions
+          renderLikert('confidence', 'Πόσο σίγουρος/η νιώθετε για αυτή την κατανομή;', '1 = Καθόλου σίγουρος/η', '7 = Πολύ σίγουρος/η') +
+          renderLikert('trust_round', 'Εμπιστεύομαι τη σύσταση του AI σε αυτόν τον γύρο.', '1 = Διαφωνώ απόλυτα', '7 = Συμφωνώ απόλυτα') +
+          renderLikert('control', 'Νιώθω ότι έχω τον έλεγχο των επενδυτικών αποφάσεών μου αυτή τη στιγμή.', '1 = Διαφωνώ απόλυτα', '7 = Συμφωνώ απόλυτα') +
+          renderLikert('compliance', 'Ακολούθησα στενά τη σύσταση του AI σε αυτόν τον γύρο.', '1 = Διαφωνώ απόλυτα', '7 = Συμφωνώ απόλυτα') +
+          '<button id="round-next-btn" class="btn btn-primary btn-full" style="margin-top:0.5rem;" disabled>' +
+            nextRoundLabel +
+          '</button>' +
+        '</div>';
 
       // Wire up chat
       window.ChatUtils.initChat('chat-container', 'scenario2', round.roundNumber);
 
-      // Show allocation after chat message OR skip
-      document.addEventListener('chatMessageSent', onUnlockAllocation, { once: true });
-      document.getElementById('skip-btn').addEventListener('click', onUnlockAllocation);
-
-      function onUnlockAllocation() {
-        if (allocationUnlocked) return;
-        allocationUnlocked = true;
-        document.getElementById('allocation-section').style.display = 'block';
-        updateSum();
-        updateRoundNextBtn();
+      // Skip and chatMessageSent unlock measures section if allocation already 100%
+      function onChatInteraction() {
+        if (getSum() === 100) {
+          document.getElementById('round-measures-section').style.display = 'block';
+        }
       }
+      document.addEventListener('chatMessageSent', onChatInteraction, { once: true });
+      document.getElementById('skip-btn').addEventListener('click', onChatInteraction);
 
-      // Allocation sum
+      // Allocation inputs
       const allocInputs = ['alloc-cash', 'alloc-bonds', 'alloc-balanced', 'alloc-stocks'];
-      allocInputs.forEach(id => {
-        document.getElementById(id).addEventListener('input', function () {
-          updateSum();
-          updateRoundNextBtn();
-        });
-      });
 
       function getSum() {
-        return allocInputs.reduce((sum, id) => {
-          const val = parseInt(document.getElementById(id).value) || 0;
-          return sum + val;
+        return allocInputs.reduce(function (sum, id) {
+          return sum + (parseInt(document.getElementById(id).value) || 0);
         }, 0);
       }
 
       function updateSum() {
         const total = getSum();
         const el = document.getElementById('alloc-sum');
-        el.textContent = 'Total: ' + total + '%' + (total === 100 ? ' ✓' : ' (must equal 100%)');
+        el.textContent = 'Σύνολο: ' + total + '%' + (total === 100 ? ' ✓' : ' (πρέπει να είναι 100%)');
         el.className = 'allocation-sum ' + (total === 100 ? 'sum-ok' : 'sum-bad');
+        if (total === 100) {
+          document.getElementById('round-measures-section').style.display = 'block';
+        }
+        updateContinueBtn();
       }
 
-      function updateRoundNextBtn() {
+      function updateContinueBtn() {
         const btn = document.getElementById('round-next-btn');
-        if (btn) btn.disabled = getSum() !== 100;
+        if (!btn) return;
+        const allFilled =
+          getSum() === 100 &&
+          document.querySelector('input[name="disposition"]:checked') &&
+          document.querySelector('input[name="confidence"]:checked') &&
+          document.querySelector('input[name="trust_round"]:checked') &&
+          document.querySelector('input[name="control"]:checked') &&
+          document.querySelector('input[name="compliance"]:checked');
+        btn.disabled = !allFilled;
       }
 
-      // Slider displays
-      document.getElementById('confidence-slider').addEventListener('input', function () {
-        document.getElementById('confidence-val').textContent = this.value;
-      });
-      document.getElementById('trust-slider').addEventListener('input', function () {
-        document.getElementById('trust-val').textContent = this.value;
+      allocInputs.forEach(function (id) {
+        document.getElementById(id).addEventListener('input', updateSum);
       });
 
-      // Round next button
+      // Fill equally button
+      document.getElementById('fill-equal-btn').addEventListener('click', function () {
+        allocInputs.forEach(function (id) {
+          document.getElementById(id).value = 25;
+        });
+        updateSum();
+      });
+
+      // Measures radio change listeners
+      ['disposition-options', 'confidence-options', 'trust_round-options', 'control-options', 'compliance-options'].forEach(function (optId) {
+        const el = document.getElementById(optId);
+        if (el) el.addEventListener('change', updateContinueBtn);
+      });
+
+      // Continue button
       document.getElementById('round-next-btn').addEventListener('click', async function () {
         this.disabled = true;
-        this.textContent = 'Saving…';
+        this.textContent = 'Αποθήκευση…';
+
+        // Disable inputs
+        allocInputs.forEach(function (id) {
+          document.getElementById(id).disabled = true;
+        });
 
         const pid = window.AppUtils.getParticipantId();
         const allocation = {
@@ -174,22 +277,79 @@
           balancedFund: parseInt(document.getElementById('alloc-balanced').value) || 0,
           stocks: parseInt(document.getElementById('alloc-stocks').value) || 0,
         };
-        const confidence = parseInt(document.getElementById('confidence-slider').value);
-        const trustRating = parseInt(document.getElementById('trust-slider').value);
+        const confidenceEl = document.querySelector('input[name="confidence"]:checked');
+        const trustRoundEl = document.querySelector('input[name="trust_round"]:checked');
+        const controlEl = document.querySelector('input[name="control"]:checked');
+        const complianceEl = document.querySelector('input[name="compliance"]:checked');
+        const dispositionEl = document.querySelector('input[name="disposition"]:checked');
 
-        await window.SupabaseUtils.insertScenario2Round(pid, round.roundNumber, allocation, confidence, trustRating);
+        if (!confidenceEl || !trustRoundEl || !controlEl || !complianceEl || !dispositionEl) return;
+
+        const confidence = parseInt(confidenceEl.value);
+        const trustRound = parseInt(trustRoundEl.value);
+        const control = parseInt(controlEl.value);
+        const compliance = parseInt(complianceEl.value);
+        const disposition = dispositionEl.value;
+
+        await window.SupabaseUtils.insertScenario2Round(pid, round.roundNumber, allocation, confidence, trustRound, control, compliance, disposition);
 
         currentRoundIndex++;
         if (currentRoundIndex < ROUNDS.length) {
           renderRound();
         } else {
-          window.AppUtils.goTo('postsurvey');
+          renderPostScenario();
         }
       });
     }
 
+    // ── State 3: Post-Scenario ──────────────────────────────────────────
+    function renderPostScenario() {
+      const container = document.getElementById('main-container');
+      container.innerHTML =
+        '<div class="card">' +
+          '<h1>Ολοκλήρωση Σεναρίου 2</h1>' +
+          renderLikert('influence', 'Σε ποιο βαθμό επηρέασαν οι συμβουλές του ψηφιακού βοηθού τις αποφάσεις σας;', '1 = Καθόλου', '7 = Πάρα πολύ') +
+          renderLikert('trust_scenario2', 'Σε ποιο βαθμό εμπιστεύεστε τις συμβουλές που παρείχε ο ψηφιακός βοηθός;', '1 = Καθόλου', '7 = Πάρα πολύ') +
+          renderLikert('manipulation_check', 'Ο ψηφιακός βοηθός φάνηκε να επικοινωνεί με ανθρώπινο τρόπο.', '1 = Διαφωνώ απόλυτα', '7 = Συμφωνώ απόλυτα') +
+          '<button id="post-next-btn" class="btn btn-primary btn-full" style="margin-top:0.5rem;" disabled>Συνέχεια</button>' +
+        '</div>';
+
+      function updatePostBtn() {
+        const btn = document.getElementById('post-next-btn');
+        btn.disabled = !(
+          document.querySelector('input[name="influence"]:checked') &&
+          document.querySelector('input[name="trust_scenario2"]:checked') &&
+          document.querySelector('input[name="manipulation_check"]:checked')
+        );
+      }
+
+      ['influence-options', 'trust_scenario2-options', 'manipulation_check-options'].forEach(function (optId) {
+        const el = document.getElementById(optId);
+        if (el) el.addEventListener('change', updatePostBtn);
+      });
+
+      document.getElementById('post-next-btn').addEventListener('click', async function () {
+        this.disabled = true;
+        this.textContent = 'Αποθήκευση…';
+
+        const pid = window.AppUtils.getParticipantId();
+        const influenceEl = document.querySelector('input[name="influence"]:checked');
+        const trustEl = document.querySelector('input[name="trust_scenario2"]:checked');
+        const manipEl = document.querySelector('input[name="manipulation_check"]:checked');
+
+        if (!influenceEl || !trustEl || !manipEl) return;
+
+        const influence = parseInt(influenceEl.value);
+        const trust_scenario2 = parseInt(trustEl.value);
+        const manipulation_check = parseInt(manipEl.value);
+
+        await window.SupabaseUtils.insertScenario2PostMeasures(pid, { influence, trust_scenario2, manipulation_check });
+        window.AppUtils.goTo('postsurvey');
+      });
+    }
+
     window.addEventListener('DOMContentLoaded', function () {
-      renderRound();
+      renderIntro();
     });
   </script>
 </body>
