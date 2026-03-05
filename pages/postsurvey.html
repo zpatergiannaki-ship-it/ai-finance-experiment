@@ -1,154 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Post-Survey — AI Financial Assistant Study</title>
+  <title>Ερωτηματολόγιο Μετά τη Μελέτη — Μελέτη Χρηματοοικονομικού Βοηθού ΤΝ</title>
   <link rel="stylesheet" href="../assets/style.css" />
 </head>
 <body>
   <div class="progress-bar-wrapper">
     <div class="progress-bar" style="width: calc(5/6 * 100%);"></div>
   </div>
-  <div class="progress-label">Step 5 of 6</div>
+  <div class="progress-label">Βήμα 5 από 6</div>
 
   <div class="container">
     <div class="card">
-      <h1>Post-Study Questions</h1>
-      <p>Please answer all questions based on your experience during this study. All items use a 1–7 scale (1 = Strongly disagree, 7 = Strongly agree) unless noted.</p>
+      <h1>Ερωτήσεις Μετά τη Μελέτη</h1>
+      <p>Παρακαλούμε απαντήστε σε όλες τις ερωτήσεις βάσει της εμπειρίας σας κατά τη διάρκεια αυτής της μελέτης. Όλες οι ερωτήσεις χρησιμοποιούν κλίμακα 1–7 (1 = Διαφωνώ απόλυτα, 7 = Συμφωνώ απόλυτα) εκτός αν αναφέρεται διαφορετικά.</p>
     </div>
 
     <form id="postsurvey-form" novalidate>
 
-      <!-- Trust in AI -->
       <div class="card">
-        <h2>Trust in AI</h2>
+        <h2>Εμπιστοσύνη στην ΤΝ</h2>
         <div id="likert-items-trust"></div>
       </div>
 
-      <!-- Anthropomorphism -->
       <div class="card">
-        <h2>Perception of the AI</h2>
+        <h2>Αντίληψη για την ΤΝ</h2>
         <div id="likert-items-anthro"></div>
       </div>
 
-      <!-- Delegation -->
       <div class="card">
-        <h2>Delegation &amp; Autonomy</h2>
+        <h2>Ανάθεση &amp; Αυτονομία</h2>
         <div id="likert-items-deleg"></div>
       </div>
 
-      <!-- Self-regulation -->
       <div class="card">
-        <h2>Self-Regulation</h2>
+        <h2>Αυτορρύθμιση</h2>
         <div id="likert-items-selfreg"></div>
       </div>
 
-      <!-- Overall experience -->
       <div class="card">
-        <h2>Overall Experience</h2>
+        <h2>Συνολική Εμπειρία</h2>
         <div id="likert-items-overall"></div>
       </div>
 
-      <button type="submit" id="submit-btn" class="btn btn-primary btn-full" disabled>Submit</button>
+      <button type="submit" id="submit-btn" class="btn btn-primary btn-full" disabled>Υποβολή</button>
     </form>
   </div>
 
-  <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="../assets/app.js" defer></script>
   <script src="../assets/supabase-client.js" defer></script>
   <script defer>
     const QUESTIONS = [
-      { name: 'trust_ai_1',      group: 'trust',   text: '1. I trust the AI assistant\'s recommendations.' },
-      { name: 'trust_ai_2',      group: 'trust',   text: '2. The AI assistant seemed reliable.' },
-      { name: 'trust_ai_3',      group: 'trust',   text: '3. I would follow the AI assistant\'s advice in real life.' },
-      { name: 'anthro_1',        group: 'anthro',  text: '4. The AI assistant felt human-like.' },
-      { name: 'anthro_2',        group: 'anthro',  text: '5. The AI assistant seemed to have a personality.' },
-      { name: 'anthro_3',        group: 'anthro',  text: '6. The AI assistant communicated in a warm and friendly way.' },
-      { name: 'deleg_1',         group: 'deleg',   text: '7. I preferred to let the AI make decisions for me.' },
-      { name: 'deleg_2',         group: 'deleg',   text: '8. I felt comfortable delegating choices to the AI.' },
-      { name: 'selfreg_1',       group: 'selfreg', text: '9. I carefully evaluated the AI\'s recommendations before accepting them.' },
-      { name: 'selfreg_2',       group: 'selfreg', text: '10. I made my decisions independently of the AI.' },
-      { name: 'overall_1',       group: 'overall', text: '11. The AI assistant was helpful.' },
-      { name: 'overall_2',       group: 'overall', text: '12. I would use an AI financial assistant in the future.' },
+      { name: 'trust_ai_1',  group: 'trust',   text: '1. Εμπιστεύομαι τις προτάσεις του βοηθού ΤΝ.' },
+      { name: 'trust_ai_2',  group: 'trust',   text: '2. Ο βοηθός ΤΝ φαινόταν αξιόπιστος.' },
+      { name: 'trust_ai_3',  group: 'trust',   text: '3. Θα ακολουθούσα τις συμβουλές του βοηθού ΤΝ στην πραγματική ζωή.' },
+      { name: 'anthro_1',    group: 'anthro',  text: '4. Ο βοηθός ΤΝ έμοιαζε ανθρώπινος.' },
+      { name: 'anthro_2',    group: 'anthro',  text: '5. Ο βοηθός ΤΝ φαινόταν να έχει προσωπικότητα.' },
+      { name: 'anthro_3',    group: 'anthro',  text: '6. Ο βοηθός ΤΝ επικοινωνούσε με ζεστό και φιλικό τρόπο.' },
+      { name: 'deleg_1',     group: 'deleg',   text: '7. Θα ήμουν άνετα να αναθέσω χρηματοοικονομικές αποφάσεις στον βοηθό ΤΝ.' },
+      { name: 'deleg_2',     group: 'deleg',   text: '8. Ακολούθησα τις προτάσεις του βοηθού ΤΝ χωρίς να τις αμφισβητήσω.' },
+      { name: 'deleg_3',     group: 'deleg',   text: '9. Ένιωσα αυτοπεποίθηση στη λήψη αποφάσεων ανεξάρτητα από τον βοηθό ΤΝ.' },
+      { name: 'selfreg_1',   group: 'selfreg', text: '10. Αξιολόγησα κριτικά τις προτάσεις του βοηθού ΤΝ πριν τις αποδεχτώ.' },
+      { name: 'selfreg_2',   group: 'selfreg', text: '11. Παρέμεινα προσεκτικός/ή στις δικές μου κρίσεις κατά τη διάρκεια της μελέτης.' },
+      { name: 'overall_1',   group: 'overall', text: '12. Συνολικά, η εμπειρία με τον βοηθό ΤΝ ήταν θετική.' },
     ];
 
-    const GROUP_CONTAINERS = {
-      trust:   'likert-items-trust',
-      anthro:  'likert-items-anthro',
-      deleg:   'likert-items-deleg',
-      selfreg: 'likert-items-selfreg',
-      overall: 'likert-items-overall',
-    };
+    const ANCHORS = { low: 'Διαφωνώ απόλυτα', high: 'Συμφωνώ απόλυτα' };
 
-    function buildLikert(q) {
-      const div = document.createElement('div');
-      div.className = 'likert-group';
-      div.id = 'group-' + q.name;
-
-      const lbl = document.createElement('span');
-      lbl.className = 'likert-label';
-      lbl.textContent = q.text;
-      div.appendChild(lbl);
-
-      const opts = document.createElement('div');
-      opts.className = 'likert-options';
-      for (let v = 1; v <= 7; v++) {
-        const label = document.createElement('label');
-        const input = document.createElement('input');
-        input.type = 'radio';
-        input.name = q.name;
-        input.value = String(v);
-        const span = document.createElement('span');
-        span.textContent = String(v);
-        label.appendChild(input);
-        label.appendChild(span);
-        opts.appendChild(label);
-      }
-      div.appendChild(opts);
-
-      const ends = document.createElement('div');
-      ends.className = 'likert-end-labels';
-      ends.innerHTML = '<span>Strongly disagree</span><span>Strongly agree</span>';
-      div.appendChild(ends);
-
-      return div;
+    function renderLikert(containerId, questions) {
+      const container = document.getElementById(containerId);
+      questions.forEach(function (q) {
+        const div = document.createElement('div');
+        div.className = 'likert-group';
+        div.id = 'group-' + q.name;
+        let optionsHtml = '';
+        for (let i = 1; i <= 7; i++) {
+          optionsHtml += '<label><input type="radio" name="' + q.name + '" value="' + i + '" /><span>' + i + '</span></label>';
+        }
+        div.innerHTML = '<span class="likert-label">' + q.text + '</span><div class="likert-options">' + optionsHtml + '</div><div class="likert-end-labels"><span>' + ANCHORS.low + '</span><span>' + ANCHORS.high + '</span></div>';
+        container.appendChild(div);
+      });
     }
 
     window.addEventListener('DOMContentLoaded', function () {
+      ['trust', 'anthro', 'deleg', 'selfreg', 'overall'].forEach(function (g) {
+        renderLikert('likert-items-' + g, QUESTIONS.filter(function (q) { return q.group === g; }));
+      });
+
       const form = document.getElementById('postsurvey-form');
       const submitBtn = document.getElementById('submit-btn');
 
-      // Build Likert items
-      QUESTIONS.forEach(function (q) {
-        const container = document.getElementById(GROUP_CONTAINERS[q.group]);
-        if (container) container.appendChild(buildLikert(q));
-      });
-
-      function allAnswered() {
+      function isComplete() {
         return QUESTIONS.every(function (q) {
           return form.querySelector('input[name="' + q.name + '"]:checked');
         });
       }
 
-      form.addEventListener('change', function () {
-        submitBtn.disabled = !allAnswered();
-      });
+      form.addEventListener('change', function () { submitBtn.disabled = !isComplete(); });
 
       form.addEventListener('submit', async function (e) {
         e.preventDefault();
-        if (!allAnswered()) return;
-
+        if (!isComplete()) return;
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Saving…';
-
+        submitBtn.textContent = 'Αποθήκευση…';
         const responses = {};
         QUESTIONS.forEach(function (q) {
-          const checked = form.querySelector('input[name="' + q.name + '"]:checked');
-          if (checked) responses[q.name] = parseInt(checked.value);
+          responses[q.name] = parseInt(form.querySelector('input[name="' + q.name + '"]:checked').value);
         });
-
         const pid = window.AppUtils.getParticipantId();
         await window.SupabaseUtils.insertPostsurvey(pid, responses);
         window.AppUtils.goTo('complete');
