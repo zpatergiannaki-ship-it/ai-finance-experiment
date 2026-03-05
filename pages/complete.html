@@ -1,31 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Complete — AI Financial Assistant Study</title>
+  <title>Ολοκλήρωση — Μελέτη Χρηματοοικονομικού Βοηθού ΤΝ</title>
   <link rel="stylesheet" href="../assets/style.css" />
 </head>
 <body>
   <div class="progress-bar-wrapper">
     <div class="progress-bar" style="width: 100%;"></div>
   </div>
-  <div class="progress-label">Step 6 of 6</div>
+  <div class="progress-label">Βήμα 6 από 6</div>
 
   <div class="container">
     <div class="card" style="text-align:center;">
-      <h1>🎉 Thank You for Participating!</h1>
-      <p style="margin-top:0.75rem;">Your responses have been recorded. Your participation in this study is greatly appreciated.</p>
+      <h1>🎉 Ευχαριστούμε για τη Συμμετοχή σας!</h1>
+      <p style="margin-top:0.75rem;">Οι απαντήσεις σας έχουν καταγραφεί. Εκτιμούμε ιδιαίτερα τη συμμετοχή σας σε αυτή τη μελέτη.</p>
 
-      <h2 style="margin-top:1.5rem;">Your Completion Code</h2>
-      <p>Please copy this code and paste it back into the survey platform to receive your reward.</p>
-      <div class="code-display" id="completion-code">Loading…</div>
-      <button id="copy-btn" class="btn btn-primary" style="margin-top:0.5rem;">Copy Code</button>
+      <h2 style="margin-top:1.5rem;">Κωδικός Ολοκλήρωσης</h2>
+      <p>Παρακαλούμε αντιγράψτε αυτόν τον κωδικό και επικολλήστε τον στην πλατφόρμα έρευνας για να λάβετε την αμοιβή σας.</p>
+      <div class="code-display" id="completion-code">Φόρτωση…</div>
+      <button id="copy-btn" class="btn btn-primary" style="margin-top:0.5rem;">Αντιγραφή Κωδικού</button>
     </div>
 
     <div class="card">
-      <h2>Study Debriefing</h2>
-      <p>This study investigated how the communication style of an AI financial assistant — either formal and factual, or warm and conversational — affects participants' trust in the AI, their willingness to delegate decisions to it, and their self-regulation when evaluating AI recommendations. The two conditions you may have been assigned to were "low anthropomorphism" (professional and data-focused) and "high anthropomorphism" (friendly and empathetic). The AI assistant was powered by GPT-4o-mini, a large language model by OpenAI. All financial scenarios were fictitious. If you have any questions about this research, please contact the study team.</p>
+      <h2>Ενημέρωση για τη Μελέτη</h2>
+      <p>Η μελέτη αυτή διερεύνησε πώς ο τρόπος επικοινωνίας ενός χρηματοοικονομικού βοηθού ΤΝ — είτε επίσημος και βασισμένος σε δεδομένα, είτε ζεστός και συνομιλητικός — επηρεάζει την εμπιστοσύνη των συμμετεχόντων στην ΤΝ, την προθυμία τους να αναθέτουν σε αυτήν αποφάσεις, και την αυτορρύθμισή τους κατά την αξιολόγηση των προτάσεών της. Οι δύο συνθήκες ήταν «χαμηλός ανθρωπομορφισμός» (επαγγελματική και αναλυτική προσέγγιση) και «υψηλός ανθρωπομορφισμός» (φιλική και ενσυναισθητική προσέγγιση). Ο βοηθός ΤΝ λειτουργούσε με το μοντέλο GPT-4o-mini της OpenAI. Όλα τα χρηματοοικονομικά σενάρια ήταν φανταστικά. Εάν έχετε ερωτήσεις σχετικά με αυτή την έρευνα, μπορείτε να επικοινωνήσετε με την ερευνητική ομάδα.</p>
     </div>
   </div>
 
@@ -37,13 +37,13 @@
 
       document.getElementById('copy-btn').addEventListener('click', function () {
         navigator.clipboard.writeText(pid).then(function () {
-          document.getElementById('copy-btn').textContent = 'Copied ✓';
+          document.getElementById('copy-btn').textContent = 'Αντιγράφηκε ✓';
           setTimeout(function () {
-            document.getElementById('copy-btn').textContent = 'Copy Code';
+            document.getElementById('copy-btn').textContent = 'Αντιγραφή Κωδικού';
           }, 2000);
         }).catch(function () {
-          // Fallback for browsers without clipboard API
-          window.prompt('Copy your completion code:', pid);
+          // Εναλλακτική μέθοδος για περιηγητές χωρίς clipboard API
+          window.prompt('Αντιγράψτε τον κωδικό ολοκλήρωσής σας:', pid);
         });
       });
     });
