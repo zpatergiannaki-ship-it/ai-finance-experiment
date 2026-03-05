@@ -54,4 +54,82 @@ async function insertPresurvey(participantId, responses) {
 }
 
 // scenario1Decision: { choice, influence, trust, manipulation_check }
-asyn...
+async function insertScenario1Decision(participantId, scenario1Decision) {
+  try {
+    const { data, error } = await getClient()
+      .from('scenario1_decision')
+      .insert([{
+        participant_id: participantId,
+        choice: scenario1Decision.choice,
+        influence: scenario1Decision.influence,
+        trust: scenario1Decision.trust,
+        manipulation_check: scenario1Decision.manipulation_check,
+      }]);
+    if (error) console.error('insertScenario1Decision error:', error.message);
+    return { data, error };
+  } catch (err) {
+    console.error('insertScenario1Decision exception:', err.message);
+    return { error: err };
+  }
+}
+
+async function insertScenario2Round(participantId, roundNumber, allocation, confidence, trustRating) {
+  try {
+    const { data, error } = await getClient()
+      .from('scenario2_rounds')
+      .insert([{
+        participant_id: participantId,
+        round_number: roundNumber,
+        allocation,
+        confidence,
+        trust_rating: trustRating,
+      }]);
+    if (error) console.error('insertScenario2Round error:', error.message);
+    return { data, error };
+  } catch (err) {
+    console.error('insertScenario2Round exception:', err.message);
+    return { error: err };
+  }
+}
+
+async function insertChatLog(participantId, scenarioId, roundNumber, role, message) {
+  try {
+    const { data, error } = await getClient()
+      .from('chat_logs')
+      .insert([{
+        participant_id: participantId,
+        scenario_id: scenarioId,
+        round_number: roundNumber,
+        role,
+        message,
+      }]);
+    if (error) console.error('insertChatLog error:', error.message);
+    return { data, error };
+  } catch (err) {
+    console.error('insertChatLog exception:', err.message);
+    return { error: err };
+  }
+}
+
+async function insertPostsurvey(participantId, responses) {
+  try {
+    const { data, error } = await getClient()
+      .from('postsurvey_responses')
+      .insert([{ participant_id: participantId, responses }]);
+    if (error) console.error('insertPostsurvey error:', error.message);
+    return { data, error };
+  } catch (err) {
+    console.error('insertPostsurvey exception:', err.message);
+    return { error: err };
+  }
+}
+
+window.SupabaseUtils = {
+  insertParticipant,
+  insertConsent,
+  insertPresurvey,
+  insertScenario1Decision,
+  insertScenario2Round,
+  insertChatLog,
+  insertPostsurvey,
+};
