@@ -5,6 +5,111 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Σενάριο 1 — Μελέτη Χρηματοοικονομικού Βοηθού ΤΝ</title>
   <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    /* Divider */
+    .section-divider {
+      border: none;
+      border-top: 1.5px solid #e5e7eb;
+      margin: 1.5rem 0;
+    }
+
+    /* Intro note */
+    .intro-note {
+      font-size: 0.92rem;
+      color: #6b7280;
+      font-style: italic;
+      margin-top: 0.35rem;
+    }
+
+    /* Scenario description card — two-column option grid */
+    .option-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 0.75rem;
+    }
+
+    @media (max-width: 560px) {
+      .option-grid { grid-template-columns: 1fr; }
+    }
+
+    .option-box {
+      border: 1.5px solid #d1d5db;
+      border-radius: 10px;
+      padding: 1rem;
+      background: #f9fafb;
+    }
+
+    .option-box h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: #1f2937;
+    }
+
+    .option-box ul {
+      padding-left: 1.1rem;
+      margin: 0;
+    }
+
+    .option-box ul li {
+      font-size: 0.9rem;
+      color: #374151;
+      margin-bottom: 0.3rem;
+      line-height: 1.4;
+    }
+
+    /* Suggested questions */
+    .suggested-questions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .suggested-question-btn {
+      background: #eff6ff;
+      border: 1.5px solid #93c5fd;
+      border-radius: 8px;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.9rem;
+      color: #1d4ed8;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s, border-color 0.15s;
+      line-height: 1.4;
+    }
+
+    .suggested-question-btn:hover {
+      background: #dbeafe;
+      border-color: #3b82f6;
+    }
+
+    .suggested-question-btn.selected {
+      background: #dbeafe;
+      border-color: #2563eb;
+      font-weight: 600;
+    }
+
+    /* Section label above chat */
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+      margin-bottom: 0.4rem;
+    }
+
+    /* Likert row compact */
+    .likert-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .likert-group:last-child {
+      margin-bottom: 0;
+    }
+  </style>
 </head>
 <body>
   <div class="progress-bar-wrapper">
@@ -13,54 +118,139 @@
   <div class="progress-label">Βήμα 3 από 6</div>
 
   <div class="container">
+
+    <!-- ── Card 1: Title + Intro ── -->
     <div class="card">
-      <h1>Σενάριο 1: Επιλογή Χρηματοδότησης</h1>
-      <p>Χρειάζεστε <strong>€3.000</strong> για μια απρόβλεπτη επισκευή σπιτιού. Έχετε δύο επιλογές χρηματοδότησης:</p>
-
-      <table style="margin-top:0.75rem;">
-        <thead>
-          <tr>
-            <th>Χαρακτηριστικό</th>
-            <th>Επιλογή Α — Πιστωτική Κάρτα</th>
-            <th>Επιλογή Β — Προσωπικό Δάνειο</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Διαθέσιμο ποσό</td><td>Έως €5.000 όριο</td><td>€3.000</td></tr>
-          <tr><td>Ετήσιο Επιτόκιο (APR)</td><td>18%</td><td>6,5%</td></tr>
-          <tr><td>Αποπληρωμή</td><td>Ευέλικτη</td><td>Σταθερή — 24 μήνες</td></tr>
-          <tr><td>Μηνιαία δόση</td><td>5% του υπολοίπου</td><td>€134 σταθερά</td></tr>
-        </tbody>
-      </table>
-
-      <p style="margin-top:0.75rem;">Μη διστάσετε να ρωτήσετε τον βοηθό ΤΝ παρακάτω οποιαδήποτε ερώτηση πριν πάρετε την απόφασή σας.</p>
+      <h1>Σενάριο 1: Επιλογή Τρόπου Χρηματοδότησης</h1>
+      <p>Στο παρακάτω σενάριο θα σας ζητηθεί να λάβετε μια οικονομική απόφαση.</p>
+      <p class="intro-note">Μπορείτε να συμβουλευτείτε τον ψηφιακό βοηθό πριν αποφασίσετε.</p>
     </div>
 
+    <!-- ── Card 2: Scenario Description ── -->
     <div class="card">
-      <h2>Συνομιλία με τον Βοηθό ΤΝ</h2>
+      <h2>Περιγραφή Σεναρίου</h2>
+      <hr class="section-divider" />
+
+      <p><strong>Κατάσταση</strong></p>
+      <p>Φανταστείτε ότι χρειάζεστε <strong>3.000€</strong> για μια απρόβλεπτη επισκευή στο σπίτι σας. Η τράπεζά σας σας προσφέρει δύο διαθέσιμες επιλογές χρηματοδότησης.</p>
+
+      <div class="option-grid">
+        <div class="option-box">
+          <h3>Επιλογή 1 — Πιστωτική Κάρτα</h3>
+          <ul>
+            <li>Διαθέσιμο πιστωτικό όριο: <strong>5.000€</strong></li>
+            <li>Ετήσιο επιτόκιο: <strong>18%</strong></li>
+            <li>Ελάχιστη μηνιαία πληρωμή: <strong>3% του υπολοίπου</strong></li>
+            <li>Ευέλικτη αποπληρωμή</li>
+            <li>Δεν υπάρχει προκαθορισμένο πρόγραμμα δόσεων</li>
+          </ul>
+        </div>
+        <div class="option-box">
+          <h3>Επιλογή 2 — Προσωπικό Δάνειο</h3>
+          <ul>
+            <li>Ποσό δανείου: <strong>3.000€</strong></li>
+            <li>Ετήσιο επιτόκιο: <strong>10%</strong></li>
+            <li>Διάρκεια: <strong>36 μήνες</strong></li>
+            <li>Μηνιαία δόση: <strong>97€</strong></li>
+            <li>Σταθερό πρόγραμμα αποπληρωμής</li>
+          </ul>
+        </div>
+      </div>
+
+      <p style="margin-top:0.9rem;" class="intro-note">Μπορείτε να συμβουλευτείτε τον ψηφιακό βοηθό πριν πάρετε την τελική σας απόφαση.</p>
+    </div>
+
+    <!-- ── Card 3: Chat with AI ── -->
+    <div class="card">
+      <h2>Συνομιλία με τον Ψηφιακό Βοηθό</h2>
+      <hr class="section-divider" />
+
+      <p style="margin-bottom:0.6rem;">Μπορείτε να επιλέξετε μία από τις παρακάτω ερωτήσεις για να λάβετε συμβουλή από τον ψηφιακό βοηθό ή να θέσετε τη δική σας.</p>
+
+      <p class="section-label">Επιλογή ερώτησης</p>
+      <div class="suggested-questions" id="suggested-questions">
+        <button type="button" class="suggested-question-btn" data-question="Ποια είναι η βασική διαφορά μεταξύ της πιστωτικής κάρτας και του προσωπικού δανείου σε αυτή την περίπτωση;">
+          Ποια είναι η βασική διαφορά μεταξύ της πιστωτικής κάρτας και του προσωπικού δανείου σε αυτή την περίπτωση;
+        </button>
+        <button type="button" class="suggested-question-btn" data-question="Ποια επιλογή φαίνεται να είναι οικονομικά πιο συμφέρουσα με βάση τα επιτόκια και τις δόσεις;">
+          Ποια επιλογή φαίνεται να είναι οικονομικά πιο συμφέρουσα με βάση τα επιτόκια και τις δόσεις;
+        </button>
+        <button type="button" class="suggested-question-btn" data-question="Ποια επιλογή έχει μεγαλύτερο οικονομικό κίνδυνο ή αβεβαιότητα για εμένα;">
+          Ποια επιλογή έχει μεγαλύτερο οικονομικό κίνδυνο ή αβεβαιότητα για εμένα;
+        </button>
+        <button type="button" class="suggested-question-btn" data-question="Με βάση τις πληροφορίες που δίνονται, ποια επιλογή θα πρότεινε ένας οικονομικός σύμβουλος;">
+          Με βάση τις πληροφορίες που δίνονται, ποια επιλογή θα πρότεινε ένας οικονομικός σύμβουλος;
+        </button>
+      </div>
+
       <div id="chat-container" class="chat-widget"></div>
     </div>
 
+    <!-- ── Card 4: Final Decision ── -->
     <div class="card" id="decision-section" style="display:none;">
-      <h2>Η Απόφασή σας</h2>
-      <p>Βάσει της συνομιλίας σας με τον βοηθό ΤΝ, ποια επιλογή θα επιλέγατε;</p>
-      <div class="decision-options" id="decision-options">
+      <h2>Τελική Απόφαση</h2>
+      <hr class="section-divider" />
+      <p>Με βάση τις πληροφορίες που λάβατε, ποια επιλογή θα επιλέγατε;</p>
+      <div class="decision-options" id="decision-options" style="margin-top:0.75rem;">
         <label>
           <input type="radio" name="decision" value="credit_card" />
-          <span>Επιλογή Α — Πιστωτική Κάρτα</span>
+          <span>Πιστωτική Κάρτα</span>
         </label>
         <label>
           <input type="radio" name="decision" value="personal_loan" />
-          <span>Επιλογή Β — Προσωπικό Δάνειο</span>
+          <span>Προσωπικό Δάνειο</span>
         </label>
-        <label>
-          <input type="radio" name="decision" value="let_ai_decide" />
-          <span>Αφήνω την ΤΝ να αποφασίσει για μένα</span>
-        </label>
+      </div>
+
+      <hr class="section-divider" />
+
+      <!-- Influence Measure -->
+      <div class="likert-group">
+        <span class="likert-label">Σε ποιο βαθμό επηρέασε η συμβουλή του ψηφιακού βοηθού την απόφασή σας;</span>
+        <div class="likert-options" id="influence-options">
+          <label><input type="radio" name="influence" value="1" /><span>1</span></label>
+          <label><input type="radio" name="influence" value="2" /><span>2</span></label>
+          <label><input type="radio" name="influence" value="3" /><span>3</span></label>
+          <label><input type="radio" name="influence" value="4" /><span>4</span></label>
+          <label><input type="radio" name="influence" value="5" /><span>5</span></label>
+          <label><input type="radio" name="influence" value="6" /><span>6</span></label>
+          <label><input type="radio" name="influence" value="7" /><span>7</span></label>
+        </div>
+        <div class="likert-end-labels"><span>Καθόλου</span><span>Πάρα πολύ</span></div>
+      </div>
+
+      <!-- Trust Measure -->
+      <div class="likert-group">
+        <span class="likert-label">Σε ποιο βαθμό εμπιστεύεστε τη συμβουλή που παρείχε ο ψηφιακός βοηθός;</span>
+        <div class="likert-options" id="trust-options">
+          <label><input type="radio" name="trust" value="1" /><span>1</span></label>
+          <label><input type="radio" name="trust" value="2" /><span>2</span></label>
+          <label><input type="radio" name="trust" value="3" /><span>3</span></label>
+          <label><input type="radio" name="trust" value="4" /><span>4</span></label>
+          <label><input type="radio" name="trust" value="5" /><span>5</span></label>
+          <label><input type="radio" name="trust" value="6" /><span>6</span></label>
+          <label><input type="radio" name="trust" value="7" /><span>7</span></label>
+        </div>
+        <div class="likert-end-labels"><span>Καθόλου</span><span>Πάρα πολύ</span></div>
+      </div>
+
+      <!-- Manipulation Check -->
+      <div class="likert-group">
+        <span class="likert-label">Ο ψηφιακός βοηθός φάνηκε να επικοινωνεί με ανθρώπινο τρόπο.</span>
+        <div class="likert-options" id="manipulation-options">
+          <label><input type="radio" name="manipulation" value="1" /><span>1</span></label>
+          <label><input type="radio" name="manipulation" value="2" /><span>2</span></label>
+          <label><input type="radio" name="manipulation" value="3" /><span>3</span></label>
+          <label><input type="radio" name="manipulation" value="4" /><span>4</span></label>
+          <label><input type="radio" name="manipulation" value="5" /><span>5</span></label>
+          <label><input type="radio" name="manipulation" value="6" /><span>6</span></label>
+          <label><input type="radio" name="manipulation" value="7" /><span>7</span></label>
+        </div>
+        <div class="likert-end-labels"><span>Διαφωνώ απόλυτα</span><span>Συμφωνώ απόλυτα</span></div>
       </div>
     </div>
 
-    <button id="next-btn" class="btn btn-primary btn-full" disabled>Επόμενο</button>
+    <button id="next-btn" class="btn btn-primary btn-full" disabled>Συνέχεια</button>
   </div>
 
   <!-- Supabase CDN -->
@@ -75,27 +265,67 @@
 
       window.ChatUtils.initChat('chat-container', 'scenario1', null);
 
+      // ── Suggested question buttons ──
+      const suggestedBtns = document.querySelectorAll('.suggested-question-btn');
+      suggestedBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const question = btn.getAttribute('data-question');
+          // Fill chat input and send
+          const inputEl = document.getElementById('chat-input-chat-container');
+          if (inputEl) {
+            inputEl.value = question;
+            const sendBtn = document.getElementById('chat-send-chat-container');
+            if (sendBtn) sendBtn.click();
+          }
+          // Highlight selected
+          suggestedBtns.forEach(function (b) { b.classList.remove('selected'); });
+          btn.classList.add('selected');
+        });
+      });
+
+      // ── Validation helper ──
       function checkNextEnabled() {
-        const selected = document.querySelector('input[name="decision"]:checked');
-        nextBtn.disabled = !(selected && window.ChatUtils.getMessageCount() >= 1);
+        const decision = document.querySelector('input[name="decision"]:checked');
+        const influence = document.querySelector('input[name="influence"]:checked');
+        const trust = document.querySelector('input[name="trust"]:checked');
+        const manipulation = document.querySelector('input[name="manipulation"]:checked');
+        nextBtn.disabled = !(
+          decision && influence && trust && manipulation &&
+          window.ChatUtils.getMessageCount() >= 1
+        );
       }
 
+      // ── Show decision section after first chat message ──
       document.addEventListener('chatMessageSent', function () {
         decisionSection.style.display = 'block';
         checkNextEnabled();
       });
 
+      // ── Listen for any radio change ──
       document.getElementById('decision-options').addEventListener('change', checkNextEnabled);
+      document.getElementById('influence-options').addEventListener('change', checkNextEnabled);
+      document.getElementById('trust-options').addEventListener('change', checkNextEnabled);
+      document.getElementById('manipulation-options').addEventListener('change', checkNextEnabled);
 
+      // ── Next button handler ──
       nextBtn.addEventListener('click', async function () {
-        const selected = document.querySelector('input[name="decision"]:checked');
-        if (!selected) return;
+        const decision = document.querySelector('input[name="decision"]:checked');
+        const influence = document.querySelector('input[name="influence"]:checked');
+        const trust = document.querySelector('input[name="trust"]:checked');
+        const manipulation = document.querySelector('input[name="manipulation"]:checked');
+
+        if (!decision || !influence || !trust || !manipulation) return;
 
         nextBtn.disabled = true;
         nextBtn.textContent = 'Αποθήκευση…';
 
         const pid = window.AppUtils.getParticipantId();
-        await window.SupabaseUtils.insertScenario1Decision(pid, selected.value);
+        await window.SupabaseUtils.insertScenario1Decision(pid, {
+          choice: decision.value,
+          influence: parseInt(influence.value, 10),
+          trust: parseInt(trust.value, 10),
+          manipulation_check: parseInt(manipulation.value, 10),
+        });
         window.AppUtils.goTo('scenario2');
       });
     });
