@@ -29,13 +29,14 @@
 
         <!-- A1: Φύλο -->
         <div class="form-group">
-          <label>A1. Φύλο</label>
-          <div class="decision-options">
-            <label><input type="radio" name="gender" value="female" /><span>Γυναίκα</span></label>
-            <label><input type="radio" name="gender" value="male" /><span>Άνδρας</span></label>
-            <label><input type="radio" name="gender" value="nonbinary" /><span>Μη δυαδικό / Άλλο</span></label>
-            <label><input type="radio" name="gender" value="prefer_not" /><span>Προτιμώ να μην απαντήσω</span></label>
-          </div>
+          <label for="gender">A1. Φύλο</label>
+          <select id="gender" name="gender">
+            <option value="">— Επιλέξτε —</option>
+            <option value="female">Γυναίκα</option>
+            <option value="male">Άνδρας</option>
+            <option value="nonbinary">Μη δυαδικό / Άλλο</option>
+            <option value="prefer_not">Προτιμώ να μην απαντήσω</option>
+          </select>
         </div>
 
         <!-- A2: Ηλικία -->
@@ -171,7 +172,7 @@
         <div class="form-group">
           <label>Γ3. Χρήση AI για οικονομικές αποφάσεις</label>
           <div class="decision-options">
-            <label><input type="radio" name="ai_finance_use" value="1" /><span>Καθόλου πιθανό</span></label>
+            <label><input type="radio" name="ai_finance_use" value="1" /><span>��αθόλου πιθανό</span></label>
             <label><input type="radio" name="ai_finance_use" value="2" /><span>Λίγο πιθανό</span></label>
             <label><input type="radio" name="ai_finance_use" value="3" /><span>Μέτρια πιθανό</span></label>
             <label><input type="radio" name="ai_finance_use" value="4" /><span>Αρκετά πιθανό</span></label>
@@ -198,14 +199,14 @@
         const age = document.getElementById('age').value;
         if (!age || parseInt(age) < 18 || parseInt(age) > 99) return false;
 
-        // A3, A4, A5: Selects
-        const selects = ['education', 'employment', 'income'];
+        // A1, A3, A4, A5: Selects
+        const selects = ['gender', 'education', 'employment', 'income'];
         for (const id of selects) {
           if (!document.getElementById(id).value) return false;
         }
 
-        // A1, B1, B2, B3, C1, C2, C3: Radio groups
-        const radios = ['gender', 'fin_literacy', 'fin_education', 'risk_tolerance', 'ai_experience', 'tech_trust', 'ai_finance_use'];
+        // B1, B2, B3, C1, C2, C3: Radio groups
+        const radios = ['fin_literacy', 'fin_education', 'risk_tolerance', 'ai_experience', 'tech_trust', 'ai_finance_use'];
         for (const name of radios) {
           if (!form.querySelector('input[name="' + name + '"]:checked')) return false;
         }
@@ -225,12 +226,12 @@
         nextBtn.textContent = 'Αποθήκευση…';
 
         const responses = {
-          gender: form.querySelector('input[name="gender"]:checked').value,
+          gender: document.getElementById('gender').value,
           age: parseInt(document.getElementById('age').value),
           education: document.getElementById('education').value,
           employment: document.getElementById('employment').value,
           income: document.getElementById('income').value,
-          fin_literacy: parseInt(form.querySelector('input[name="fin_literacy"]:checked').value),
+          fin_literacy: parseInt(form.querySelector('input[name="fin_literacy']:checked').value),
           fin_education: parseInt(form.querySelector('input[name="fin_education"]:checked').value),
           risk_tolerance: parseInt(form.querySelector('input[name="risk_tolerance"]:checked').value),
           ai_experience: parseInt(form.querySelector('input[name="ai_experience"]:checked').value),
