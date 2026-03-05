@@ -188,7 +188,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="../assets/app.js" defer></script>
   <script src="../assets/supabase-client.js" defer></script>
-  <script defer>
+  <script>
     window.addEventListener('DOMContentLoaded', function () {
       const nextBtn = document.getElementById('next-btn');
       const form = document.getElementById('presurvey-form');
@@ -234,7 +234,7 @@
           education: document.getElementById('education').value,
           employment: document.getElementById('employment').value,
           income: document.getElementById('income').value,
-          fin_literacy: parseInt(form.querySelector('input[name="fin_literacy']:checked').value),
+          fin_literacy: parseInt(form.querySelector('input[name="fin_literacy"]:checked').value),
           fin_education: parseInt(form.querySelector('input[name="fin_education"]:checked').value),
           risk_tolerance: parseInt(form.querySelector('input[name="risk_tolerance"]:checked').value),
           ai_experience: parseInt(form.querySelector('input[name="ai_experience"]:checked').value),
