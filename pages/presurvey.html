@@ -41,23 +41,23 @@
 
         <!-- A2: Ηλικία -->
         <div class="form-group">
-          <label for="age">A2. Ηλικία</label>
+          <label for="age">A2. Πόσο χρονών είστε;</label>
           <input type="number" id="age" name="age" min="18" max="99" placeholder="π.χ. 30" />
         </div>
 
         <!-- A3: Μορφωτικό Επίπεδο -->
         <div class="form-group">
-          <label for="education">A3. Μορφωτικό Επίπεδο</label>
+          <label for="education">A3. Ποιο είναι το υψηλότερο επίπεδο εκπαίδευσης που έχετε ολοκληρώσει;</label>
           <select id="education" name="education">
             <option value="">— Επιλέξτε —</option>
-            <option value="no_primary">Εγκατέλειψα το Δημοτικό</option>
+            <option value="no_primary">Δεν ολοκλήρωσα το Δημοτικό</option>
             <option value="primary">Απόφοιτος/η Δημοτικού</option>
             <option value="gymnasium">Απόφοιτος/η Γυμνασίου</option>
             <option value="highschool">Απόφοιτος/η Λυκείου</option>
-            <option value="postsecondary">Πτυχιούχοι Μεταδευτεροβάθμιας εκπαίδευσης (ΙΕΚ, Κολλέγια κλπ.)</option>
-            <option value="bachelor">Πτυχιούχοι Πανεπιστημίου (ΑΕΙ, ΤΕΙ, κλπ.)</option>
-            <option value="master">Κάτοχος Μεταπτυχιακού Διπλώματος</option>
-            <option value="phd">Κάτοχος Διδακτορικού</option>
+            <option value="postsecondary"> Μεταδευτεροβάθμια εκπαίδευση (ΙΕΚ, Κολλέγια κλπ.)</option>
+            <option value="bachelor">Πανεπιστημίου (ΑΕΙ, ΤΕΙ, κλπ.)</option>
+            <option value="master">Πανεπιστήμιο </option>
+            <option value="phd">Διδακτορικό</option>
           </select>
         </div>
 
@@ -66,20 +66,20 @@
           <label for="employment">A4. Εργασία</label>
           <select id="employment" name="employment">
             <option value="">— Επιλέξτε —</option>
-            <option value="public_sector">Εργαζόμενος/η στον Δημόσιο Τομέα</option>
+            <option value="public_sector">Δημόσιος υπάλληλος</option>
             <option value="private_sector">Μισθωτός/η στον Ιδιωτικό Τομέα</option>
             <option value="self_employed">Αυτοαπασχολούμενος/η – Ελεύθερος Επαγγελματίας</option>
             <option value="retired">Συνταξιούχος</option>
             <option value="unemployed">Άνεργος/η</option>
             <option value="homemaker">Οικιακά</option>
             <option value="student">Μαθητής/τρια ή Φοιτητής/τρια</option>
-            <option value="other">Άλλη Περίπτωση</option>
+            <option value="other">Άλλο</option>
           </select>
         </div>
 
         <!-- A5: Μηνιαίο Εισόδημα -->
         <div class="form-group">
-          <label for="income">A5. Μηνιαίο Εισόδημα</label>
+          <label for="income">A5. Ποιο είναι περίπου το μηνιαίο εισόδημά σας;</label>
           <select id="income" name="income">
             <option value="">— Επιλέξτε —</option>
             <option value="up_to_500">Έως 500 €</option>
@@ -97,40 +97,39 @@
         <!-- ================================================ -->
         <hr style="border:none;border-top:1px solid #e5e7eb;margin:1.5rem 0 1.25rem;" />
         <h2>Ενότητα Β — Επενδυτική Γνώση και Εμπειρία</h2>
-        <p style="color:#6b7280;font-size:0.9rem;margin-bottom:1.25rem;">Οι επόμενες ερωτήσεις αφορούν τις οικονομικές και επενδυτικές σας γνώσεις.</p>
 
         <!-- Β1: Επενδυτικές γνώσεις -->
         <div class="form-group">
-          <label>Β1. Επενδυτικές γνώσεις</label>
+          <label>Β1. Ποιες είναι οι γνώσεις και η εμπειρία σας στις επενδύσεις;</label>
           <div class="decision-options">
-            <label><input type="radio" name="fin_literacy" value="1" /><span>Δεν έχω καθόλου επενδυτικές γνώσεις</span></label>
-            <label><input type="radio" name="fin_literacy" value="2" /><span>Βασικές γνώσεις</span></label>
-            <label><input type="radio" name="fin_literacy" value="3" /><span>Μέτριες γνώσεις</span></label>
-            <label><input type="radio" name="fin_literacy" value="4" /><span>Πάνω από τον μέσο όρο</span></label>
-            <label><input type="radio" name="fin_literacy" value="5" /><span>Εκτεταμένες γνώσεις</span></label>
+            <label><input type="radio" name="fin_literacy" value="1" /><span>Δεν έχω καθόλου επενδυτικές γνώσεις: Δεν παρακολουθώ ποτέ οικονομικές ειδήσεις ή τις χρηματοπιστωτικές αγορές.</span></label>
+            <label><input type="radio" name="fin_literacy" value="2" /><span>Βασικές γνώσεις: Παρακολουθώ περιστασιακά τις αγορές και κατανοώ τη διαφορά μεταξύ βασικών, μη σύνθετων προϊόντων, όπως μετοχές, ομόλογα κ.λπ.</span></label>
+            <label><input type="radio" name="fin_literacy" value="3" /><span>Μέτριες γνώσεις: Έχω επενδύσει στο παρελθόν και γνωρίζω τις διαφορετικές επενδυτικές επιλογές, όπως μετοχές, ομόλογα, εμπορεύματα κ.λπ., καθώς και τα διαφορετικά επίπεδα κινδύνου.</span></label>
+            <label><input type="radio" name="fin_literacy" value="4" /><span>Πάνω από τον μέσο όρο γνώσεις: Είμαι ενεργός επενδυτής στις αγορές. Γνωρίζω και έχω επενδύσει σε διάφορες επενδυτικές επιλογές, όπως μετοχές, ομόλογα, εμπορεύματα κ.λπ., και γνωρίζω τους σχετικούς κινδύνους.</span></label>
+            <label><input type="radio" name="fin_literacy" value="5" /><span>Εκτεταμένες γνώσεις: Διαθέτω οικονομική/χρηματοοικονομική εξειδίκευση, επαγγελματικό υπόβαθρο στον χώρο και σε βάθος κατανόηση των επενδυτικών προϊόντων και στρατηγικών.</span></label>
           </div>
         </div>
 
         <!-- Β2: Οικονομική εκπαίδευση / επάγγελμα -->
         <div class="form-group">
-          <label>Β2. Οικονομική εκπαίδευση / επάγγελμα</label>
+          <label>Β2. Πώς συμβάλλει η οικονομική εκπαίδευση ή το επάγγελμά σας στις επενδυτικές σας γνώσεις;</label>
           <div class="decision-options">
-            <label><input type="radio" name="fin_education" value="1" /><span>Δεν έχω οικονομική εκπαίδευση ή επάγγελμα</span></label>
-            <label><input type="radio" name="fin_education" value="2" /><span>Η εκπαίδευση ή το επάγγελμά μου με βοηθούν να αναλύω οικονομικές πληροφορίες</span></label>
-            <label><input type="radio" name="fin_education" value="3" /><span>Το επάγγελμά μου με βοηθά να κατανοώ επενδυτικούς κινδύνους</span></label>
-            <label><input type="radio" name="fin_education" value="4" /><span>Η εκπαίδευση και το επάγγελμά μου συμβάλλουν σημαντικά στην κατανόηση σύνθετων οικονομικών προϊόντων</span></label>
+            <label><input type="radio" name="fin_education" value="1" /><span>Δεν έχω οικονομική εκπαίδευση ούτε εργάζομαι σε οικονομικό επάγγελμα.</span></label>
+            <label><input type="radio" name="fin_education" value="2" /><span>Η εκπαίδευση ή/και το επάγγελμά μου μου επιτρέπουν να αναλύω γενικές οικονομικές πληροφορίες.</span></label>
+            <label><input type="radio" name="fin_education" value="3" /><span>Το επάγγελμά μου μου παρέχει τις γνώσεις για να κατανοώ και να διαχειρίζομαι επενδυτικούς κινδύνους.</span></label>
+            <label><input type="radio" name="fin_education" value="4" /><span>Τόσο η εκπαίδευση όσο και το επάγγελμά μου συμβάλλουν σημαντικά στην κατανόηση σύνθετων χρηματοοικονομικών υπηρεσιών και προϊόντων.</span></label>
           </div>
         </div>
 
         <!-- Β3: Ανοχή στον οικονομικό κίνδυνο -->
         <div class="form-group">
-          <label>Β3. Ανοχή στον οικονομικό κίνδυνο</label>
+          <label>Β3. Πόσο πρόθυμος/η είστε να αναλάβετε οικονομικό κίνδυνο σε μια επένδυση;</label>
           <div class="decision-options">
-            <label><input type="radio" name="risk_tolerance" value="1" /><span>Καθόλου πρόθυμος/η να αναλάβω κίνδυνο</span></label>
-            <label><input type="radio" name="risk_tolerance" value="2" /><span>Λίγο πρόθυμος/η να αναλάβω κίνδυνο</span></label>
-            <label><input type="radio" name="risk_tolerance" value="3" /><span>Μέτρια πρόθυμος/η να αναλάβω κίνδυνο</span></label>
-            <label><input type="radio" name="risk_tolerance" value="4" /><span>Αρκετά πρόθυμος/η να αναλάβω κίνδυνο</span></label>
-            <label><input type="radio" name="risk_tolerance" value="5" /><span>Πολύ πρόθυμος/η να αναλάβω κίνδυνο</span></label>
+            <label><input type="radio" name="risk_tolerance" value="1" /><span>Καθόλου πρόθυμος/η</span></label>
+            <label><input type="radio" name="risk_tolerance" value="2" /><span>Λίγο πρόθυμος/η</span></label>
+            <label><input type="radio" name="risk_tolerance" value="3" /><span>Μέτρια πρόθυμος/η</span></label>
+            <label><input type="radio" name="risk_tolerance" value="4" /><span>Πολύ πρόθυμος/η</span></label>
+            <label><input type="radio" name="risk_tolerance" value="5" /><span>Πάρα πολύ πρόθυμος/η</span></label>
           </div>
         </div>
 
@@ -143,7 +142,7 @@
 
         <!-- Γ1: Συχνότητα χρήσης AI -->
         <div class="form-group">
-          <label>Γ1. Συχνότητα χρήσης AI</label>
+          <label>Γ1. Πόσο συχνά χρησιμοποιείτε εργαλεία τεχνητής νοημοσύνης (π.χ. ChatGPT);</label>
           <div class="decision-options">
             <label><input type="radio" name="ai_experience" value="1" /><span>Ποτέ</span></label>
             <label><input type="radio" name="ai_experience" value="2" /><span>Σπάνια</span></label>
@@ -155,7 +154,7 @@
 
         <!-- Γ2: Εμπιστοσύνη σε AI — Likert 1–7 -->
         <div class="likert-group" id="group-tech_trust">
-          <span class="likert-label">Γ2. Εμπιστοσύνη σε AI</span>
+          <span class="likert-label">Γ2. Πόσο εμπιστεύεστε τις απαντήσεις που δίνει η τεχνητή νοημοσύνη;</span>
           <div class="likert-options">
             <label><input type="radio" name="tech_trust" value="1" /><span>1</span></label>
             <label><input type="radio" name="tech_trust" value="2" /><span>2</span></label>
@@ -170,7 +169,7 @@
 
         <!-- Γ3: Χρήση AI για οικονομικές αποφάσεις -->
         <div class="form-group">
-          <label>Γ3. Χρήση AI για οικονομικές αποφάσεις</label>
+          <label>Γ3. Πόσο πιθανό είναι να χρησιμοποιούσατε τεχνητή νοημοσύνη για οικονομικές ή επενδυτικές αποφάσεις;</label>
           <div class="decision-options">
             <label><input type="radio" name="ai_finance_use" value="1" /><span>��αθόλου πιθανό</span></label>
             <label><input type="radio" name="ai_finance_use" value="2" /><span>Λίγο πιθανό</span></label>
