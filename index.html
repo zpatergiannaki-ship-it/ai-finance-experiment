@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Financial Assistant Study</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="spinner-wrapper">
+    <div class="spinner"></div>
+    <p>Loading study…</p>
+  </div>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="assets/app.js" defer></script>
+  <script src="assets/supabase-client.js" defer></script>
+  <script defer>
+    window.addEventListener('DOMContentLoaded', async function () {
+      const pid = window.AppUtils.getParticipantId();
+      const condition = window.AppUtils.getCondition();
+
+      // Register participant only once
+      if (!localStorage.getItem('exp_registered')) {
+        await window.SupabaseUtils.insertParticipant(pid, condition);
+        localStorage.setItem('exp_registered', 'true');
+      }
+
+      // Redirect to intro
+      window.location.href = 'pages/intro.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+'use strict';
+
+let _chatContainerId = null;
+let _scenarioId = null;
+let _roundNumber = null;
+let _messageCount = 0;
+
+function initChat(containerId, scenarioId, roundNumber) {
+  _chatContainerId = containerId;
+  _scenarioId = scenarioId;
+  _roundNumber = roundNumber || null;
+  _messageCount = 0;
+
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="chat-messages" id="chat-messages-${containerId}"></div>
+    <div class="chat-input-row">
+      <input type="text" id="chat-input-${containerId}" class="chat-input" placeholder="Ask the AI assistant a question…" maxlength="500" />
+      <button id="chat-send-${containerId}" class="btn btn-primary chat-send-btn">Send</button>
+    </div>
+    <div id="chat-error-${containerId}" class="chat-error" style="display:none;"></div>
+  `;
+
+  const sendBtn = document.getElementById('chat-send-' + containerId);
+  const inputEl = document.getElementById('chat-input-' + containerId);
+
+  sendBtn.addEventListener('click', function () {
+    const msg = inputEl.value.trim();
+    if (!msg) return;
+    inputEl.value = '';
+    sendMessage(msg);
+  });
+
+  inputEl.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      const msg = inputEl.value.trim();
+      if (!msg) return;
+      inputEl.value = '';
+      sendMessage(msg);
+    }
+  });
+}
+
+async function sendMessage(message) {
+  const messagesEl = document.getElementById('chat-messages-' + _chatContainerId);
+  const errorEl = document.getElementById('chat-error-' + _chatContainerId);
+  const sendBtn = document.getElementById('chat-send-' + _chatContainerId);
+  const inputEl = document.getElementById('chat-input-' + _chatContainerId);
+
+  if (!messagesEl) return;
+
+  const participantId = window.AppUtils.getParticipantId();
+  const condition = window.AppUtils.getCondition();
+
+  // Append user bubble
+  appendBubble(messagesEl, 'user', message);
+
+  // Disable input while waiting
+  if (sendBtn) sendBtn.disabled = true;
+  if (inputEl) inputEl.disabled = true;
+
+  // Show loading indicator
+  const loadingId = 'loading-' + Date.now();
+  const loadingEl = document.createElement('div');
+  loadingEl.id = loadingId;
+  loadingEl.className = 'chat-bubble assistant loading';
+  loadingEl.innerHTML = '<span class="dots"><span>.</span><span>.</span><span>.</span></span>';
+  messagesEl.appendChild(loadingEl);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  // Save user message to Supabase
+  if (window.SupabaseUtils) {
+    await window.SupabaseUtils.insertChatLog(participantId, _scenarioId, _roundNumber, 'user', message);
+  }
+
+  // Hide previous error
+  if (errorEl) errorEl.style.display = 'none';
+
+  try {
+    const body = {
+      participantId,
+      scenarioId: _scenarioId,
+      condition,
+      message,
+    };
+    if (_roundNumber !== null && _roundNumber !== undefined) {
+      body.roundNumber = _roundNumber;
+    }
+
+    const response = await fetch(window.AppUtils.BACKEND_URL + '/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+
+    // Remove loading indicator
+    const loadingNode = document.getElementById(loadingId);
+    if (loadingNode) loadingNode.remove();
+
+    if (!response.ok || data.error) {
+      const errMsg = (data && data.error) ? data.error : 'Failed to get a response from the AI assistant. Please try again.';
+      if (errorEl) {
+        errorEl.textContent = errMsg;
+        errorEl.style.display = 'block';
+      }
+    } else {
+      const reply = data.reply || '';
+      appendBubble(messagesEl, 'assistant', reply);
+      _messageCount++;
+
+      // Save assistant message to Supabase
+      if (window.SupabaseUtils) {
+        await window.SupabaseUtils.insertChatLog(participantId, _scenarioId, _roundNumber, 'assistant', reply);
+      }
+
+      // Notify the page that a message has been sent (fire custom event)
+      document.dispatchEvent(new CustomEvent('chatMessageSent', { detail: { count: _messageCount } }));
+    }
+  } catch (err) {
+    const loadingNode = document.getElementById(loadingId);
+    if (loadingNode) loadingNode.remove();
+    if (errorEl) {
+      errorEl.textContent = 'Could not reach the AI assistant. Please check your connection and try again.';
+      errorEl.style.display = 'block';
+    }
+  } finally {
+    if (sendBtn) sendBtn.disabled = false;
+    if (inputEl) inputEl.disabled = false;
+    if (inputEl) inputEl.focus();
+    if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+}
+
+function appendBubble(container, role, text) {
+  const div = document.createElement('div');
+  div.className = 'chat-bubble ' + role;
+  div.textContent = text;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function getMessageCount() {
+  return _messageCount;
+}
+
+window.ChatUtils = {
+  initChat,
+  getMessageCount,
+};

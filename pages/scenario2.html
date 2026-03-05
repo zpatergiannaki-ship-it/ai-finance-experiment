@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scenario 2 — AI Financial Assistant Study</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <div class="progress-bar-wrapper">
+    <div class="progress-bar" style="width: calc(4/6 * 100%);"></div>
+  </div>
+  <div class="progress-label">Step 4 of 6</div>
+
+  <div class="container" id="main-container">
+    <!-- Content injected by JS -->
+  </div>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../assets/app.js" defer></script>
+  <script src="../assets/supabase-client.js" defer></script>
+  <script src="../assets/chat.js" defer></script>
+  <script defer>
+    const ROUNDS = [
+      { roundNumber: 1, marketPerformance: { cash: 0.5, bonds: 1.0, balancedFund: 2.0, stocks: 4.0 }, recommendedAllocation: { cash: 10, bonds: 20, balancedFund: 40, stocks: 30 } },
+      { roundNumber: 2, marketPerformance: { cash: 0.5, bonds: 0.5, balancedFund: -1.5, stocks: -6.0 }, recommendedAllocation: { cash: 20, bonds: 30, balancedFund: 40, stocks: 10 } },
+      { roundNumber: 3, marketPerformance: { cash: 0.5, bonds: -1.0, balancedFund: 1.0, stocks: 5.0 }, recommendedAllocation: { cash: 25, bonds: 35, balancedFund: 35, stocks: 5 } },
+      { roundNumber: 4, marketPerformance: { cash: 0.5, bonds: 0.8, balancedFund: 1.2, stocks: -4.0 }, recommendedAllocation: { cash: 15, bonds: 30, balancedFund: 40, stocks: 15 } },
+    ];
+
+    const ASSET_LABELS = { cash: 'Cash', bonds: 'Bonds', balancedFund: 'Balanced Fund', stocks: 'Stocks' };
+
+    let currentRoundIndex = 0;
+    let allocationUnlocked = false;
+
+    function renderRound() {
+      const round = ROUNDS[currentRoundIndex];
+      const container = document.getElementById('main-container');
+      allocationUnlocked = false;
+
+      container.innerHTML = `
+        <div class="card">
+          <h1>Round ${round.roundNumber} of 4</h1>
+          <p>You are managing a <strong>€10,000 portfolio</strong> across 4 assets: Cash, Bonds, Balanced Fund, and Stocks.</p>
+
+          <h2 style="margin-top:1rem;">Market Performance This Round</h2>
+          <table>
+            <thead><tr><th>Asset</th><th>Return (%)</th></tr></thead>
+            <tbody>
+              ${Object.entries(round.marketPerformance).map(([k, v]) =>
+                `<tr><td>${ASSET_LABELS[k]}</td><td style="color:${v >= 0 ? '#065f46' : '#b91c1c'}">${v >= 0 ? '+' : ''}${v}%</td></tr>`
+              ).join('')}
+            </tbody>
+          </table>
+
+          <h2 style="margin-top:1rem;">AI Recommended Allocation</h2>
+          <table>
+            <thead><tr><th>Asset</th><th>Recommended (%)</th></tr></thead>
+            <tbody>
+              ${Object.entries(round.recommendedAllocation).map(([k, v]) =>
+                `<tr><td>${ASSET_LABELS[k]}</td><td>${v}%</td></tr>`
+              ).join('')}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h2>Chat with the AI Assistant</h2>
+          <div id="chat-container" class="chat-widget"></div>
+          <div style="margin-top:0.75rem;">
+            <button id="skip-btn" class="btn btn-secondary">Skip to allocation →</button>
+          </div>
+        </div>
+
+        <div class="card" id="allocation-section" style="display:none;">
+          <h2>Your Allocation for Round ${round.roundNumber}</h2>
+          <p>Allocate your portfolio across the four assets. Total must equal <strong>100%</strong>.</p>
+
+          <div class="allocation-row">
+            <label for="alloc-cash">Cash %</label>
+            <input type="number" id="alloc-cash" min="0" max="100" value="25" />
+          </div>
+          <div class="allocation-row">
+            <label for="alloc-bonds">Bonds %</label>
+            <input type="number" id="alloc-bonds" min="0" max="100" value="25" />
+          </div>
+          <div class="allocation-row">
+            <label for="alloc-balanced">Balanced Fund %</label>
+            <input type="number" id="alloc-balanced" min="0" max="100" value="25" />
+          </div>
+          <div class="allocation-row">
+            <label for="alloc-stocks">Stocks %</label>
+            <input type="number" id="alloc-stocks" min="0" max="100" value="25" />
+          </div>
+          <div class="allocation-sum" id="alloc-sum">Total: 100% ✓</div>
+
+          <div class="slider-group" style="margin-top:1.25rem;">
+            <label for="confidence-slider">How confident are you in this allocation? <span id="confidence-val">4</span>/7</label>
+            <input type="range" id="confidence-slider" min="1" max="7" value="4" />
+          </div>
+
+          <div class="slider-group">
+            <label for="trust-slider">How much do you trust the AI recommendation this round? <span id="trust-val">4</span>/7</label>
+            <input type="range" id="trust-slider" min="1" max="7" value="4" />
+          </div>
+
+          <button id="round-next-btn" class="btn btn-primary btn-full" style="margin-top:0.5rem;" disabled>
+            ${currentRoundIndex < ROUNDS.length - 1 ? 'Next Round →' : 'Finish Scenario →'}
+          </button>
+        </div>
+      `;
+
+      // Wire up chat
+      window.ChatUtils.initChat('chat-container', 'scenario2', round.roundNumber);
+
+      // Show allocation after chat message OR skip
+      document.addEventListener('chatMessageSent', onUnlockAllocation, { once: true });
+      document.getElementById('skip-btn').addEventListener('click', onUnlockAllocation);
+
+      function onUnlockAllocation() {
+        if (allocationUnlocked) return;
+        allocationUnlocked = true;
+        document.getElementById('allocation-section').style.display = 'block';
+        updateSum();
+        updateRoundNextBtn();
+      }
+
+      // Allocation sum
+      const allocInputs = ['alloc-cash', 'alloc-bonds', 'alloc-balanced', 'alloc-stocks'];
+      allocInputs.forEach(id => {
+        document.getElementById(id).addEventListener('input', function () {
+          updateSum();
+          updateRoundNextBtn();
+        });
+      });
+
+      function getSum() {
+        return allocInputs.reduce((sum, id) => {
+          const val = parseInt(document.getElementById(id).value) || 0;
+          return sum + val;
+        }, 0);
+      }
+
+      function updateSum() {
+        const total = getSum();
+        const el = document.getElementById('alloc-sum');
+        el.textContent = 'Total: ' + total + '%' + (total === 100 ? ' ✓' : ' (must equal 100%)');
+        el.className = 'allocation-sum ' + (total === 100 ? 'sum-ok' : 'sum-bad');
+      }
+
+      function updateRoundNextBtn() {
+        const btn = document.getElementById('round-next-btn');
+        if (btn) btn.disabled = getSum() !== 100;
+      }
+
+      // Slider displays
+      document.getElementById('confidence-slider').addEventListener('input', function () {
+        document.getElementById('confidence-val').textContent = this.value;
+      });
+      document.getElementById('trust-slider').addEventListener('input', function () {
+        document.getElementById('trust-val').textContent = this.value;
+      });
+
+      // Round next button
+      document.getElementById('round-next-btn').addEventListener('click', async function () {
+        this.disabled = true;
+        this.textContent = 'Saving…';
+
+        const pid = window.AppUtils.getParticipantId();
+        const allocation = {
+          cash: parseInt(document.getElementById('alloc-cash').value) || 0,
+          bonds: parseInt(document.getElementById('alloc-bonds').value) || 0,
+          balancedFund: parseInt(document.getElementById('alloc-balanced').value) || 0,
+          stocks: parseInt(document.getElementById('alloc-stocks').value) || 0,
+        };
+        const confidence = parseInt(document.getElementById('confidence-slider').value);
+        const trustRating = parseInt(document.getElementById('trust-slider').value);
+
+        await window.SupabaseUtils.insertScenario2Round(pid, round.roundNumber, allocation, confidence, trustRating);
+
+        currentRoundIndex++;
+        if (currentRoundIndex < ROUNDS.length) {
+          renderRound();
+        } else {
+          window.AppUtils.goTo('postsurvey');
+        }
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+      renderRound();
+    });
+  </script>
+</body>
+</html>

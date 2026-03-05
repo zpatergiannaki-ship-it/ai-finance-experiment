@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction — AI Financial Assistant Study</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <div class="progress-bar-wrapper">
+    <div class="progress-bar" style="width: calc(1/6 * 100%);"></div>
+  </div>
+  <div class="progress-label">Step 1 of 6</div>
+
+  <div class="container">
+    <div class="card">
+      <h1>AI Financial Assistant Study</h1>
+      <p>Welcome! This study investigates how people interact with AI-powered financial assistants when making financial decisions. You will work through two realistic financial scenarios and answer some survey questions.</p>
+      <p>The study takes approximately <strong>15 minutes</strong> to complete. Your responses are <strong>fully anonymous</strong> and participation is <strong>entirely voluntary</strong>.</p>
+
+      <h2 style="margin-top:1rem;">What participation involves:</h2>
+      <ul>
+        <li>A brief pre-study questionnaire about your background.</li>
+        <li>Two interactive financial scenarios where you can consult an AI assistant.</li>
+        <li>A post-study questionnaire about your experience.</li>
+        <li>All responses are stored securely and anonymously.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Informed Consent</h2>
+      <p>Please read the information above carefully before deciding whether to participate.</p>
+      <div class="consent-row">
+        <input type="checkbox" id="consent-checkbox" />
+        <label for="consent-checkbox">I have read the above information and I consent to participate in this study.</label>
+      </div>
+      <button id="begin-btn" class="btn btn-primary btn-full" disabled>Begin Study</button>
+    </div>
+  </div>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../assets/app.js" defer></script>
+  <script src="../assets/supabase-client.js" defer></script>
+  <script defer>
+    window.addEventListener('DOMContentLoaded', function () {
+      const checkbox = document.getElementById('consent-checkbox');
+      const beginBtn = document.getElementById('begin-btn');
+
+      checkbox.addEventListener('change', function () {
+        beginBtn.disabled = !checkbox.checked;
+      });
+
+      beginBtn.addEventListener('click', async function () {
+        beginBtn.disabled = true;
+        beginBtn.textContent = 'Saving…';
+
+        const pid = window.AppUtils.getParticipantId();
+        await window.SupabaseUtils.insertConsent(pid, true);
+        localStorage.setItem('exp_consented', 'true');
+        window.AppUtils.goTo('presurvey');
+      });
+    });
+  </script>
+</body>
+</html>
