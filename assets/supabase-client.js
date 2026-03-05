@@ -73,7 +73,7 @@ async function insertScenario1Decision(participantId, scenario1Decision) {
   }
 }
 
-async function insertScenario2Round(participantId, roundNumber, allocation, confidence, trustRating) {
+async function insertScenario2Round(participantId, roundNumber, allocation, confidence, trustRating, control, compliance, disposition) {
   try {
     const { data, error } = await getClient()
       .from('scenario2_rounds')
@@ -83,11 +83,32 @@ async function insertScenario2Round(participantId, roundNumber, allocation, conf
         allocation,
         confidence,
         trust_rating: trustRating,
+        control,
+        compliance,
+        disposition,
       }]);
     if (error) console.error('insertScenario2Round error:', error.message);
     return { data, error };
   } catch (err) {
     console.error('insertScenario2Round exception:', err.message);
+    return { error: err };
+  }
+}
+
+async function insertScenario2PostMeasures(participantId, measures) {
+  try {
+    const { data, error } = await getClient()
+      .from('scenario2_post_measures')
+      .insert([{
+        participant_id: participantId,
+        influence: measures.influence,
+        trust_scenario2: measures.trust_scenario2,
+        manipulation_check: measures.manipulation_check,
+      }]);
+    if (error) console.error('insertScenario2PostMeasures error:', error.message);
+    return { data, error };
+  } catch (err) {
+    console.error('insertScenario2PostMeasures exception:', err.message);
     return { error: err };
   }
 }
@@ -130,6 +151,7 @@ window.SupabaseUtils = {
   insertPresurvey,
   insertScenario1Decision,
   insertScenario2Round,
+  insertScenario2PostMeasures,
   insertChatLog,
   insertPostsurvey,
 };

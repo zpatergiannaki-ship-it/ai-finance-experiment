@@ -134,3 +134,28 @@ LEFT JOIN consent              c    ON c.participant_id    = p.participant_id
 LEFT JOIN presurvey_responses  pre  ON pre.participant_id  = p.participant_id
 LEFT JOIN scenario1_decision   s1   ON s1.participant_id   = p.participant_id
 LEFT JOIN postsurvey_responses post ON post.participant_id = p.participant_id;
+
+-- ============================================================
+-- Scenario 2 extensions: new columns on scenario2_rounds
+-- ============================================================
+ALTER TABLE scenario2_rounds
+  ADD COLUMN control      INTEGER CHECK (control BETWEEN 1 AND 7),
+  ADD COLUMN compliance   INTEGER CHECK (compliance BETWEEN 1 AND 7),
+  ADD COLUMN disposition  TEXT CHECK (disposition IN ('sell', 'hold'));
+
+-- ============================================================
+-- Scenario 2 post-scenario measures table
+-- ============================================================
+CREATE TABLE scenario2_post_measures (
+  id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  participant_id     TEXT NOT NULL,
+  influence          INTEGER NOT NULL CHECK (influence BETWEEN 1 AND 7),
+  trust_scenario2    INTEGER NOT NULL CHECK (trust_scenario2 BETWEEN 1 AND 7),
+  manipulation_check INTEGER NOT NULL CHECK (manipulation_check BETWEEN 1 AND 7),
+  created_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+ALTER TABLE scenario2_post_measures ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "allow_anon_insert" ON scenario2_post_measures
+  FOR INSERT TO anon WITH CHECK (true);
