@@ -104,6 +104,17 @@ app.post('/chat', async (req, res) => {
     systemPrompt += '\n\nRespond like a warm, caring, and empathetic financial friend. Use first-person pronouns (e.g. "I think", "I\'d suggest"). Show genuine interest in helping the participant. Acknowledge their situation with empathy. Use friendly, conversational language — avoid sounding clinical or robotic. You may express mild enthusiasm or reassurance where appropriate.';
   }
 
+  // Formatting instruction (applied identically across all conditions)
+  systemPrompt += '\n\nResponse format instructions (apply regardless of tone):\n' +
+    'Structure every response as follows:\n' +
+    '1. Begin with one short introductory sentence.\n' +
+    '2. Present key points, reasons, or comparisons as a numbered list (e.g. 1. ... 2. ... 3. ...).\n' +
+    '   Use bullet points (- ...) for sub-details where appropriate.\n' +
+    '3. End with one optional short concluding sentence if relevant.\n\n' +
+    'Keep the total response under 200 words.\n' +
+    'Do not use emojis, graphs, images, or any visual elements.\n' +
+    'Do not introduce any information not present in the facts provided above.';
+
   // OpenAI call
   try {
     const completion = await openai.chat.completions.create({
