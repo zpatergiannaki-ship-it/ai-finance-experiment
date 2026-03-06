@@ -246,6 +246,7 @@
     window.addEventListener('DOMContentLoaded', function () {
       const nextBtn = document.getElementById('next-btn');
       const decisionSection = document.getElementById('decision-section');
+      const _scenarioStartTime = Date.now();
 
       window.ChatUtils.initChat('chat-container', 'scenario1', null, [
         'Ποια είναι η βασική διαφορά μεταξύ της πιστωτικής κάρτας και του προσωπικού δανείου;',
@@ -297,6 +298,40 @@
           trust: parseInt(trust.value, 10),
           manipulation_check: parseInt(manipulation.value, 10),
         });
+
+        // Silent behavioral log — invisible to participants
+        try {
+          const AI_RECOMMENDATION_S1 = 'personal_loan';
+          const userChoice = decision.value;
+          const recommendationAccepted = (userChoice === AI_RECOMMENDATION_S1);
+          const chatQueryCount  = window.ChatUtils.getChatQueryCount();
+          const totalMessages   = window.ChatUtils.getMessageCount();
+          const timeSpentInChat = window.ChatUtils.getTimeSpentInChatMs();
+          const informationSeeking = chatQueryCount > 1;
+          const decisionTimeMs = Date.now() - _scenarioStartTime;
+          await window.SupabaseUtils.insertDecisionEvent({
+            participant_id:               pid,
+            scenario_id:                  'scenario1',
+            round_number:                 null,
+            ai_recommendation:            { choice: AI_RECOMMENDATION_S1 },
+            user_decision:                { choice: userChoice },
+            recommendation_accepted:      recommendationAccepted,
+            allocation_cash:              null,
+            allocation_bonds:             null,
+            allocation_balanced:          null,
+            allocation_stocks:            null,
+            total_allocation_check:       null,
+            allocation_deviation:         null,
+            recommendation_override_level: null,
+            recommendation_follow_score:  null,
+            chat_query_count:             chatQueryCount,
+            total_messages:               totalMessages,
+            time_spent_in_chat_ms:        timeSpentInChat,
+            information_seeking:          informationSeeking,
+            decision_time_ms:             decisionTimeMs,
+          });
+        } catch (_e) { /* silent — never block navigation */ }
+
         // STEP 4 — Navigate to the next scenario or to the post-survey if this was the last
         const nextScenario = window.AppUtils.getNextScenario('scenario1');
         if (nextScenario) {

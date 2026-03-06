@@ -145,6 +145,19 @@ async function insertPostsurvey(participantId, responses) {
   }
 }
 
+async function insertDecisionEvent(payload) {
+  try {
+    const { data, error } = await getClient()
+      .from('decision_events')
+      .insert([payload]);
+    if (error) console.error('insertDecisionEvent error:', error.message);
+    return { data, error };
+  } catch (err) {
+    console.error('insertDecisionEvent exception:', err.message);
+    return { error: err };
+  }
+}
+
 window.SupabaseUtils = {
   insertParticipant,
   insertConsent,
@@ -154,4 +167,5 @@ window.SupabaseUtils = {
   insertScenario2PostMeasures,
   insertChatLog,
   insertPostsurvey,
+  insertDecisionEvent,
 };

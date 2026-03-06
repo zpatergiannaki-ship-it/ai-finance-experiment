@@ -4,6 +4,8 @@ let _chatContainerId = null;
 let _scenarioId = null;
 let _roundNumber = null;
 let _messageCount = 0;
+let _chatQueryCount = 0;
+let _chatStartTime = null;
 
 function escapeHtml(str) {
   return str
@@ -18,6 +20,8 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
   _scenarioId = scenarioId;
   _roundNumber = roundNumber || null;
   _messageCount = 0;
+  _chatQueryCount = 0;
+  _chatStartTime = null;
 
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -84,6 +88,12 @@ async function sendMessage(message) {
 
   // Append user bubble
   appendBubble(messagesEl, 'user', message);
+
+  // Track user query count and chat start time
+  if (_chatStartTime === null) {
+    _chatStartTime = Date.now();
+  }
+  _chatQueryCount++;
 
   // Disable input while waiting
   if (sendBtn) sendBtn.disabled = true;
@@ -225,8 +235,18 @@ function getMessageCount() {
   return _messageCount;
 }
 
+function getChatQueryCount() {
+  return _chatQueryCount;
+}
+
+function getTimeSpentInChatMs() {
+  return _chatStartTime !== null ? Date.now() - _chatStartTime : 0;
+}
+
 window.ChatUtils = {
   initChat,
   sendMessage,
   getMessageCount,
+  getChatQueryCount,
+  getTimeSpentInChatMs,
 };
