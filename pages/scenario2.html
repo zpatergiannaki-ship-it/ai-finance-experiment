@@ -189,13 +189,6 @@
           '<h2>Σύσταση AI</h2>' +
           '<div class="chat-bubble assistant">' + recText + '</div>' +
           '<p style="margin-top:0.5rem;font-style:italic;font-size:0.9rem;color:#6b7280;">Σημείωση: Μπορείτε να ακολουθήσετε ή να αγνοήσετε τη σύσταση.</p>' +
-          '<p class="section-label">Επιλογή ερώτησης</p>' +
-          '<div class="suggested-questions" id="suggested-questions">' +
-            '<button type="button" class="suggested-question-btn" data-question="Γιατί προτείνεται αυτή η κατανομή;">Γιατί προτείνεται αυτή η κατανομή;</button>' +
-            '<button type="button" class="suggested-question-btn" data-question="Ποια επιλογή έχει τον μεγαλύτερο κίνδυνο;">Ποια επιλογή έχει τον μεγαλύτερο κίνδυνο;</button>' +
-            '<button type="button" class="suggested-question-btn" data-question="Ποια επιλογή έχει την μεγαλύτερη πιθανή απόδοση;">Ποια επιλογή έχει την μεγαλύτερη πιθανή απόδοση;</button>' +
-            '<button type="button" class="suggested-question-btn" data-question="Ποια επιλογή θεωρείται πιο σταθερή;">Ποια επιλογή θεωρείται πιο σταθερή;</button>' +
-          '</div>' +
           '<div id="chat-container" class="chat-widget" style="margin-top:0.75rem;"></div>' +
           '<div style="margin-top:0.75rem;">' +
             '<button id="skip-btn" class="btn btn-secondary">Παράλειψη →</button>' +
@@ -249,23 +242,12 @@
         '</div>';
 
       // Wire up chat
-      window.ChatUtils.initChat('chat-container', 'scenario2', round.roundNumber);
-
-      // Suggested question buttons
-      const suggestedBtns = document.querySelectorAll('#suggested-questions .suggested-question-btn');
-      suggestedBtns.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          const question = btn.getAttribute('data-question');
-          suggestedBtns.forEach(function (b) { b.classList.remove('selected'); });
-          btn.classList.add('selected');
-          const inputEl = document.getElementById('chat-input-chat-container');
-          if (inputEl) {
-            inputEl.value = question;
-            const sendBtn = document.getElementById('chat-send-chat-container');
-            if (sendBtn) sendBtn.click();
-          }
-        });
-      });
+      window.ChatUtils.initChat('chat-container', 'scenario2', round.roundNumber, [
+        'Γιατί προτείνεται αυτή η κατανομή;',
+        'Ποια επιλογή έχει τον μεγαλύτερο κίνδυνο;',
+        'Ποια επιλογή έχει την μεγαλύτερη πιθανή απόδοση;',
+        'Ποια επιλογή θεωρείται πιο σταθερή;'
+      ]);
 
       // Skip and chatMessageSent unlock measures section if allocation already 100%
       function onChatInteraction() {
