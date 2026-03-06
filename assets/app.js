@@ -3,33 +3,80 @@
 // CONFIGURE THIS VALUE:
 const BACKEND_URL = 'https://ai-finance-experiment.onrender.com';
 
-function getParticipantId() {
-  let pid = localStorage.getItem('exp_pid');
-  if (!pid) {
-    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-      pid = crypto.randomUUID();
-    } else {
-      // UUID v4 fallback
-      pid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      });
-    }
-    localStorage.setItem('exp_pid', pid);
-  }
-  return pid;
-}
-
+// ---------------------------------------------------------------------------
+// STEP 1 — Randomly assign AI Anthropomorphism condition (50 / 50)
+// Stored in sessionStorage under "experimentCondition".
+// ---------------------------------------------------------------------------
 function getCondition() {
-  let cond = localStorage.getItem('exp_condition');
+  let cond = sessionStorage.getItem('experimentCondition');
   if (!cond) {
     cond = Math.random() < 0.5 ? 'lowAnthropomorphism' : 'highAnthropomorphism';
-    localStorage.setItem('exp_condition', cond);
+    sessionStorage.setItem('experimentCondition', cond);
   }
   return cond;
 }
 
+// ---------------------------------------------------------------------------
+// STEP 2 — Randomly assign scenario order (50 / 50)
+// Two possible orders:
+//   Order A: ["scenario1", "scenario2"]
+//   Order B: ["scenario2", "scenario1"]
+// Stored in sessionStorage under "scenarioOrder" as a JSON array.
+// ---------------------------------------------------------------------------
+function getScenarioOrder() {
+  let order = sessionStorage.getItem('scenarioOrder');
+  if (!order) {
+    const scenarioOrder = Math.random() < 0.5
+      ? ['scenario1', 'scenario2']
+      : ['scenario2', 'scenario1'];
+    sessionStorage.setItem('scenarioOrder', JSON.stringify(scenarioOrder));
+    return scenarioOrder;
+  }
+  return JSON.parse(order);
+}
+
+// ---------------------------------------------------------------------------
+// STEP 3 — Generate / retrieve participant ID and persist all assignments
+// Participant ID is generated once and stored in sessionStorage.
+// All three values (participantId, experimentCondition, scenarioOrder) are
+// stored together in sessionStorage.
+// ---------------------------------------------------------------------------
+function getParticipantId() {
+  let pid = sessionStorage.getItem('participantId');
+  if (!pid) {
+    pid = 'P' + Date.now();
+    sessionStorage.setItem('participantId', pid);
+  }
+  return pid;
+}
+
+/**
+ * Orchestrates all three randomisation steps and guarantees that every
+ * assignment is written to sessionStorage before any page uses it.
+ *
+ * Returns: { participantId, experimentCondition, scenarioOrder }
+ */
+function initExperiment() {
+  // Step 1 — condition
+  const experimentCondition = getCondition();
+
+  // Step 2 — scenario order
+  const scenarioOrder = getScenarioOrder();
+
+  // Step 3 — participant ID (and persist all three together)
+  const participantId = getParticipantId();
+
+  // Ensure all three values are synchronised in sessionStorage
+  sessionStorage.setItem('participantId', participantId);
+  sessionStorage.setItem('experimentCondition', experimentCondition);
+  sessionStorage.setItem('scenarioOrder', JSON.stringify(scenarioOrder));
+
+  return { participantId, experimentCondition, scenarioOrder };
+}
+
+// ---------------------------------------------------------------------------
+// Navigation helpers
+// ---------------------------------------------------------------------------
 function goTo(page) {
   // Determine if we are currently in /pages/ subdirectory
   const inPages = window.location.pathname.includes('/pages/');
@@ -54,6 +101,9 @@ function getFromLocal(key) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// UI helpers
+// ---------------------------------------------------------------------------
 function showError(msg) {
   let banner = document.getElementById('app-error-banner');
   if (!banner) {
@@ -80,10 +130,15 @@ function showSuccess(msg) {
   setTimeout(() => { banner.style.display = 'none'; }, 4000);
 }
 
+// ---------------------------------------------------------------------------
+// Public API
+// ---------------------------------------------------------------------------
 window.AppUtils = {
   BACKEND_URL,
+  initExperiment,
   getParticipantId,
   getCondition,
+  getScenarioOrder,
   goTo,
   saveToLocal,
   getFromLocal,
