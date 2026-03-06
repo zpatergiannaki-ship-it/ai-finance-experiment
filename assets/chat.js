@@ -18,6 +18,22 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
+function injectPredefinedQuestions(messagesEl, questions, containerId) {
+  if (!Array.isArray(questions) || questions.length === 0) return;
+  const div = document.createElement('div');
+  div.className = 'chat-preference-btns';
+  div.id = 'chat-predefined-' + containerId;
+  questions.forEach(function (q) {
+    const btn = document.createElement('button');
+    btn.className = 'chat-predefined-btn';
+    btn.setAttribute('data-question', q);
+    btn.textContent = q;
+    div.appendChild(btn);
+  });
+  messagesEl.appendChild(div);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
 function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
   _chatContainerId = containerId;
   _scenarioId = scenarioId;
@@ -32,17 +48,8 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const predefinedHtml = (Array.isArray(predefinedQuestions) && predefinedQuestions.length > 0)
-    ? '<div class="chat-predefined-questions" id="chat-predefined-' + containerId + '">' +
-        predefinedQuestions.map(function (q) {
-          return '<button class="chat-predefined-btn" data-question="' + escapeHtml(q) + '">' + escapeHtml(q) + '</button>';
-        }).join('') +
-      '</div>'
-    : '';
-
   container.innerHTML =
     '<div class="chat-messages" id="chat-messages-' + containerId + '"></div>' +
-    predefinedHtml +
     '<div class="chat-input-row">' +
       '<input type="text" id="chat-input-' + containerId + '" class="chat-input" placeholder="Κάντε μια ερώτηση στον βοηθό…" maxlength="500" />' +
       '<button id="chat-send-' + containerId + '" class="btn btn-primary chat-send-btn">Αποστολή</button>' +
@@ -51,6 +58,7 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
 
   const sendBtn = document.getElementById('chat-send-' + containerId);
   const inputEl = document.getElementById('chat-input-' + containerId);
+  const messagesEl = document.getElementById('chat-messages-' + containerId);
 
   sendBtn.addEventListener('click', function () {
     const msg = inputEl.value.trim();
@@ -68,14 +76,12 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
     }
   });
 
-  const predefinedContainer = document.getElementById('chat-predefined-' + containerId);
-  if (predefinedContainer) {
-    predefinedContainer.addEventListener('click', function (e) {
+  if (messagesEl) {
+    messagesEl.addEventListener('click', function (e) {
       const btn = e.target.closest('.chat-predefined-btn');
       if (!btn || btn.disabled) return;
       const question = btn.getAttribute('data-question');
-      const input = document.getElementById('chat-input-' + containerId);
-      if (input) input.value = '';
+      if (inputEl) inputEl.value = '';
       sendMessage(question);
     });
   }
@@ -112,6 +118,9 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
       _preference = stored;
       _preferenceCompleted = true;
       // Input stays unlocked (already enabled from HTML render)
+      if (messagesEl) {
+        injectPredefinedQuestions(messagesEl, predefinedQuestions, containerId);
+      }
       return;
     }
   }
@@ -127,7 +136,6 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
       inputEl.placeholder = 'Απαντήστε πρώτα στην παραπάνω ερώτηση…';
     }
 
-    const messagesEl = document.getElementById('chat-messages-' + containerId);
     if (messagesEl) {
       // Show preference question as assistant bubble
       appendBubble(messagesEl, 'assistant', prefConfig.question);
@@ -165,6 +173,9 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
           // Show follow-up assistant message
           appendBubble(messagesEl, 'assistant', prefConfig.followUp);
 
+          // Inject predefined questions now that preference step is complete
+          injectPredefinedQuestions(messagesEl, predefinedQuestions, containerId);
+
           // Log to Supabase
           const participantId = window.AppUtils.getParticipantId();
           if (window.SupabaseUtils && window.SupabaseUtils.insertPreferenceLog) {
@@ -183,6 +194,11 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
       });
       messagesEl.appendChild(prefBtnsDiv);
       messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+  } else {
+    // No preference step – inject predefined questions immediately
+    if (messagesEl) {
+      injectPredefinedQuestions(messagesEl, predefinedQuestions, containerId);
     }
   }
 }
