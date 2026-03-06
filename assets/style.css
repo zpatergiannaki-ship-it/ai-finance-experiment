@@ -422,6 +422,43 @@ body {
 }
 
 /* ===========================
+   Chat Predefined Questions (inside widget)
+   =========================== */
+.chat-predefined-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem 0;
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  align-items: flex-start;
+}
+
+.chat-predefined-btn {
+  background: #eff6ff;
+  border: 1.5px solid #93c5fd;
+  border-radius: 8px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.85rem;
+  color: #1d4ed8;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+  line-height: 1.4;
+  max-width: 100%;
+}
+
+.chat-predefined-btn:hover:not(:disabled) {
+  background: #dbeafe;
+  border-color: #3b82f6;
+}
+
+.chat-predefined-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===========================
    Banners
    =========================== */
 .banner {
