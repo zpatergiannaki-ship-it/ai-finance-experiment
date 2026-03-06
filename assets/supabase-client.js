@@ -135,6 +135,26 @@ async function insertChatLog(participantId, scenarioId, roundNumber, role, messa
   }
 }
 
+async function insertPreferenceLog(participantId, scenarioId, preference, timestamp) {
+  try {
+    const { data, error } = await getClient()
+      .from('chat_logs')
+      .insert([{
+        participant_id: participantId,
+        scenario_id: scenarioId,
+        round_number: null,
+        role: 'preference',
+        message: preference,
+        created_at: timestamp,
+      }]);
+    if (error) console.error('insertPreferenceLog error:', error.message);
+    return { data, error };
+  } catch (err) {
+    console.error('insertPreferenceLog exception:', err.message);
+    return { error: err };
+  }
+}
+
 async function insertPostsurvey(participantId, responses) {
   try {
     const { data, error } = await getClient()
@@ -169,6 +189,7 @@ window.SupabaseUtils = {
   insertScenario2Round,
   insertScenario2PostMeasures,
   insertChatLog,
+  insertPreferenceLog,
   insertPostsurvey,
   insertDecisionEvent,
 };
