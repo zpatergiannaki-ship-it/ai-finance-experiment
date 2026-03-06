@@ -4,6 +4,11 @@ const express = require('express');
 const cors = require('cors');
 const OpenAI = require('openai');
 const scenarios = require('./scenarios');
+const { createClient } = require('@supabase/supabase-js');
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
+);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -139,6 +144,70 @@ app.post('/chat', async (req, res) => {
     console.error('[CHAT ERROR]', error.message);
     res.status(500).json({ error: 'Failed to get AI response.' });
   }
+});
+
+app.post('/db/participants', async (req, res) => {
+  const { participant_id, condition, scenario_order } = req.body;
+  const { error } = await supabaseAdmin.from('participants').insert([{ participant_id, condition, scenario_order }]);
+  if (error) { console.error('/db/participants error:', error.message); return res.status(500).json({ error: error.message }); }
+  res.json({ ok: true });
+});
+
+app.post('/db/consent', async (req, res) => {
+  const { participant_id, consented } = req.body;
+  const { error } = await supabaseAdmin.from('consent').insert([{ participant_id, consented }]);
+  if (error) { console.error('/db/consent error:', error.message); return res.status(500).json({ error: error.message }); }
+  res.json({ ok: true });
+});
+
+app.post('/db/presurvey', async (req, res) => {
+  const { participant_id, responses } = req.body;
+  const { error } = await supabaseAdmin.from('presurvey_responses').insert([{ participant_id, responses }]);
+  if (error) { console.error('/db/presurvey error:', error.message); return res.status(500).json({ error: error.message }); }
+  res.json({ ok: true });
+});
+
+app.post('/db/scenario1-decision', async (req, res) => {
+  const { participant_id, choice } = req.body;
+  const { error } = await supabaseAdmin.from('scenario1_decision').insert([{ participant_id, choice }]);
+  if (error) { console.error('/db/scenario1-decision error:', error.message); return res.status(500).json({ error: error.message }); }
+  res.json({ ok: true });
+});
+
+app.post('/db/scenario2-round', async (req, res) => {
+  const { participant_id, round_number, allocation_cash, allocation_bonds, allocation_balanced, allocation_stocks, confidence, trust_rating, control, compliance, disposition } = req.body;
+  const { error } = await supabaseAdmin.from('scenario2_rounds').insert([{ participant_id, round_number, allocation_cash, allocation_bonds, allocation_balanced, allocation_stocks, confidence, trust_rating, control, compliance, disposition }]);
+  if (error) { console.error('/db/scenario2-round error:', error.message); return res.status(500).json({ error: error.message }); }
+  res.json({ ok: true });
+});
+
+app.post('/db/scenario2-post-measures', async (req, res) => {
+  const { participant_id, influence, trust_scenario2, manipulation_check } = req.body;
+  const { error } = await supabaseAdmin.from('scenario2_post_measures').insert([{ participant_id, influence, trust_scenario2, manipulation_check }]);
+  if (error) { console.error('/db/scenario2-post-measures error:', error.message); return res.status(500).json({ error: error.message }); }
+  res.json({ ok: true });
+});
+
+app.post('/db/chat-log', async (req, res) => {
+  const { participant_id, scenario_id, round_number, role, message, created_at } = req.body;
+  const record = { participant_id, scenario_id, round_number, role, message };
+  if (created_at) record.created_at = created_at;
+  const { error } = await supabaseAdmin.from('chat_logs').insert([record]);
+  if (error) { console.error('/db/chat-log error:', error.message); return res.status(500).json({ error: error.message }); }
+  res.json({ ok: true });
+});
+
+app.post('/db/postsurvey', async (req, res) => {
+  const { participant_id, responses } = req.body;
+  const { error } = await supabaseAdmin.from('postsurvey_responses').insert([{ participant_id, responses }]);
+  if (error) { console.error('/db/postsurvey error:', error.message); return res.status(500).json({ error: error.message }); }
+  res.json({ ok: true });
+});
+
+app.post('/db/decision-event', async (req, res) => {
+  const { error } = await supabaseAdmin.from('decision_events').insert([req.body]);
+  if (error) { console.error('/db/decision-event error:', error.message); return res.status(500).json({ error: error.message }); }
+  res.json({ ok: true });
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

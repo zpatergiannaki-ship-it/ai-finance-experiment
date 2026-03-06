@@ -1,184 +1,100 @@
 'use strict';
 
-// CONFIGURE THESE TWO VALUES:
-const SUPABASE_URL = 'https://yhtyrfpfkdspjrvxkxoo.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_Ddeu9lf70BCXCp79_6y-cA_is98z9F1';
-
-// Initialize Supabase client (loaded via CDN)
-let _supabase = null;
-function getClient() {
-  if (!_supabase) {
-    // supabase global is injected by the CDN script
-    _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+async function _post(path, body) {
+  const BACKEND_URL = window.AppUtils.BACKEND_URL;
+  try {
+    const res = await fetch(BACKEND_URL + path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      console.error(path + ' error:', text);
+      return { error: text };
+    }
+    return { data: await res.json(), error: null };
+  } catch (err) {
+    console.error(path + ' exception:', err.message);
+    return { error: err };
   }
-  return _supabase;
 }
 
 async function insertParticipant(participantId, condition, scenarioOrder) {
-  try {
-    const { data, error } = await getClient()
-      .from('participants')
-      .insert([{ participant_id: participantId, condition, scenario_order: scenarioOrder }]);
-    if (error) console.error('insertParticipant error:', error.message);
-    return { data, error };
-  } catch (err) {
-    console.error('insertParticipant exception:', err.message);
-    return { error: err };
-  }
+  return _post('/db/participants', { participant_id: participantId, condition, scenario_order: scenarioOrder });
 }
 
 async function insertConsent(participantId, consented) {
-  try {
-    const { data, error } = await getClient()
-      .from('consent')
-      .insert([{ participant_id: participantId, consented }]);
-    if (error) console.error('insertConsent error:', error.message);
-    return { data, error };
-  } catch (err) {
-    console.error('insertConsent exception:', err.message);
-    return { error: err };
-  }
+  return _post('/db/consent', { participant_id: participantId, consented });
 }
 
 async function insertPresurvey(participantId, responses) {
-  try {
-    const { data, error } = await getClient()
-      .from('presurvey_responses')
-      .insert([{ participant_id: participantId, responses }]);
-    if (error) console.error('insertPresurvey error:', error.message);
-    return { data, error };
-  } catch (err) {
-    console.error('insertPresurvey exception:', err.message);
-    return { error: err };
-  }
+  return _post('/db/presurvey', { participant_id: participantId, responses });
 }
 
 // scenario1Decision: { choice, influence, trust, manipulation_check }
 async function insertScenario1Decision(participantId, scenario1Decision) {
-  try {
-    const { data, error } = await getClient()
-      .from('scenario1_decision')
-      .insert([{
-        participant_id: participantId,
-        choice: scenario1Decision.choice,
-        influence: scenario1Decision.influence,
-        trust: scenario1Decision.trust,
-        manipulation_check: scenario1Decision.manipulation_check,
-      }]);
-    if (error) console.error('insertScenario1Decision error:', error.message);
-    return { data, error };
-  } catch (err) {
-    console.error('insertScenario1Decision exception:', err.message);
-    return { error: err };
-  }
+  return _post('/db/scenario1-decision', {
+    participant_id: participantId,
+    choice: scenario1Decision.choice,
+    influence: scenario1Decision.influence,
+    trust: scenario1Decision.trust,
+    manipulation_check: scenario1Decision.manipulation_check,
+  });
 }
 
 async function insertScenario2Round(participantId, roundNumber, allocation, confidence, trustRating, control, compliance, disposition) {
-  try {
-    const { data, error } = await getClient()
-      .from('scenario2_rounds')
-      .insert([{
-        participant_id: participantId,
-        round_number: roundNumber,
-        allocation_cash: allocation.cash,
-        allocation_bonds: allocation.bonds,
-        allocation_balanced: allocation.balancedFund,
-        allocation_stocks: allocation.stocks,
-        confidence,
-        trust_rating: trustRating,
-        control,
-        compliance,
-        disposition,
-      }]);
-    if (error) console.error('insertScenario2Round error:', error.message);
-    return { data, error };
-  } catch (err) {
-    console.error('insertScenario2Round exception:', err.message);
-    return { error: err };
-  }
+  return _post('/db/scenario2-round', {
+    participant_id: participantId,
+    round_number: roundNumber,
+    allocation_cash: allocation.cash,
+    allocation_bonds: allocation.bonds,
+    allocation_balanced: allocation.balancedFund,
+    allocation_stocks: allocation.stocks,
+    confidence,
+    trust_rating: trustRating,
+    control,
+    compliance,
+    disposition,
+  });
 }
 
 async function insertScenario2PostMeasures(participantId, measures) {
-  try {
-    const { data, error } = await getClient()
-      .from('scenario2_post_measures')
-      .insert([{
-        participant_id: participantId,
-        influence: measures.influence,
-        trust_scenario2: measures.trust_scenario2,
-        manipulation_check: measures.manipulation_check,
-      }]);
-    if (error) console.error('insertScenario2PostMeasures error:', error.message);
-    return { data, error };
-  } catch (err) {
-    console.error('insertScenario2PostMeasures exception:', err.message);
-    return { error: err };
-  }
+  return _post('/db/scenario2-post-measures', {
+    participant_id: participantId,
+    influence: measures.influence,
+    trust_scenario2: measures.trust_scenario2,
+    manipulation_check: measures.manipulation_check,
+  });
 }
 
 async function insertChatLog(participantId, scenarioId, roundNumber, role, message) {
-  try {
-    const { data, error } = await getClient()
-      .from('chat_logs')
-      .insert([{
-        participant_id: participantId,
-        scenario_id: scenarioId,
-        round_number: roundNumber,
-        role,
-        message,
-      }]);
-    if (error) console.error('insertChatLog error:', error.message);
-    return { data, error };
-  } catch (err) {
-    console.error('insertChatLog exception:', err.message);
-    return { error: err };
-  }
+  return _post('/db/chat-log', {
+    participant_id: participantId,
+    scenario_id: scenarioId,
+    round_number: roundNumber,
+    role,
+    message,
+  });
 }
 
 async function insertPreferenceLog(participantId, scenarioId, preference, timestamp) {
-  try {
-    const { data, error } = await getClient()
-      .from('chat_logs')
-      .insert([{
-        participant_id: participantId,
-        scenario_id: scenarioId,
-        round_number: null,
-        role: 'preference',
-        message: preference,
-        created_at: timestamp,
-      }]);
-    if (error) console.error('insertPreferenceLog error:', error.message);
-    return { data, error };
-  } catch (err) {
-    console.error('insertPreferenceLog exception:', err.message);
-    return { error: err };
-  }
+  return _post('/db/chat-log', {
+    participant_id: participantId,
+    scenario_id: scenarioId,
+    round_number: null,
+    role: 'preference',
+    message: preference,
+    created_at: timestamp,
+  });
 }
 
 async function insertPostsurvey(participantId, responses) {
-  try {
-    const { data, error } = await getClient()
-      .from('postsurvey_responses')
-      .insert([{ participant_id: participantId, responses }]);
-    if (error) console.error('insertPostsurvey error:', error.message);
-    return { data, error };
-  } catch (err) {
-    console.error('insertPostsurvey exception:', err.message);
-    return { error: err };
-  }
+  return _post('/db/postsurvey', { participant_id: participantId, responses });
 }
 
 async function insertDecisionEvent(payload) {
-  try {
-    const { data, error } = await getClient()
-      .from('decision_events')
-      .insert([payload]);
-    if (error) console.error('insertDecisionEvent error:', error.message);
-    return { data, error };
-  } catch (err) {
-    console.error('insertDecisionEvent exception:', err.message);
-    return { error: err };
-  }
+  return _post('/db/decision-event', payload);
 }
 
 window.SupabaseUtils = {

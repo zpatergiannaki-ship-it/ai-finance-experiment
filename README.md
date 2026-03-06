@@ -27,20 +27,19 @@ This repository hosts both the **Express.js backend** and the **static frontend*
 
 ### 4. Configure the frontend
 
-Open `assets/supabase-client.js` and replace the placeholder values at the top:
+The Supabase credentials are no longer needed in the frontend. All database writes are proxied through the Render backend.
 
-```js
-const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';  // ← your Project URL
-const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';                // ← your anon key
-```
+Add the following environment variables to your Render service (Dashboard → Environment):
+
+| Variable | Value |
+|---|---|
+| `SUPABASE_URL` | Your Supabase Project URL (e.g. `https://abcdefgh.supabase.co`) |
+| `SUPABASE_SERVICE_KEY` | Your **service role** key (from Supabase → Project Settings → API → service_role). **Never expose this in frontend code.** |
 
 The backend URL in `assets/app.js` is already configured:
-
 ```js
 const BACKEND_URL = 'https://ai-finance-experiment.onrender.com';
 ```
-
-If you deploy your own backend, update `BACKEND_URL` to match your Render URL.
 
 ### 5. Enable GitHub Pages
 
@@ -118,7 +117,7 @@ pages/
 assets/
   style.css                  ← Responsive styles
   app.js                     ← Shared utilities (participantId, condition, navigation)
-  supabase-client.js         ← Supabase CDN client + insert helpers
+  supabase-client.js         ← Fetch-based insert helpers (proxies to backend)
   chat.js                    ← Chat widget logic
 supabase_schema.sql          ← Database schema + RLS policies
 server.js                    ← Express backend (deployed on Render)
