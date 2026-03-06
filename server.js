@@ -168,22 +168,65 @@ app.post('/db/presurvey', async (req, res) => {
 });
 
 app.post('/db/scenario1-decision', async (req, res) => {
-  const { participant_id, choice } = req.body;
-  const { error } = await supabaseAdmin.from('scenario1_decision').insert([{ participant_id, choice }]);
+  const {
+    participant_id, scenario_id, choice,
+    influence, trust, manipulation_check,
+    chat_query_count, chat_message_count, time_spent_in_chat_ms,
+  } = req.body;
+  const { error } = await supabaseAdmin.from('scenario1_decision').insert([{
+    participant_id,
+    scenario_id:           scenario_id           ?? 'scenario1',
+    choice,
+    influence:             influence             ?? null,
+    trust:                 trust                 ?? null,
+    manipulation_check:    manipulation_check    ?? null,
+    chat_query_count:      chat_query_count      ?? 0,
+    chat_message_count:    chat_message_count    ?? 0,
+    time_spent_in_chat_ms: time_spent_in_chat_ms ?? 0,
+  }]);
   if (error) { console.error('/db/scenario1-decision error:', error.message); return res.status(500).json({ error: error.message }); }
   res.json({ ok: true });
 });
 
 app.post('/db/scenario2-round', async (req, res) => {
-  const { participant_id, round_number, allocation_cash, allocation_bonds, allocation_balanced, allocation_stocks, confidence, trust_rating, control, compliance, disposition } = req.body;
-  const { error } = await supabaseAdmin.from('scenario2_rounds').insert([{ participant_id, round_number, allocation_cash, allocation_bonds, allocation_balanced, allocation_stocks, confidence, trust_rating, control, compliance, disposition }]);
+  const {
+    participant_id, scenario_id, round_number,
+    allocation_cash, allocation_bonds, allocation_balanced, allocation_stocks,
+    confidence, trust_rating, control, compliance, disposition,
+    ai_recommendation,
+    chat_query_count, chat_message_count, time_spent_in_chat_ms,
+  } = req.body;
+  const { error } = await supabaseAdmin.from('scenario2_rounds').insert([{
+    participant_id,
+    scenario_id:           scenario_id           ?? 'scenario2',
+    round_number,
+    allocation_cash,
+    allocation_bonds,
+    allocation_balanced,
+    allocation_stocks,
+    confidence,
+    trust_rating,
+    control,
+    compliance,
+    disposition,
+    ai_recommendation:     ai_recommendation     ?? null,
+    chat_query_count:      chat_query_count      ?? 0,
+    chat_message_count:    chat_message_count    ?? 0,
+    time_spent_in_chat_ms: time_spent_in_chat_ms ?? 0,
+  }]);
   if (error) { console.error('/db/scenario2-round error:', error.message); return res.status(500).json({ error: error.message }); }
   res.json({ ok: true });
 });
 
 app.post('/db/scenario2-post-measures', async (req, res) => {
-  const { participant_id, influence, trust_scenario2, manipulation_check } = req.body;
-  const { error } = await supabaseAdmin.from('scenario2_post_measures').insert([{ participant_id, influence, trust_scenario2, manipulation_check }]);
+  const { participant_id, scenario_id, influence, trust_scenario2, manipulation_check } = req.body;
+  const { error } = await supabaseAdmin.from('scenario2_post_measures').insert([{
+    participant_id,
+    scenario_id:        scenario_id ?? 'scenario2',
+    influence,
+    trust_scenario2,
+    manipulation_check,
+  }]);
   if (error) { console.error('/db/scenario2-post-measures error:', error.message); return res.status(500).json({ error: error.message }); }
   res.json({ ok: true });
 });
