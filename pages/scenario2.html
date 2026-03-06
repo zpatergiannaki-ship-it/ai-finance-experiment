@@ -5,12 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Σενάριο 2 — Μελέτη AI Χρηματοοικονομικού Βοηθού</title>
   <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    /* Suggested questions */
+    .suggested-questions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .suggested-question-btn {
+      background: #eff6ff;
+      border: 1.5px solid #93c5fd;
+      border-radius: 8px;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.9rem;
+      color: #1d4ed8;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s, border-color 0.15s;
+      line-height: 1.4;
+    }
+
+    .suggested-question-btn:hover {
+      background: #dbeafe;
+      border-color: #3b82f6;
+    }
+
+    .suggested-question-btn.selected {
+      background: #dbeafe;
+      border-color: #2563eb;
+      font-weight: 600;
+    }
+
+    /* Section label above chat */
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+      margin-bottom: 0.4rem;
+    }
+  </style>
 </head>
 <body>
   <div class="progress-bar-wrapper">
     <div class="progress-bar" style="width: calc(4/6 * 100%);"></div>
   </div>
-  <div class="progress-label">Step 4 of 6</div>
+  <div class="progress-label">Βήμα 4 από 6</div>
 
   <div class="container" id="main-container">
     <!-- Content injected by JS -->
@@ -146,6 +189,13 @@
           '<h2>Σύσταση AI</h2>' +
           '<div class="chat-bubble assistant">' + recText + '</div>' +
           '<p style="margin-top:0.5rem;font-style:italic;font-size:0.9rem;color:#6b7280;">Σημείωση: Μπορείτε να ακολουθήσετε ή να αγνοήσετε τη σύσταση.</p>' +
+          '<p class="section-label">Επιλογή ερώτησης</p>' +
+          '<div class="suggested-questions" id="suggested-questions">' +
+            '<button type="button" class="suggested-question-btn" data-question="Γιατί προτείνεται αυτή η κατανομή;">Γιατί προτείνεται αυτή η κατανομή;</button>' +
+            '<button type="button" class="suggested-question-btn" data-question="Ποια επιλογή έχει τον μεγαλύτερο κίνδυνο;">Ποια επιλογή έχει τον μεγαλύτερο κίνδυνο;</button>' +
+            '<button type="button" class="suggested-question-btn" data-question="Ποια επιλογή έχει την μεγαλύτερη πιθανή απόδοση;">Ποια επιλογή έχει την μεγαλύτερη πιθανή απόδοση;</button>' +
+            '<button type="button" class="suggested-question-btn" data-question="Ποια επιλογή θεωρείται πιο σταθερή;">Ποια επιλογή θεωρείται πιο σταθερή;</button>' +
+          '</div>' +
           '<div id="chat-container" class="chat-widget" style="margin-top:0.75rem;"></div>' +
           '<div style="margin-top:0.75rem;">' +
             '<button id="skip-btn" class="btn btn-secondary">Παράλειψη →</button>' +
@@ -199,12 +249,23 @@
         '</div>';
 
       // Wire up chat
-      window.ChatUtils.initChat('chat-container', 'scenario2', round.roundNumber, [
-        'Γιατί προτείνεται αυτή η κατανομή;',
-        'Ποια επιλογή έχει τον μεγαλύτερο κίνδυνο;',
-        'Ποια επιλογή έχει την μεγαλύτερη πιθανή απόδοση;',
-        'Ποια επιλογή θεωρείται πιο σταθερή;',
-      ]);
+      window.ChatUtils.initChat('chat-container', 'scenario2', round.roundNumber);
+
+      // Suggested question buttons
+      const suggestedBtns = document.querySelectorAll('#suggested-questions .suggested-question-btn');
+      suggestedBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const question = btn.getAttribute('data-question');
+          suggestedBtns.forEach(function (b) { b.classList.remove('selected'); });
+          btn.classList.add('selected');
+          const inputEl = document.getElementById('chat-input-chat-container');
+          if (inputEl) {
+            inputEl.value = question;
+            const sendBtn = document.getElementById('chat-send-chat-container');
+            if (sendBtn) sendBtn.click();
+          }
+        });
+      });
 
       // Skip and chatMessageSent unlock measures section if allocation already 100%
       function onChatInteraction() {
