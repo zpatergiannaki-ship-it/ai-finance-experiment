@@ -486,7 +486,7 @@
         };
 
         const pid = window.AppUtils.getParticipantId();
-        await window.SupabaseUtils.insertPresvrvey(pid, responses);
+        await window.SupabaseUtils.insertPresurvey(pid, responses);
         // STEP 4 — Navigate to the first scenario in the participant's assigned order
         const order = window.AppUtils.getScenarioOrder();
         window.AppUtils.goTo(order[0]);
