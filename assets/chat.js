@@ -179,7 +179,7 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
           // Log to Supabase
           const participantId = window.AppUtils.getParticipantId();
           if (window.SupabaseUtils && window.SupabaseUtils.insertPreferenceLog) {
-            window.SupabaseUtils.insertPreferenceLog(participantId, scenarioId, option, _preferenceTimestamp);
+            window.SupabaseUtils.insertPreferenceLog(participantId, scenarioId, option);
           }
 
           // Unlock input
