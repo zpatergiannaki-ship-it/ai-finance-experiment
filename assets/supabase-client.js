@@ -78,9 +78,12 @@ async function insertScenario2Round(participantId, roundNumber, allocation, conf
     const { data, error } = await getClient()
       .from('scenario2_rounds')
       .insert([{
-        participant_id: participantId,
-        round_number: roundNumber,
-        allocation,
+        participant_id:      participantId,
+        round_number:        roundNumber,
+        allocation_cash:     allocation.cash,
+        allocation_bonds:    allocation.bonds,
+        allocation_balanced: allocation.balancedFund,
+        allocation_stocks:   allocation.stocks,
         confidence,
         trust_rating: trustRating,
         control,
