@@ -18,13 +18,20 @@
   <script src="assets/supabase-client.js" defer></script>
   <script defer>
     window.addEventListener('DOMContentLoaded', async function () {
-      const pid = window.AppUtils.getParticipantId();
-      const condition = window.AppUtils.getCondition();
+      // Run all three randomisation steps (Steps 1–3).
+      // initExperiment() is idempotent: existing sessionStorage values are
+      // preserved on page reload so the same participant keeps the same
+      // assignment throughout the session.
+      const { participantId, experimentCondition, scenarioOrder } =
+        window.AppUtils.initExperiment();
 
-      // Register participant only once
-      if (!localStorage.getItem('exp_registered')) {
-        await window.SupabaseUtils.insertParticipant(pid, condition);
-        localStorage.setItem('exp_registered', 'true');
+      // Register participant with Supabase only once per browser session
+      if (!sessionStorage.getItem('exp_registered')) {
+        await window.SupabaseUtils.insertParticipant(
+          participantId,
+          experimentCondition
+        );
+        sessionStorage.setItem('exp_registered', 'true');
       }
 
       // Redirect to intro
