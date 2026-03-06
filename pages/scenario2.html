@@ -70,7 +70,7 @@
       { roundNumber: 4, marketPerformance: { cash: 0.5, bonds: 0.8, balancedFund: 1.2, stocks: -4.0 }, recommendedAllocation: { cash: 15, bonds: 30, balancedFund: 40, stocks: 15 } },
     ];
 
-    const ASSET_LABELS = { cash: 'Μετρητά', bonds: 'Ομόλογα', balancedFund: 'Μικτό Α/Κ', stocks: 'Μετοχικό ETF' };
+    const ASSET_LABELS = { cash: 'Μετρητά', bonds: 'Ομόλογα', balancedFund: 'Μικτό Αμοιβαίο Κεφάλαιο', stocks: 'Μετοχικό ETF' };
 
     const ROUND_FOCAL = [
       { question: 'Το Μετοχικό ETF απέδωσε +4.0% αυτόν τον γύρο.', focalAssetKey: 'stocks' },
@@ -88,8 +88,8 @@
           <thead><tr><th>Επιλογή</th><th>Επίπεδο Κινδύνου</th></tr></thead>
           <tbody>
             <tr><td>Λογαριασμός Μετρητών</td><td>Πολύ χαμηλός κίνδυνος</td></tr>
-            <tr><td>Ομολογιακό Α/Κ</td><td>Χαμηλός κίνδυνος</td></tr>
-            <tr><td>Μικτό Α/Κ</td><td>Μέτριος κίνδυνος</td></tr>
+            <tr><td>Ομόλογα</td><td>Χαμηλός κίνδυνος</td></tr>
+            <tr><td>Μικτό Αμοιβαίο Κεφάλαιο</td><td>Μέτριος κίνδυνος</td></tr>
             <tr><td>Μετοχικό ETF</td><td>Υψηλός κίνδυνος</td></tr>
           </tbody>
         </table>`;
@@ -179,7 +179,7 @@
       }).join('');
 
       // SECTION 2: AI recommendation text (reframed as risk management suggestion)
-      const recText = 'Για διαχείριση κινδύνου τον επόμενο γύρο, μια συνετή κατανομή θα ήταν: Μετρητά ' + rec.cash + '%, Ομόλογα ' + rec.bonds + '%, Μικτό Α/Κ ' + rec.balancedFund + '%, Μετοχικό ETF ' + rec.stocks + '%.';
+      const recText = 'Για διαχείριση κινδύνου τον επόμενο γύρο, μια συνετή κατανομή θα ήταν: Μετρητά ' + rec.cash + '%, Ομόλογα ' + rec.bonds + '%, Μικτό Αμοιβαίο Κεφάλαιο ' + rec.balancedFund + '%, Μετοχικό ETF ' + rec.stocks + '%.';
 
       // Disposition question text (dynamically generated from focal asset data)
       const focalAssetReturn = mp[focal.focalAssetKey];
@@ -222,7 +222,7 @@
           '<h2>Η δική σας κατανομή (€10.000)</h2>' +
           '<p>Κατανείμετε το χαρτοφυλάκιό σας. Το σύνολο πρέπει να είναι 100%.</p>' +
           '<div style="margin-bottom:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap;">' +
-            '<button id="fill-equal-btn" class="btn btn-secondary">Συμπλήρωση ίσα (25%)</button>' +
+            '<button id="fill-equal-btn" class="btn btn-secondary">Συμπλήρωση ισόποσα (25%)</button>' +
             '<button id="fill-ai-btn" class="btn btn-secondary">Χρήση πρότασης AI</button>' +
           '</div>' +
           '<div class="allocation-row">' +
@@ -234,7 +234,7 @@
             '<input type="number" id="alloc-bonds" min="0" max="100" value="" />' +
           '</div>' +
           '<div class="allocation-row">' +
-            '<label for="alloc-balanced">Μικτό Α/Κ %</label>' +
+            '<label for="alloc-balanced">Μικτό Αμοιβαίο Κεφάλαιο %</label>' +
             '<input type="number" id="alloc-balanced" min="0" max="100" value="" />' +
           '</div>' +
           '<div class="allocation-row">' +
