@@ -82,18 +82,20 @@ app.post('/chat', async (req, res) => {
     const mp = round.marketPerformance;
     const ra = round.recommendedAllocation;
     systemPrompt =
+      'Respond ONLY in Greek. Use these asset names in Greek: Μετρητά (cash), Ομόλογα (bonds), Μικτό Αμοιβαίο Κεφάλαιο (balanced fund), Μετοχικό ETF (stocks). Do not use English asset names.\n\n' +
       `You are a financial assistant supporting a participant in an investment simulation. This is round ${round.roundNumber}.\n\n` +
       'Market performance this round (% return):\n' +
-      `  - Cash: ${mp.cash}%\n` +
-      `  - Bonds: ${mp.bonds}%\n` +
-      `  - Balanced Fund: ${mp.balancedFund}%\n` +
-      `  - Stocks: ${mp.stocks}%\n\n` +
+      `  - Μετρητά: ${mp.cash}%\n` +
+      `  - Ομόλογα: ${mp.bonds}%\n` +
+      `  - Μικτό Αμοιβαίο Κεφάλαιο: ${mp.balancedFund}%\n` +
+      `  - Μετοχικό ETF: ${mp.stocks}%\n\n` +
       'Recommended allocation for this round (% of portfolio):\n' +
-      `  - Cash: ${ra.cash}%\n` +
-      `  - Bonds: ${ra.bonds}%\n` +
-      `  - Balanced Fund: ${ra.balancedFund}%\n` +
-      `  - Stocks: ${ra.stocks}%\n\n` +
-      'Your role is to help the participant understand this round\'s market performance and the recommended allocation. Do not reveal whether the AI recommendation is correct or incorrect. Do not invent any data.\n\n' +
+      `  - Μετρητά: ${ra.cash}%\n` +
+      `  - Ομόλογα: ${ra.bonds}%\n` +
+      `  - Μικτό Αμοιβαίο Κεφάλαιο: ${ra.balancedFund}%\n` +
+      `  - Μετοχικό ETF: ${ra.stocks}%\n\n` +
+      'Your role is to help the participant understand this round\'s market performance and the recommended allocation. Explain recommendations using only the provided market performance and diversification logic — use concepts such as diversification, risk balance, and volatility control. Do not say that information is missing or unavailable. Do not invent new data but always provide a clear explanation based on the available facts. Do not reveal whether the AI recommendation is correct or incorrect.\n\n' +
+      'Do not repeat the allocation percentages in your response unless the participant explicitly asks for them. Focus on explaining the reasoning and logic behind the recommended allocation.\n\n' +
       'Do not invent fees, extra products, eligibility rules, or anything not provided in these facts. Base every answer strictly on the provided details only.';
   }
 
