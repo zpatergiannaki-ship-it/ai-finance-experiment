@@ -206,8 +206,9 @@
         '<div class="card" id="allocation-section">' +
           '<h2>Η δική σας κατανομή (€10.000)</h2>' +
           '<p>Κατανείμετε το χαρτοφυλάκιό σας. Το σύνολο πρέπει να είναι 100%.</p>' +
-          '<div style="margin-bottom:0.75rem;">' +
+          '<div style="margin-bottom:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap;">' +
             '<button id="fill-equal-btn" class="btn btn-secondary">Συμπλήρωση ίσα (25%)</button>' +
+            '<button id="fill-ai-btn" class="btn btn-secondary">Χρήση πρότασης AI</button>' +
           '</div>' +
           '<div class="allocation-row">' +
             '<label for="alloc-cash">Μετρητά %</label>' +
@@ -358,6 +359,15 @@
         allocInputs.forEach(function (id) {
           document.getElementById(id).value = 25;
         });
+        updateSum();
+      });
+
+      // "Use AI Proposal" button — fills inputs with the current round's AI recommendation
+      document.getElementById('fill-ai-btn').addEventListener('click', function () {
+        document.getElementById('alloc-cash').value     = rec.cash;
+        document.getElementById('alloc-bonds').value    = rec.bonds;
+        document.getElementById('alloc-balanced').value = rec.balancedFund;
+        document.getElementById('alloc-stocks').value   = rec.stocks;
         updateSum();
       });
 
