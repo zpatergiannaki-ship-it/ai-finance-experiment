@@ -99,24 +99,60 @@
 
     const ANCHORS = { low: 'Διαφωνώ απόλυτα', high: 'Συμφωνώ απόλυτα' };
 
-    function renderLikert(containerId, questions) {
+    function renderLikertMatrix(containerId, questions) {
       const container = document.getElementById(containerId);
-      questions.forEach(function (q) {
-        const div = document.createElement('div');
-        div.className = 'likert-group';
-        div.id = 'group-' + q.name;
-        let optionsHtml = '';
-        for (let i = 1; i <= 7; i++) {
-          optionsHtml += '<label><input type="radio" name="' + q.name + '" value="' + i + '" /><span>' + i + '</span></label>';
+      const table = document.createElement('table');
+      table.className = 'likert-matrix';
+
+      // Header
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+      const emptyTh = document.createElement('th');
+      headerRow.appendChild(emptyTh);
+      for (var i = 1; i <= 7; i++) {
+        const th = document.createElement('th');
+        th.textContent = i;
+        if (i === 1) {
+          const small = document.createElement('small');
+          small.textContent = ANCHORS.low;
+          th.appendChild(small);
+        } else if (i === 7) {
+          const small = document.createElement('small');
+          small.textContent = ANCHORS.high;
+          th.appendChild(small);
         }
-        div.innerHTML = '<span class="likert-label">' + q.text + '</span><div class="likert-options">' + optionsHtml + '</div><div class="likert-end-labels"><span>' + ANCHORS.low + '</span><span>' + ANCHORS.high + '</span></div>';
-        container.appendChild(div);
+        headerRow.appendChild(th);
+      }
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      // Body
+      const tbody = document.createElement('tbody');
+      questions.forEach(function (q) {
+        const tr = document.createElement('tr');
+        const labelTd = document.createElement('td');
+        labelTd.textContent = q.text;
+        tr.appendChild(labelTd);
+        for (var i = 1; i <= 7; i++) {
+          const td = document.createElement('td');
+          const label = document.createElement('label');
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = q.name;
+          input.value = i;
+          label.appendChild(input);
+          td.appendChild(label);
+          tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
       });
+      table.appendChild(tbody);
+      container.appendChild(table);
     }
 
     window.addEventListener('DOMContentLoaded', function () {
       ['anthro', 'social', 'cog-trust', 'aff-trust', 'risk', 'accept', 'deleg', 'autonomy', 'satisfaction'].forEach(function (g) {
-        renderLikert('likert-items-' + g, QUESTIONS.filter(function (q) { return q.group === g; }));
+        renderLikertMatrix('likert-items-' + g, QUESTIONS.filter(function (q) { return q.group === g; }));
       });
 
       const form = document.getElementById('postsurvey-form');
