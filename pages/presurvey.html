@@ -92,44 +92,217 @@
           </select>
         </div>
 
-        <!-- ================================================ -->
-        <!-- ΕΝΟΤΗΤΑ Β: Επενδυτική Γνώση και Εμπειρία        -->
-        <!-- ================================================ -->
+        <!-- ============================================================== -->
+        <!-- ΕΝΟΤΗΤΑ Β: Χρηματοοικονομική Γνώση, Αυτοαποτελεσματικότητα   -->
+        <!--             και Ανοχή στον Κίνδυνο                             -->
+        <!-- ============================================================== -->
         <hr style="border:none;border-top:1px solid #e5e7eb;margin:1.5rem 0 1.25rem;" />
-        <h2>Ενότητα Β — Επενδυτική Γνώση και Εμπειρία</h2>
+        <h2>Ενότητα Β — Χρηματοοικονομική Γνώση, Αυτοαποτελεσματικότητα και Ανοχή στον Κίνδυνο</h2>
+        <p style="color:#6b7280;font-size:0.9rem;margin-bottom:1.25rem;">Παρακαλούμε δηλώστε σε ποιο βαθμό συμφωνείτε με τις παρακάτω προτάσεις.<br/>
+          <strong>Κλίμακα:</strong> 1 = Διαφωνώ απόλυτα &nbsp;·&nbsp; 2 = Διαφωνώ &nbsp;·&nbsp; 3 = Μάλλον διαφωνώ &nbsp;·&nbsp; 4 = Ούτε συμφωνώ ούτε διαφωνώ &nbsp;·&nbsp; 5 = Μάλλον συμφωνώ &nbsp;·&nbsp; 6 = Συμφωνώ &nbsp;·&nbsp; 7 = Συμφωνώ απόλυτα
+        </p>
 
-        <!-- Β1: Επενδυτικές γνώσεις -->
-        <div class="form-group">
-          <label>Β1. Ποιες είναι οι γνώσεις και η εμπειρία σας στις επενδύσεις;</label>
-          <div class="decision-options">
-            <label><input type="radio" name="fin_literacy" value="1" /><span>Δεν έχω καθόλου επενδυτικές γνώσεις: Δεν παρακολουθώ ποτέ οικονομικές ειδήσεις ή τις χρηματοπιστωτικές αγορές.</span></label>
-            <label><input type="radio" name="fin_literacy" value="2" /><span>Βασικές γνώσεις: Παρακολουθώ περιστασιακά τις αγορές και κατανοώ τη διαφορά μεταξύ βασικών, μη σύνθετων προϊόντων, όπως μετοχές, ομόλογα κ.λπ.</span></label>
-            <label><input type="radio" name="fin_literacy" value="3" /><span>Μέτριες γνώσεις: Έχω επενδύσει στο παρελθόν και γνωρίζω τις διαφορετικές επενδυτικές επιλογές, όπως μετοχές, ομόλογα, εμπορεύματα κ.λπ., καθώς και τα διαφορετικά επίπεδα κινδύνου.</span></label>
-            <label><input type="radio" name="fin_literacy" value="4" /><span>Πάνω από τον μέσο όρο γνώσεις: Είμαι ενεργός επενδυτής στις αγορές. Γνωρίζω και έχω επενδύσει σε διάφορες επενδυτικές επιλογές, όπως μετοχές, ομόλογα, εμπορεύματα κ.λπ., και γνωρίζω τους σχετικούς κινδύνους.</span></label>
-            <label><input type="radio" name="fin_literacy" value="5" /><span>Εκτεταμένες γνώσεις: Διαθέτω οικονομική/χρηματοοικονομική εξειδίκευση, επαγγελματικό υπόβαθρο στον χώρο και σε βάθος κατανόηση των επενδυτικών προϊόντων και στρατηγικών.</span></label>
+        <!-- Β1: Αυτοαξιολόγηση οικονομικών γνώσεων -->
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:0.75rem;">Β1. Αυτοαξιολόγηση οικονομικών γνώσεων</h3>
+
+        <div class="likert-group" id="group-fin_lit_1">
+          <span class="likert-label">Β1.1. Κατανοώ καλά βασικές οικονομικές έννοιες.</span>
+          <div class="likert-options">
+            <label><input type="radio" name="fin_lit_1" value="1" /><span>1</span></label>
+            <label><input type="radio" name="fin_lit_1" value="2" /><span>2</span></label>
+            <label><input type="radio" name="fin_lit_1" value="3" /><span>3</span></label>
+            <label><input type="radio" name="fin_lit_1" value="4" /><span>4</span></label>
+            <label><input type="radio" name="fin_lit_1" value="5" /><span>5</span></label>
+            <label><input type="radio" name="fin_lit_1" value="6" /><span>6</span></label>
+            <label><input type="radio" name="fin_lit_1" value="7" /><span>7</span></label>
           </div>
         </div>
 
-        <!-- Β2: Οικονομική εκπαίδευση / επάγγελμα -->
-        <div class="form-group">
-          <label>Β2. Πώς συμβάλλει η οικονομική εκπαίδευση ή το επάγγελμά σας στις επενδυτικές σας γνώσεις;</label>
-          <div class="decision-options">
-            <label><input type="radio" name="fin_education" value="1" /><span>Δεν έχω οικονομική εκπαίδευση ούτε εργάζομαι σε οικονομικό επάγγελμα.</span></label>
-            <label><input type="radio" name="fin_education" value="2" /><span>Η εκπαίδευση ή/και το επάγγελμά μου μου επιτρέπουν να αναλύω γενικές οικονομικές πληροφορίες.</span></label>
-            <label><input type="radio" name="fin_education" value="3" /><span>Το επάγγελμά μου μου παρέχει τις γνώσεις για να κατανοώ και να διαχειρίζομαι επενδυτικούς κινδύνους.</span></label>
-            <label><input type="radio" name="fin_education" value="4" /><span>Τόσο η εκπαίδευση όσο και το επάγγελμά μου συμβάλλουν σημαντικά στην κατανόηση σύνθετων χρηματοοικονομικών υπηρεσιών και προϊόντων.</span></label>
+        <div class="likert-group" id="group-fin_lit_2">
+          <span class="likert-label">Β1.2. Έχω γνώσεις σχετικά με τον επενδυτικό κίνδυνο και την απόδοση.</span>
+          <div class="likert-options">
+            <label><input type="radio" name="fin_lit_2" value="1" /><span>1</span></label>
+            <label><input type="radio" name="fin_lit_2" value="2" /><span>2</span></label>
+            <label><input type="radio" name="fin_lit_2" value="3" /><span>3</span></label>
+            <label><input type="radio" name="fin_lit_2" value="4" /><span>4</span></label>
+            <label><input type="radio" name="fin_lit_2" value="5" /><span>5</span></label>
+            <label><input type="radio" name="fin_lit_2" value="6" /><span>6</span></label>
+            <label><input type="radio" name="fin_lit_2" value="7" /><span>7</span></label>
           </div>
         </div>
 
-        <!-- Β3: Ανοχή στον οικονομικό κίνδυνο -->
-        <div class="form-group">
-          <label>Β3. Πόσο πρόθυμος/η είστε να αναλάβετε οικονομικό κίνδυνο σε μια επένδυση;</label>
-          <div class="decision-options">
-            <label><input type="radio" name="risk_tolerance" value="1" /><span>Καθόλου πρόθυμος/η</span></label>
-            <label><input type="radio" name="risk_tolerance" value="2" /><span>Λίγο πρόθυμος/η</span></label>
-            <label><input type="radio" name="risk_tolerance" value="3" /><span>Μέτρια πρόθυμος/η</span></label>
-            <label><input type="radio" name="risk_tolerance" value="4" /><span>Πολύ πρόθυμος/η</span></label>
-            <label><input type="radio" name="risk_tolerance" value="5" /><span>Πάρα πολύ πρόθυμος/η</span></label>
+        <div class="likert-group" id="group-fin_lit_3">
+          <span class="likert-label">Β1.3. Μπορώ συνήθως να κρίνω αν μια οικονομική σύσταση είναι λογική.</span>
+          <div class="likert-options">
+            <label><input type="radio" name="fin_lit_3" value="1" /><span>1</span></label>
+            <label><input type="radio" name="fin_lit_3" value="2" /><span>2</span></label>
+            <label><input type="radio" name="fin_lit_3" value="3" /><span>3</span></label>
+            <label><input type="radio" name="fin_lit_3" value="4" /><span>4</span></label>
+            <label><input type="radio" name="fin_lit_3" value="5" /><span>5</span></label>
+            <label><input type="radio" name="fin_lit_3" value="6" /><span>6</span></label>
+            <label><input type="radio" name="fin_lit_3" value="7" /><span>7</span></label>
+          </div>
+        </div>
+
+        <div class="likert-group" id="group-fin_lit_4">
+          <span class="likert-label">Β1.4. Σε σύγκριση με τον μέσο ιδιώτη επενδυτή, γνωρίζω αρκετά για τα προσωπικά οικονομικά.</span>
+          <div class="likert-options">
+            <label><input type="radio" name="fin_lit_4" value="1" /><span>1</span></label>
+            <label><input type="radio" name="fin_lit_4" value="2" /><span>2</span></label>
+            <label><input type="radio" name="fin_lit_4" value="3" /><span>3</span></label>
+            <label><input type="radio" name="fin_lit_4" value="4" /><span>4</span></label>
+            <label><input type="radio" name="fin_lit_4" value="5" /><span>5</span></label>
+            <label><input type="radio" name="fin_lit_4" value="6" /><span>6</span></label>
+            <label><input type="radio" name="fin_lit_4" value="7" /><span>7</span></label>
+          </div>
+        </div>
+
+        <div class="likert-group" id="group-fin_lit_5">
+          <span class="likert-label">Β1.5. Νιώθω ικανός/ή να αξιολογώ την ποιότητα των επενδυτικών συμβουλών.</span>
+          <div class="likert-options">
+            <label><input type="radio" name="fin_lit_5" value="1" /><span>1</span></label>
+            <label><input type="radio" name="fin_lit_5" value="2" /><span>2</span></label>
+            <label><input type="radio" name="fin_lit_5" value="3" /><span>3</span></label>
+            <label><input type="radio" name="fin_lit_5" value="4" /><span>4</span></label>
+            <label><input type="radio" name="fin_lit_5" value="5" /><span>5</span></label>
+            <label><input type="radio" name="fin_lit_5" value="6" /><span>6</span></label>
+            <label><input type="radio" name="fin_lit_5" value="7" /><span>7</span></label>
+          </div>
+        </div>
+
+        <!-- Β2: Χρηματοοικονομική αυτοαποτελεσματικότητα -->
+        <h3 style="font-size:1rem;font-weight:600;margin:1.5rem 0 0.75rem;">Β2. Χρηματοοικονομική αυτοαποτελεσματικότητα (Financial self-efficacy)</h3>
+
+        <div class="likert-group" id="group-fin_se_1">
+          <span class="likert-label">Β2.1. Έχω εμπιστοσύνη στην ικανότητά μου να διαχειρίζομαι τα προσωπικά μου οικονομικά.</span>
+          <div class="likert-options">
+            <label><input type="radio" name="fin_se_1" value="1" /><span>1</span></label>
+            <label><input type="radio" name="fin_se_1" value="2" /><span>2</span></label>
+            <label><input type="radio" name="fin_se_1" value="3" /><span>3</span></label>
+            <label><input type="radio" name="fin_se_1" value="4" /><span>4</span></label>
+            <label><input type="radio" name="fin_se_1" value="5" /><span>5</span></label>
+            <label><input type="radio" name="fin_se_1" value="6" /><span>6</span></label>
+            <label><input type="radio" name="fin_se_1" value="7" /><span>7</span></label>
+          </div>
+        </div>
+
+        <div class="likert-group" id="group-fin_se_2">
+          <span class="likert-label">Β2.2. Μπορώ να λαμβάνω σωστές οικονομικές αποφάσεις όταν χρειάζεται.</span>
+          <div class="likert-options">
+            <label><input type="radio" name="fin_se_2" value="1" /><span>1</span></label>
+            <label><input type="radio" name="fin_se_2" value="2" /><span>2</span></label>
+            <label><input type="radio" name="fin_se_2" value="3" /><span>3</span></label>
+            <label><input type="radio" name="fin_se_2" value="4" /><span>4</span></label>
+            <label><input type="radio" name="fin_se_2" value="5" /><span>5</span></label>
+            <label><input type="radio" name="fin_se_2" value="6" /><span>6</span></label>
+            <label><input type="radio" name="fin_se_2" value="7" /><span>7</span></label>
+          </div>
+        </div>
+
+        <div class="likert-group" id="group-fin_se_3">
+          <span class="likert-label">Β2.3. Μπορώ να παραμένω συνεπής στους οικονομικούς μου στόχους ακόμη και όταν οι αποφάσεις είναι δύσκολες.</span>
+          <div class="likert-options">
+            <label><input type="radio" name="fin_se_3" value="1" /><span>1</span></label>
+            <label><input type="radio" name="fin_se_3" value="2" /><span>2</span></label>
+            <label><input type="radio" name="fin_se_3" value="3" /><span>3</span></label>
+            <label><input type="radio" name="fin_se_3" value="4" /><span>4</span></label>
+            <label><input type="radio" name="fin_se_3" value="5" /><span>5</span></label>
+            <label><input type="radio" name="fin_se_3" value="6" /><span>6</span></label>
+            <label><input type="radio" name="fin_se_3" value="7" /><span>7</span></label>
+          </div>
+        </div>
+
+        <div class="likert-group" id="group-fin_se_4">
+          <span class="likert-label">Β2.4. Μπορώ να αξιολογώ οικονομικές επιλογές χωρίς να βασίζομαι πλήρως σε άλλους.</span>
+          <div class="likert-options">
+            <label><input type="radio" name="fin_se_4" value="1" /><span>1</span></label>
+            <label><input type="radio" name="fin_se_4" value="2" /><span>2</span></label>
+            <label><input type="radio" name="fin_se_4" value="3" /><span>3</span></label>
+            <label><input type="radio" name="fin_se_4" value="4" /><span>4</span></label>
+            <label><input type="radio" name="fin_se_4" value="5" /><span>5</span></label>
+            <label><input type="radio" name="fin_se_4" value="6" /><span>6</span></label>
+            <label><input type="radio" name="fin_se_4" value="7" /><span>7</span></label>
+          </div>
+        </div>
+
+        <div class="likert-group" id="group-fin_se_5">
+          <span class="likert-label">Β2.5. Αν χρειαζόταν, θα μπορούσα να βελτιώσω την οικονομική μου κατάσταση μέσω των δικών μου αποφάσεων.</span>
+          <div class="likert-options">
+            <label><input type="radio" name="fin_se_5" value="1" /><span>1</span></label>
+            <label><input type="radio" name="fin_se_5" value="2" /><span>2</span></label>
+            <label><input type="radio" name="fin_se_5" value="3" /><span>3</span></label>
+            <label><input type="radio" name="fin_se_5" value="4" /><span>4</span></label>
+            <label><input type="radio" name="fin_se_5" value="5" /><span>5</span></label>
+            <label><input type="radio" name="fin_se_5" value="6" /><span>6</span></label>
+            <label><input type="radio" name="fin_se_5" value="7" /><span>7</span></label>
+          </div>
+        </div>
+
+        <!-- Β3: Ανοχή στον κίνδυνο -->
+        <h3 style="font-size:1rem;font-weight:600;margin:1.5rem 0 0.75rem;">Β3. Ανοχή στον κίνδυνο</h3>
+
+        <div class="likert-group" id="group-risk_tol_1">
+          <span class="likert-label">Β3.1. Γενικά αισθάνομαι άνετα να αναλαμβάνω οικονομικό κίνδυνο για πιθανώς υψηλότερες αποδόσεις.</span>
+          <div class="likert-options">
+            <label><input type="radio" name="risk_tol_1" value="1" /><span>1</span></label>
+            <label><input type="radio" name="risk_tol_1" value="2" /><span>2</span></label>
+            <label><input type="radio" name="risk_tol_1" value="3" /><span>3</span></label>
+            <label><input type="radio" name="risk_tol_1" value="4" /><span>4</span></label>
+            <label><input type="radio" name="risk_tol_1" value="5" /><span>5</span></label>
+            <label><input type="radio" name="risk_tol_1" value="6" /><span>6</span></label>
+            <label><input type="radio" name="risk_tol_1" value="7" /><span>7</span></label>
+          </div>
+        </div>
+
+        <div class="likert-group" id="group-risk_tol_2">
+          <span class="likert-label">Β3.2. Προτιμώ πιο ασφαλείς οικονομικές επιλογές ακόμη και αν προσφέρουν χαμηλότερες αποδόσεις. (R)</span>
+          <div class="likert-options">
+            <label><input type="radio" name="risk_tol_2" value="1" /><span>1</span></label>
+            <label><input type="radio" name="risk_tol_2" value="2" /><span>2</span></label>
+            <label><input type="radio" name="risk_tol_2" value="3" /><span>3</span></label>
+            <label><input type="radio" name="risk_tol_2" value="4" /><span>4</span></label>
+            <label><input type="radio" name="risk_tol_2" value="5" /><span>5</span></label>
+            <label><input type="radio" name="risk_tol_2" value="6" /><span>6</span></label>
+            <label><input type="radio" name="risk_tol_2" value="7" /><span>7</span></label>
+          </div>
+        </div>
+
+        <div class="likert-group" id="group-risk_tol_3">
+          <span class="likert-label">Β3.3. Μεγάλες διακυμάνσεις στην αξία μιας επένδυσης θα με έκαναν να νιώσω πολύ άβολα. (R)</span>
+          <div class="likert-options">
+            <label><input type="radio" name="risk_tol_3" value="1" /><span>1</span></label>
+            <label><input type="radio" name="risk_tol_3" value="2" /><span>2</span></label>
+            <label><input type="radio" name="risk_tol_3" value="3" /><span>3</span></label>
+            <label><input type="radio" name="risk_tol_3" value="4" /><span>4</span></label>
+            <label><input type="radio" name="risk_tol_3" value="5" /><span>5</span></label>
+            <label><input type="radio" name="risk_tol_3" value="6" /><span>6</span></label>
+            <label><input type="radio" name="risk_tol_3" value="7" /><span>7</span></label>
+          </div>
+        </div>
+
+        <div class="likert-group" id="group-risk_tol_4">
+          <span class="likert-label">Β3.4. Είμαι πρόθυμος/η να εξετάσω επενδύσεις υψηλότερου κινδύνου εάν το μακροπρόθεσμο όφελος είναι σημαντικό.</span>
+          <div class="likert-options">
+            <label><input type="radio" name="risk_tol_4" value="1" /><span>1</span></label>
+            <label><input type="radio" name="risk_tol_4" value="2" /><span>2</span></label>
+            <label><input type="radio" name="risk_tol_4" value="3" /><span>3</span></label>
+            <label><input type="radio" name="risk_tol_4" value="4" /><span>4</span></label>
+            <label><input type="radio" name="risk_tol_4" value="5" /><span>5</span></label>
+            <label><input type="radio" name="risk_tol_4" value="6" /><span>6</span></label>
+            <label><input type="radio" name="risk_tol_4" value="7" /><span>7</span></label>
+          </div>
+        </div>
+
+        <div class="likert-group" id="group-risk_tol_5">
+          <span class="likert-label">Β3.5. Η αποφυγή ζημιών είναι για μένα πιο σημαντική από την επίτευξη κερδών. (R)</span>
+          <div class="likert-options">
+            <label><input type="radio" name="risk_tol_5" value="1" /><span>1</span></label>
+            <label><input type="radio" name="risk_tol_5" value="2" /><span>2</span></label>
+            <label><input type="radio" name="risk_tol_5" value="3" /><span>3</span></label>
+            <label><input type="radio" name="risk_tol_5" value="4" /><span>4</span></label>
+            <label><input type="radio" name="risk_tol_5" value="5" /><span>5</span></label>
+            <label><input type="radio" name="risk_tol_5" value="6" /><span>6</span></label>
+            <label><input type="radio" name="risk_tol_5" value="7" /><span>7</span></label>
           </div>
         </div>
 
@@ -204,8 +377,13 @@
           if (!document.getElementById(id).value) return false;
         }
 
-        // B1, B2, B3, C1, C2, C3: Radio groups
-        const radios = ['fin_literacy', 'fin_education', 'risk_tolerance', 'ai_experience', 'tech_trust', 'ai_finance_use'];
+        // B1 (5 items), B2 (5 items), B3 (5 items), C1, C2, C3: Radio groups
+        const radios = [
+          'fin_lit_1', 'fin_lit_2', 'fin_lit_3', 'fin_lit_4', 'fin_lit_5',
+          'fin_se_1',  'fin_se_2',  'fin_se_3',  'fin_se_4',  'fin_se_5',
+          'risk_tol_1','risk_tol_2','risk_tol_3','risk_tol_4','risk_tol_5',
+          'ai_experience', 'tech_trust', 'ai_finance_use'
+        ];
         for (const name of radios) {
           if (!form.querySelector('input[name="' + name + '"]:checked')) return false;
         }
@@ -229,16 +407,32 @@
         nextBtn.textContent = 'Αποθήκευση…';
 
         const responses = {
-          gender: document.getElementById('gender').value,
-          age: parseInt(document.getElementById('age').value),
-          education: document.getElementById('education').value,
-          employment: document.getElementById('employment').value,
-          income: document.getElementById('income').value,
-          fin_literacy: parseInt(form.querySelector('input[name="fin_literacy"]:checked').value),
-          fin_education: parseInt(form.querySelector('input[name="fin_education"]:checked').value),
-          risk_tolerance: parseInt(form.querySelector('input[name="risk_tolerance"]:checked').value),
-          ai_experience: parseInt(form.querySelector('input[name="ai_experience"]:checked').value),
-          tech_trust: parseInt(form.querySelector('input[name="tech_trust"]:checked').value),
+          gender:       document.getElementById('gender').value,
+          age:          parseInt(document.getElementById('age').value),
+          education:    document.getElementById('education').value,
+          employment:   document.getElementById('employment').value,
+          income:       document.getElementById('income').value,
+          // B1 — Αυτοαξιολόγηση οικονομικών γνώσεων
+          fin_lit_1:    parseInt(form.querySelector('input[name="fin_lit_1"]:checked').value),
+          fin_lit_2:    parseInt(form.querySelector('input[name="fin_lit_2"]:checked').value),
+          fin_lit_3:    parseInt(form.querySelector('input[name="fin_lit_3"]:checked').value),
+          fin_lit_4:    parseInt(form.querySelector('input[name="fin_lit_4"]:checked').value),
+          fin_lit_5:    parseInt(form.querySelector('input[name="fin_lit_5"]:checked').value),
+          // B2 — Χρηματοοικονομική αυτοαποτελεσματικότητα
+          fin_se_1:     parseInt(form.querySelector('input[name="fin_se_1"]:checked').value),
+          fin_se_2:     parseInt(form.querySelector('input[name="fin_se_2"]:checked').value),
+          fin_se_3:     parseInt(form.querySelector('input[name="fin_se_3"]:checked').value),
+          fin_se_4:     parseInt(form.querySelector('input[name="fin_se_4"]:checked').value),
+          fin_se_5:     parseInt(form.querySelector('input[name="fin_se_5"]:checked').value),
+          // B3 — Ανοχή στον κίνδυνο
+          risk_tol_1:   parseInt(form.querySelector('input[name="risk_tol_1"]:checked').value),
+          risk_tol_2:   parseInt(form.querySelector('input[name="risk_tol_2"]:checked').value),
+          risk_tol_3:   parseInt(form.querySelector('input[name="risk_tol_3"]:checked').value),
+          risk_tol_4:   parseInt(form.querySelector('input[name="risk_tol_4"]:checked').value),
+          risk_tol_5:   parseInt(form.querySelector('input[name="risk_tol_5"]:checked').value),
+          // C
+          ai_experience:  parseInt(form.querySelector('input[name="ai_experience"]:checked').value),
+          tech_trust:     parseInt(form.querySelector('input[name="tech_trust"]:checked').value),
           ai_finance_use: parseInt(form.querySelector('input[name="ai_finance_use"]:checked').value),
         };
 
