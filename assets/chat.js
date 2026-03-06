@@ -6,6 +6,9 @@ let _roundNumber = null;
 let _messageCount = 0;
 let _chatQueryCount = 0;
 let _chatStartTime = null;
+let _preference = null;
+let _preferenceCompleted = false;
+let _preferenceTimestamp = null;
 
 function escapeHtml(str) {
   return str
@@ -22,6 +25,9 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
   _messageCount = 0;
   _chatQueryCount = 0;
   _chatStartTime = null;
+  _preference = null;
+  _preferenceCompleted = false;
+  _preferenceTimestamp = null;
 
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -72,6 +78,112 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
       if (input) input.value = '';
       sendMessage(question);
     });
+  }
+
+  // Preference step configuration
+  let prefConfig = null;
+  if (scenarioId === 'scenario1') {
+    prefConfig = {
+      question: 'Πριν συνεχίσουμε, θα ήθελα μια σύντομη πληροφορία για να προσαρμόσω τον τρόπο που θα σας εξηγήσω τη σύσταση.\nΤι είναι πιο σημαντικό για εσάς σε αυτή την απόφαση;',
+      options: [
+        'Να γνωρίζω ακριβώς τη μηνιαία δόση',
+        'Να έχω ευελιξία στην αποπληρωμή',
+        'Να ελαχιστοποιήσω το συνολικό κόστος',
+        'Να έχω άμεση πρόσβαση στα χρήματα',
+      ],
+      followUp: 'Ευχαριστώ. Θα το λάβω υπόψη μόνο για να προσαρμόσω τον τρόπο που θα σας παρουσιάσω τη σύσταση.',
+    };
+  } else if (scenarioId === 'scenario2') {
+    prefConfig = {
+      question: 'Πριν προχωρήσουμε, θα ήθελα να μου πείτε ποια επενδυτική προσέγγιση σας εκφράζει περισσότερο, ώστε να προσαρμόσω τον τρόπο εξήγησης της πρότασης.',
+      options: [
+        'Προτιμώ σταθερότητα και χαμηλό κίνδυνο',
+        'Προτιμώ ισορροπία μεταξύ κινδύνου και απόδοσης',
+        'Προτιμώ υψηλότερη απόδοση ακόμη και με μεγαλύτερο κίνδυνο',
+      ],
+      followUp: 'Ευχαριστώ. Θα χρησιμοποιήσω αυτή την πληροφορία μόνο για να προσαρμόσω τον τρόπο εξήγησης της επενδυτικής πρότασης.',
+    };
+  }
+
+  // For scenario2 rounds 2–4, check if preference was already captured
+  if (scenarioId === 'scenario2' && roundNumber && roundNumber > 1) {
+    const stored = sessionStorage.getItem('scenario2_preference');
+    if (stored) {
+      _preference = stored;
+      _preferenceCompleted = true;
+      // Input stays unlocked (already enabled from HTML render)
+      return;
+    }
+  }
+
+  // Show preference question if applicable
+  if (prefConfig) {
+    // Lock input until preference is completed
+    if (sendBtn) {
+      sendBtn.disabled = true;
+    }
+    if (inputEl) {
+      inputEl.disabled = true;
+      inputEl.placeholder = 'Απαντήστε πρώτα στην παραπάνω ερώτηση…';
+    }
+
+    const messagesEl = document.getElementById('chat-messages-' + containerId);
+    if (messagesEl) {
+      // Show preference question as assistant bubble
+      appendBubble(messagesEl, 'assistant', prefConfig.question);
+
+      // Show quick-reply buttons
+      const prefBtnsDiv = document.createElement('div');
+      prefBtnsDiv.className = 'chat-preference-btns';
+      prefBtnsDiv.id = 'chat-pref-btns-' + containerId;
+      prefConfig.options.forEach(function (option) {
+        const btn = document.createElement('button');
+        btn.className = 'chat-pref-btn';
+        btn.setAttribute('data-value', option);
+        btn.textContent = option;
+        btn.addEventListener('click', function () {
+          _preference = option;
+          _preferenceTimestamp = new Date().toISOString();
+          _preferenceCompleted = true;
+
+          if (scenarioId === 'scenario2') {
+            sessionStorage.setItem('scenario2_preference', option);
+          }
+
+          // Disable all preference buttons
+          const allPrefBtns = prefBtnsDiv.querySelectorAll('.chat-pref-btn');
+          allPrefBtns.forEach(function (b) { b.disabled = true; });
+
+          // Render selected option as user bubble
+          appendBubble(messagesEl, 'user', option);
+
+          // Remove preference buttons div
+          if (prefBtnsDiv.parentNode) {
+            prefBtnsDiv.parentNode.removeChild(prefBtnsDiv);
+          }
+
+          // Show follow-up assistant message
+          appendBubble(messagesEl, 'assistant', prefConfig.followUp);
+
+          // Log to Supabase
+          const participantId = window.AppUtils.getParticipantId();
+          if (window.SupabaseUtils && window.SupabaseUtils.insertPreferenceLog) {
+            window.SupabaseUtils.insertPreferenceLog(participantId, scenarioId, option, _preferenceTimestamp);
+          }
+
+          // Unlock input
+          if (sendBtn) sendBtn.disabled = false;
+          if (inputEl) {
+            inputEl.disabled = false;
+            inputEl.placeholder = 'Κάντε μια ερώτηση στον βοηθό…';
+            inputEl.focus();
+          }
+        });
+        prefBtnsDiv.appendChild(btn);
+      });
+      messagesEl.appendChild(prefBtnsDiv);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
   }
 }
 
@@ -124,6 +236,7 @@ async function sendMessage(message) {
       scenarioId: _scenarioId,
       condition,
       message,
+      preference: _preference || null,
     };
     if (_roundNumber !== null && _roundNumber !== undefined) {
       body.roundNumber = _roundNumber;
@@ -243,10 +356,15 @@ function getTimeSpentInChatMs() {
   return _chatStartTime !== null ? Date.now() - _chatStartTime : 0;
 }
 
+function getPreference() {
+  return _preference;
+}
+
 window.ChatUtils = {
   initChat,
   sendMessage,
   getMessageCount,
   getChatQueryCount,
   getTimeSpentInChatMs,
+  getPreference,
 };

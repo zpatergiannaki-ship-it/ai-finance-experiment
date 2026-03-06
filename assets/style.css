@@ -671,3 +671,34 @@ th {
     padding: 0.6rem 1rem;
   }
 }
+
+/* Preference quick-reply buttons */
+.chat-preference-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0.75rem 0;
+}
+
+.chat-pref-btn {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.875rem;
+  color: #1e293b;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+  line-height: 1.4;
+}
+
+.chat-pref-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.chat-pref-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

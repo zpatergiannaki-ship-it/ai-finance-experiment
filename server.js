@@ -29,7 +29,7 @@ const VALID_CONDITIONS = ['lowAnthropomorphism', 'highAnthropomorphism'];
 const VALID_ROUNDS = [1, 2, 3, 4];
 
 app.post('/chat', async (req, res) => {
-  const { participantId, scenarioId, condition, message, roundNumber } = req.body;
+  const { participantId, scenarioId, condition, message, roundNumber, preference } = req.body;
 
   // Validation
   if (!participantId) {
@@ -52,7 +52,7 @@ app.post('/chat', async (req, res) => {
 
   // Logging
   const roundLog = scenarioId === 'scenario2' ? roundNumber : 'N/A';
-  console.log(`[CHAT] participantId=${participantId} scenarioId=${scenarioId} condition=${condition} roundNumber=${roundLog}`);
+  console.log(`[CHAT] participantId=${participantId} scenarioId=${scenarioId} condition=${condition} roundNumber=${roundLog} preference=${preference || 'none'}`);
 
   // System prompt construction
   let systemPrompt = '';
@@ -116,6 +116,12 @@ app.post('/chat', async (req, res) => {
     'Keep the total response under 200 words.\n' +
     'Do not use emojis, graphs, images, or any visual elements.\n' +
     'Do not introduce any information not present in the facts provided above.';
+
+  // Preference framing (if provided)
+  if (preference && typeof preference === 'string') {
+    const sanitizedPreference = preference.trim().slice(0, 200).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    systemPrompt += `\n\nThe participant selected the following preference: "${sanitizedPreference}". Use it only to adapt the explanatory framing of the answer. Do not change the recommendation, allocation, or financial facts. Do not ask any further follow-up questions. Respond only in Greek.`;
+  }
 
   // OpenAI call
   try {
