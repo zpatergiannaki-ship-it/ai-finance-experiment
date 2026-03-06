@@ -148,7 +148,7 @@ app.post('/chat', async (req, res) => {
 
 app.post('/db/participants', async (req, res) => {
   const { participant_id, condition, scenario_order } = req.body;
-  const { error } = await supabaseAdmin.from('participants').insert([{ participant_id, condition, scenario_order }]);
+  const { error } = await supabaseAdmin.from('participants').upsert([{ participant_id, condition, scenario_order }], { onConflict: 'participant_id' });
   if (error) { console.error('/db/participants error:', error.message); return res.status(500).json({ error: error.message }); }
   res.json({ ok: true });
 });
