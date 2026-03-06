@@ -454,7 +454,13 @@
         const manipulation_check = parseInt(manipEl.value);
 
         await window.SupabaseUtils.insertScenario2PostMeasures(pid, { influence, trust_scenario2, manipulation_check });
-        window.AppUtils.goTo('postsurvey');
+        // STEP 4 — Navigate to the next scenario or to the post-survey if this was the last
+        const nextScenario = window.AppUtils.getNextScenario('scenario2');
+        if (nextScenario) {
+          window.AppUtils.goTo(nextScenario);
+        } else {
+          window.AppUtils.goTo('postsurvey');
+        }
       });
     }
 

@@ -75,6 +75,41 @@ function initExperiment() {
 }
 
 // ---------------------------------------------------------------------------
+// STEP 4 — Scenario sequencing helpers
+// These helpers ensure consistent scenario ordering throughout the session.
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns the ID of the scenario that should follow `currentScenario`,
+ * based on the participant's assigned scenarioOrder.
+ *
+ * @param {string} currentScenario - e.g. 'scenario1' or 'scenario2'
+ * @returns {string|null} - the next scenario ID, or null if there is none
+ *                          (i.e. currentScenario is the last in the order)
+ */
+function getNextScenario(currentScenario) {
+  const order = getScenarioOrder();
+  // order is ['scenario1','scenario2'] or ['scenario2','scenario1']
+  const idx = order.indexOf(currentScenario);
+  if (idx === -1 || idx === order.length - 1) {
+    // Not found, or already last scenario
+    return null;
+  }
+  return order[idx + 1];
+}
+
+/**
+ * Returns the ID of the first scenario in the participant's assigned order.
+ * Use this to navigate to the correct starting scenario after the pre-survey.
+ *
+ * @returns {string} - e.g. 'scenario1' or 'scenario2'
+ */
+function getCurrentScenario() {
+  const order = getScenarioOrder();
+  return order[0];
+}
+
+// ---------------------------------------------------------------------------
 // Navigation helpers
 // ---------------------------------------------------------------------------
 function goTo(page) {
@@ -139,6 +174,8 @@ window.AppUtils = {
   getParticipantId,
   getCondition,
   getScenarioOrder,
+  getNextScenario,
+  getCurrentScenario,
   goTo,
   saveToLocal,
   getFromLocal,
