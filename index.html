@@ -29,7 +29,8 @@
       if (!sessionStorage.getItem('exp_registered')) {
         await window.SupabaseUtils.insertParticipant(
           participantId,
-          experimentCondition
+          experimentCondition,
+          scenarioOrder
         );
         sessionStorage.setItem('exp_registered', 'true');
       }

@@ -14,11 +14,11 @@ function getClient() {
   return _supabase;
 }
 
-async function insertParticipant(participantId, condition) {
+async function insertParticipant(participantId, condition, scenarioOrder) {
   try {
     const { data, error } = await getClient()
       .from('participants')
-      .insert([{ participant_id: participantId, condition }]);
+      .insert([{ participant_id: participantId, condition, scenario_order: scenarioOrder }]);
     if (error) console.error('insertParticipant error:', error.message);
     return { data, error };
   } catch (err) {
