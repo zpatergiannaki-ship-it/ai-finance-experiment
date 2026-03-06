@@ -133,11 +133,26 @@
       document.getElementById('start-btn').addEventListener('click', function () {
         renderRound();
       });
+
+      // Log scenario entry
+      try {
+        const pid = window.AppUtils.getParticipantId();
+        const cond = window.AppUtils.getCondition();
+        window.SupabaseUtils.insertStudyEvent(pid, 'scenario2', 'scenario_enter', cond, null);
+      } catch (_e) { /* silent */ }
     }
 
     // ── State 2: Round ──────────────────────────────────────────────────
     function renderRound() {
       _roundStartTime = Date.now();
+
+      // Log round start
+      try {
+        const pid = window.AppUtils.getParticipantId();
+        const cond = window.AppUtils.getCondition();
+        window.SupabaseUtils.insertStudyEvent(pid, 'scenario2', 'round_started', cond, ROUNDS[currentRoundIndex].roundNumber);
+      } catch (_e) { /* silent */ }
+
       const round = ROUNDS[currentRoundIndex];
       const focal = ROUND_FOCAL[currentRoundIndex];
       const container = document.getElementById('main-container');
@@ -411,7 +426,26 @@
 
         if (focalAlloc > 0 && !dispositionEl) return;
 
-        await window.SupabaseUtils.insertScenario2Round(pid, round.roundNumber, allocation, confidence, trustRound, control, compliance, disposition);
+        await window.SupabaseUtils.insertScenario2Round(
+          pid,
+          round.roundNumber,
+          allocation,
+          confidence,
+          trustRound,
+          control,
+          compliance,
+          disposition,
+          round.recommendedAllocation,
+          window.ChatUtils.getChatQueryCount(),
+          window.ChatUtils.getMessageCount(),
+          window.ChatUtils.getTimeSpentInChatMs()
+        );
+
+        // Log round completion for stimulus delivery verification
+        try {
+          const cond = window.AppUtils.getCondition();
+          await window.SupabaseUtils.insertStudyEvent(pid, 'scenario2', 'round_completed', cond, round.roundNumber);
+        } catch (_e) { /* silent */ }
 
         // Silent behavioral log — invisible to participants
         try {
@@ -523,6 +557,13 @@
         const manipulation_check = parseInt(manipEl.value);
 
         await window.SupabaseUtils.insertScenario2PostMeasures(pid, { influence, trust_scenario2, manipulation_check });
+
+        // Log scenario completion for stimulus delivery verification
+        try {
+          const cond = window.AppUtils.getCondition();
+          await window.SupabaseUtils.insertStudyEvent(pid, 'scenario2', 'scenario_completed', cond, null);
+        } catch (_e) { /* silent */ }
+
         // STEP 4 — Navigate to the next scenario or to the post-survey if this was the last
         const nextScenario = window.AppUtils.getNextScenario('scenario2');
         if (nextScenario) {

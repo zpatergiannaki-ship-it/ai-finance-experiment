@@ -246,12 +246,26 @@
       const decisionSection = document.getElementById('decision-section');
       const _scenarioStartTime = Date.now();
 
+      // Log scenario entry
+      try {
+        const _pid = window.AppUtils.getParticipantId();
+        const _cond = window.AppUtils.getCondition();
+        window.SupabaseUtils.insertStudyEvent(_pid, 'scenario1', 'scenario_enter', _cond, null);
+      } catch (_e) { /* silent */ }
+
       window.ChatUtils.initChat('chat-container', 'scenario1', null, [
         'Ποια είναι η βασική διαφορά μεταξύ της πιστωτικής κάρτας και του προσωπικού δανείου;',
         'Ποια επιλογή φαίνεται να είναι οικονομικά πιο συμφέρουσα με βάση τα επιτόκια και τις δόσεις;',
         'Ποια επιλογή έχει μεγαλύτερο οικονομικό κίνδυνο ή αβεβαιότητα για εμένα;',
         'Με βάση τις πληροφορίες που δίνονται, ποια επιλογή θα πρότεινε ένας οικονομικός σύμβουλος;'
       ]);
+
+      // Log stimulus rendered
+      try {
+        const _pid2 = window.AppUtils.getParticipantId();
+        const _cond2 = window.AppUtils.getCondition();
+        window.SupabaseUtils.insertStudyEvent(_pid2, 'scenario1', 'stimulus_rendered', _cond2, null);
+      } catch (_e) { /* silent */ }
 
       // ── Validation helper ──
       function checkNextEnabled() {
@@ -291,11 +305,20 @@
 
         const pid = window.AppUtils.getParticipantId();
         await window.SupabaseUtils.insertScenario1Decision(pid, {
-          choice: decision.value,
-          influence: parseInt(influence.value, 10),
-          trust: parseInt(trust.value, 10),
-          manipulation_check: parseInt(manipulation.value, 10),
+          choice:                decision.value,
+          influence:             parseInt(influence.value, 10),
+          trust:                 parseInt(trust.value, 10),
+          manipulation_check:    parseInt(manipulation.value, 10),
+          chat_query_count:      window.ChatUtils.getChatQueryCount(),
+          chat_message_count:    window.ChatUtils.getMessageCount(),
+          time_spent_in_chat_ms: window.ChatUtils.getTimeSpentInChatMs(),
         });
+
+        // Log stimulus delivery verification
+        try {
+          const cond = window.AppUtils.getCondition();
+          await window.SupabaseUtils.insertStudyEvent(pid, 'scenario1', 'scenario_completed', cond, null);
+        } catch (_e) { /* silent */ }
 
         // Silent behavioral log — invisible to participants
         try {
