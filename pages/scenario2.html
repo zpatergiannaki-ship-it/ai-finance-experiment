@@ -82,6 +82,7 @@
     ];
 
     let currentRoundIndex = 0;
+    let _roundStartTime = Date.now();
 
     function investmentDefinitionsTable() {
       return `
@@ -138,6 +139,7 @@
 
     // ── State 2: Round ──────────────────────────────────────────────────
     function renderRound() {
+      _roundStartTime = Date.now();
       const round = ROUNDS[currentRoundIndex];
       const focal = ROUND_FOCAL[currentRoundIndex];
       const container = document.getElementById('main-container');
@@ -412,6 +414,65 @@
         if (focalAlloc > 0 && !dispositionEl) return;
 
         await window.SupabaseUtils.insertScenario2Round(pid, round.roundNumber, allocation, confidence, trustRound, control, compliance, disposition);
+
+        // Silent behavioral log — invisible to participants
+        try {
+          const rec = round.recommendedAllocation;
+          const cash_alloc     = allocation.cash;
+          const bonds_alloc    = allocation.bonds;
+          const balanced_alloc = allocation.balancedFund;
+          const stocks_alloc   = allocation.stocks;
+          const total_check    = cash_alloc + bonds_alloc + balanced_alloc + stocks_alloc;
+
+          const deviation =
+            Math.abs(cash_alloc     - rec.cash)         +
+            Math.abs(bonds_alloc    - rec.bonds)        +
+            Math.abs(balanced_alloc - rec.balancedFund) +
+            Math.abs(stocks_alloc   - rec.stocks);
+
+          let overrideLevel;
+          if      (deviation === 0)  overrideLevel = 'none';
+          else if (deviation <= 10)  overrideLevel = 'minor';
+          else if (deviation <= 25)  overrideLevel = 'moderate';
+          else                       overrideLevel = 'major';
+
+          // Follow score: 100 minus 0.5 points per unit of deviation, clamped to [0, 100]
+          const followScore = Math.max(0, Math.min(100, 100 - deviation / 2));
+
+          const recommendationAccepted =
+            Math.abs(cash_alloc     - rec.cash)         <= 5 &&
+            Math.abs(bonds_alloc    - rec.bonds)        <= 5 &&
+            Math.abs(balanced_alloc - rec.balancedFund) <= 5 &&
+            Math.abs(stocks_alloc   - rec.stocks)       <= 5;
+
+          const chatQueryCount  = window.ChatUtils.getChatQueryCount();
+          const totalMessages   = window.ChatUtils.getMessageCount();
+          const timeSpentInChat = window.ChatUtils.getTimeSpentInChatMs();
+          const informationSeeking = chatQueryCount > 1;
+          const decisionTimeMs = Date.now() - _roundStartTime;
+
+          await window.SupabaseUtils.insertDecisionEvent({
+            participant_id:               pid,
+            scenario_id:                  'scenario2',
+            round_number:                 round.roundNumber,
+            ai_recommendation:            rec,
+            user_decision:                allocation,
+            recommendation_accepted:      recommendationAccepted,
+            allocation_cash:              cash_alloc,
+            allocation_bonds:             bonds_alloc,
+            allocation_balanced:          balanced_alloc,
+            allocation_stocks:            stocks_alloc,
+            total_allocation_check:       total_check,
+            allocation_deviation:         deviation,
+            recommendation_override_level: overrideLevel,
+            recommendation_follow_score:  parseFloat(followScore.toFixed(2)),
+            chat_query_count:             chatQueryCount,
+            total_messages:               totalMessages,
+            time_spent_in_chat_ms:        timeSpentInChat,
+            information_seeking:          informationSeeking,
+            decision_time_ms:             decisionTimeMs,
+          });
+        } catch (_e) { /* silent — never block navigation */ }
 
         currentRoundIndex++;
         if (currentRoundIndex < ROUNDS.length) {

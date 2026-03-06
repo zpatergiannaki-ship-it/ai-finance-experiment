@@ -144,6 +144,53 @@ ALTER TABLE scenario2_rounds
   ADD COLUMN disposition  TEXT CHECK (disposition IN ('sell', 'hold'));
 
 -- ============================================================
+-- Decision events: silent behavioral log (one row per decision)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS decision_events (
+  id              BIGSERIAL PRIMARY KEY,
+  participant_id  TEXT        NOT NULL,
+  scenario_id     TEXT        NOT NULL,  -- 'scenario1' | 'scenario2'
+  round_number    INT,                   -- NULL for scenario1
+  timestamp       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  -- AI recommendation
+  ai_recommendation         JSONB,  -- e.g. { cash:10, bonds:20, balancedFund:40, stocks:30 } or 'personal_loan'
+
+  -- User decision
+  user_decision             JSONB,  -- same shape as ai_recommendation
+
+  -- Scenario 1 acceptance (boolean)
+  recommendation_accepted   BOOLEAN,
+
+  -- Scenario 2 allocation fields (flat columns for easy SQL analysis)
+  allocation_cash           INT,
+  allocation_bonds          INT,
+  allocation_balanced       INT,
+  allocation_stocks         INT,
+  total_allocation_check    INT,   -- must equal 100
+
+  -- Deviation / override
+  allocation_deviation      INT,   -- sum of |user - rec| per asset (scenario2 only)
+  recommendation_override_level TEXT, -- 'none' | 'minor' | 'moderate' | 'major'
+
+  -- Follow score (scenario2 only)
+  recommendation_follow_score NUMERIC(5,2),  -- 0–100
+
+  -- Chat / information seeking
+  chat_query_count          INT,
+  total_messages            INT,
+  time_spent_in_chat_ms     INT,
+  information_seeking       BOOLEAN,
+
+  -- Timing
+  decision_time_ms          INT    -- ms from scenario/round render to submit
+);
+
+ALTER TABLE decision_events ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "insert_decision_events" ON decision_events
+  FOR INSERT WITH CHECK (true);
+
+-- ============================================================
 -- Scenario 2 post-scenario measures table
 -- ============================================================
 CREATE TABLE scenario2_post_measures (
