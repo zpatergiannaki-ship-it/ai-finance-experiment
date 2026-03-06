@@ -1,8 +1,8 @@
 'use strict';
 
 // CONFIGURE THESE TWO VALUES:
-const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+const SUPABASE_URL = 'https://yhtyrfpfkdspjrvxkxoo.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_Ddeu9lf70BCXCp79_6y-cA_is98z9F1';
 
 // Initialize Supabase client (loaded via CDN)
 let _supabase = null;
