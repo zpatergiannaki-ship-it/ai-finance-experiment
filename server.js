@@ -210,4 +210,24 @@ app.post('/db/decision-event', async (req, res) => {
   res.json({ ok: true });
 });
 
+app.post('/db/study-event', async (req, res) => {
+  const { participant_id, scenario_id, event_type, condition, round_number } = req.body;
+  const { error } = await supabaseAdmin.from('study_events').insert([{
+    participant_id,
+    scenario_id: scenario_id ?? null,
+    event_type,
+    condition: condition ?? null,
+    round_number: round_number ?? null,
+  }]);
+  if (error) { console.error('/db/study-event error:', error.message); return res.status(500).json({ error: error.message }); }
+  res.json({ ok: true });
+});
+
+app.post('/db/preference-log', async (req, res) => {
+  const { participant_id, scenario_id, preference_value } = req.body;
+  const { error } = await supabaseAdmin.from('preference_logs').insert([{ participant_id, scenario_id, preference_value }]);
+  if (error) { console.error('/db/preference-log error:', error.message); return res.status(500).json({ error: error.message }); }
+  res.json({ ok: true });
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
