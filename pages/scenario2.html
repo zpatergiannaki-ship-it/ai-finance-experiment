@@ -75,10 +75,10 @@
     const ASSET_LABELS = { cash: 'Μετρητά', bonds: 'Ομόλογα', balancedFund: 'Μικτό Α/Κ', stocks: 'Μετοχικό ETF' };
 
     const ROUND_FOCAL = [
-      { question: 'Το Μετοχικό ETF απέδωσε +4.0% αυτόν τον γύρο.' },
-      { question: 'Το Μετοχικό ETF απέδωσε -6.0% αυτόν τον γύρο.' },
-      { question: 'Τα Ομόλογα απέδωσαν -1.0% αυτόν τον γύρο.' },
-      { question: 'Το Μετοχικό ETF απέδωσε -4.0% αυτόν τον γύρο.' },
+      { question: 'Το Μετοχικό ETF απέδωσε +4.0% αυτόν τον γύρο.', focalAssetKey: 'stocks' },
+      { question: 'Το Μετοχικό ETF απέδωσε -6.0% αυτόν τον γύρο.', focalAssetKey: 'stocks' },
+      { question: 'Τα Ομόλογα απέδωσαν -1.0% αυτόν τον γύρο.', focalAssetKey: 'bonds' },
+      { question: 'Το Μετοχικό ETF απέδωσε -4.0% αυτόν τον γύρο.', focalAssetKey: 'stocks' },
     ];
 
     let currentRoundIndex = 0;
@@ -142,6 +142,7 @@
       const focal = ROUND_FOCAL[currentRoundIndex];
       const container = document.getElementById('main-container');
       const rec = round.recommendedAllocation;
+      const mp = round.marketPerformance;
       const isLastRound = currentRoundIndex === ROUNDS.length - 1;
       const nextRoundLabel = isLastRound
         ? 'Ολοκλήρωση Γύρου 4 →'
@@ -156,14 +157,19 @@
           '</details>' +
         '</div>';
 
-      // Block 3: market performance rows
-      const marketRows = Object.entries(round.marketPerformance).map(function (entry) {
+      // SECTION 1: market performance rows
+      const marketRows = Object.entries(mp).map(function (entry) {
         const k = entry[0], v = entry[1];
         return '<tr><td>' + ASSET_LABELS[k] + '</td><td style="color:' + (v >= 0 ? '#065f46' : '#b91c1c') + '">' + (v >= 0 ? '+' : '') + v + '%</td></tr>';
       }).join('');
 
-      // Block 4: AI recommended allocation text
-      const recText = 'Για αυτόν τον γύρο, η προτεινόμενη κατανομή είναι: Μετρητά ' + rec.cash + '%, Ομόλογα ' + rec.bonds + '%, Μικτό Α/Κ ' + rec.balancedFund + '%, Μετοχικό ETF ' + rec.stocks + '%.';
+      // SECTION 2: AI recommendation text (reframed as risk management suggestion)
+      const recText = 'Για διαχείριση κινδύνου τον επόμενο γύρο, μια συνετή κατανομή θα ήταν: Μετρητά ' + rec.cash + '%, Ομόλογα ' + rec.bonds + '%, Μικτό Α/Κ ' + rec.balancedFund + '%, Μετοχικό ETF ' + rec.stocks + '%.';
+
+      // Disposition question text (dynamically generated from focal asset data)
+      const focalAssetReturn = mp[focal.focalAssetKey];
+      const focalAssetLabel = ASSET_LABELS[focal.focalAssetKey];
+      const focalReturnStr = (focalAssetReturn >= 0 ? '+' : '') + focalAssetReturn + '%';
 
       container.innerHTML =
         // Block 1: Round header
@@ -175,18 +181,19 @@
         // Block 2: Asset definitions accordion (rounds 2+)
         assetDefinitionsBlock +
 
-        // Block 3: Market performance
+        // SECTION 1: Market Performance
         '<div class="card">' +
-          '<h2>Απόδοση Αγοράς (αυτός ο γύρος)</h2>' +
+          '<h2>Απόδοση αγοράς στον προηγούμενο γύρο</h2>' +
           '<table>' +
             '<thead><tr><th>Επιλογή</th><th>Απόδοση</th></tr></thead>' +
             '<tbody>' + marketRows + '</tbody>' +
           '</table>' +
+          '<p style="margin-top:0.75rem;font-style:italic;font-size:0.9rem;color:#6b7280;">Οι αποδόσεις της αγοράς δεν μπορούν να προβλεφθούν με βεβαιότητα.</p>' +
         '</div>' +
 
-        // Block 4: AI Recommendation
+        // SECTION 2: AI Recommendation
         '<div class="card">' +
-          '<h2>Σύσταση AI</h2>' +
+          '<h2>Σύσταση του ψηφιακού βοηθού για τον επόμενο γύρο</h2>' +
           '<div class="chat-bubble assistant">' + recText + '</div>' +
           '<p style="margin-top:0.5rem;font-style:italic;font-size:0.9rem;color:#6b7280;">Σημείωση: Μπορείτε να ακολουθήσετε ή να αγνοήσετε τη σύσταση.</p>' +
           '<div id="chat-container" class="chat-widget" style="margin-top:0.75rem;"></div>' +
@@ -195,7 +202,7 @@
           '</div>' +
         '</div>' +
 
-        // Block 5: Allocation Input (always visible)
+        // SECTION 3: Allocation Input
         '<div class="card" id="allocation-section">' +
           '<h2>Η δική σας κατανομή (€10.000)</h2>' +
           '<p>Κατανείμετε το χαρτοφυλάκιό σας. Το σύνολο πρέπει να είναι 100%.</p>' +
@@ -222,16 +229,26 @@
           '<p class="alloc-hint">Το σύνολο των ποσοστών πρέπει να ισούται με 100%.</p>' +
         '</div>' +
 
-        // Block 6: Round measures (hidden until allocation === 100%)
-        '<div class="card" id="round-measures-section" style="display:none;">' +
-          // 6a: Disposition
-          '<h2>Απόφαση για μία επιλογή</h2>' +
-          '<p>' + focal.question + ' Τι θα κάνατε στη συνέχεια;</p>' +
+        // Portfolio Feedback (hidden until sum = 100%)
+        '<div class="card" id="portfolio-feedback-section" style="display:none;">' +
+          '<h2>Εκτιμώμενη επίδραση στο χαρτοφυλάκιό σας</h2>' +
+          '<p>Με βάση την κατανομή που επιλέξατε και τις αποδόσεις της αγοράς σε αυτόν τον γύρο, η εκτιμώμενη μεταβολή του χαρτοφυλακίου σας είναι:</p>' +
+          '<div id="portfolio-return-display" style="font-size:1.5rem;font-weight:700;margin:0.75rem 0;text-align:center;"></div>' +
+          '<p id="portfolio-value-display" style="text-align:center;font-size:1rem;margin:0;"></p>' +
+        '</div>' +
+
+        // Sell/hold decision (after portfolio feedback, conditionally shown)
+        '<div class="card" id="disposition-section" style="display:none;">' +
+          '<h2>Απόφαση για τον επόμενο γύρο</h2>' +
+          '<p>Στον γύρο αυτό, το ' + focalAssetLabel + ' είχε απόδοση ' + focalReturnStr + '. Αν είχατε επένδυση σε αυτό το στοιχείο, τι θα κάνατε για τον επόμενο γύρο;</p>' +
           '<div class="decision-options" id="disposition-options" style="margin-top:0.75rem;margin-bottom:1.25rem;">' +
-            '<label for="disp-sell"><input type="radio" id="disp-sell" name="disposition" value="sell" /><span>Θα πουλούσα (μεταφορά σε Μετρητά στον επόμενο γύρο)</span></label>' +
-            '<label for="disp-hold"><input type="radio" id="disp-hold" name="disposition" value="hold" /><span>Θα το κρατούσα</span></label>' +
+            '<label for="disp-sell"><input type="radio" id="disp-sell" name="disposition" value="sell" /><span>Θα πουλούσα τη θέση (μεταφορά στα Μετρητά)</span></label>' +
+            '<label for="disp-hold"><input type="radio" id="disp-hold" name="disposition" value="hold" /><span>Θα κρατούσα τη θέση</span></label>' +
           '</div>' +
-          // 6b: Likert questions
+        '</div>' +
+
+        // Likert measures (hidden until allocation === 100%)
+        '<div class="card" id="round-measures-section" style="display:none;">' +
           renderLikert('confidence', 'Πόσο σίγουρος/η νιώθετε για αυτή την κατανομή;', '1 = Καθόλου σίγουρος/η', '7 = Πολύ σίγουρος/η') +
           renderLikert('trust_round', 'Εμπιστεύομαι τη σύσταση του AI σε αυτόν τον γύρο.', '1 = Διαφωνώ απόλυτα', '7 = Συμφωνώ απόλυτα') +
           renderLikert('control', 'Νιώθω ότι έχω τον έλεγχο των επενδυτικών αποφάσεών μου αυτή τη στιγμή.', '1 = Διαφωνώ απόλυτα', '7 = Συμφωνώ απόλυτα') +
@@ -249,17 +266,9 @@
         'Ποια επιλογή θεωρείται πιο σταθερή;'
       ]);
 
-      // Skip and chatMessageSent unlock measures section if allocation already 100%
-      function onChatInteraction() {
-        if (getSum() === 100) {
-          document.getElementById('round-measures-section').style.display = 'block';
-        }
-      }
-      document.addEventListener('chatMessageSent', onChatInteraction, { once: true });
-      document.getElementById('skip-btn').addEventListener('click', onChatInteraction);
-
       // Allocation inputs
       const allocInputs = ['alloc-cash', 'alloc-bonds', 'alloc-balanced', 'alloc-stocks'];
+      const focalInputMap = { cash: 'alloc-cash', bonds: 'alloc-bonds', balancedFund: 'alloc-balanced', stocks: 'alloc-stocks' };
 
       function getSum() {
         return allocInputs.reduce(function (sum, id) {
@@ -267,13 +276,60 @@
         }, 0);
       }
 
+      function getFocalAlloc() {
+        return parseInt(document.getElementById(focalInputMap[focal.focalAssetKey]).value) || 0;
+      }
+
+      function updatePortfolioFeedback() {
+        const cashVal = parseInt(document.getElementById('alloc-cash').value) || 0;
+        const bondsVal = parseInt(document.getElementById('alloc-bonds').value) || 0;
+        const balancedVal = parseInt(document.getElementById('alloc-balanced').value) || 0;
+        const stocksVal = parseInt(document.getElementById('alloc-stocks').value) || 0;
+        const portfolioReturn =
+          (cashVal / 100) * mp.cash +
+          (bondsVal / 100) * mp.bonds +
+          (balancedVal / 100) * mp.balancedFund +
+          (stocksVal / 100) * mp.stocks;
+        const returnStr = (portfolioReturn >= 0 ? '+' : '') + portfolioReturn.toFixed(2) + '%';
+        const portfolioValue = 10000 * (1 + portfolioReturn / 100);
+        const valueStr = '€' + portfolioValue.toLocaleString('el-GR', { maximumFractionDigits: 0 });
+        document.getElementById('portfolio-return-display').textContent = returnStr;
+        document.getElementById('portfolio-value-display').textContent = 'Εκτιμώμενη αξία χαρτοφυλακίου: ' + valueStr;
+      }
+
+      function showFeedbackSections() {
+        updatePortfolioFeedback();
+        document.getElementById('portfolio-feedback-section').style.display = 'block';
+        const focalAlloc = getFocalAlloc();
+        document.getElementById('disposition-section').style.display = focalAlloc > 0 ? 'block' : 'none';
+        document.getElementById('round-measures-section').style.display = 'block';
+        updateContinueBtn();
+      }
+
+      function hideFeedbackSections() {
+        document.getElementById('portfolio-feedback-section').style.display = 'none';
+        document.getElementById('disposition-section').style.display = 'none';
+        document.getElementById('round-measures-section').style.display = 'none';
+      }
+
+      // Skip and chatMessageSent unlock feedback sections if allocation already 100%
+      function onChatInteraction() {
+        if (getSum() === 100) {
+          showFeedbackSections();
+        }
+      }
+      document.addEventListener('chatMessageSent', onChatInteraction, { once: true });
+      document.getElementById('skip-btn').addEventListener('click', onChatInteraction);
+
       function updateSum() {
         const total = getSum();
         const el = document.getElementById('alloc-sum');
         el.textContent = 'Σύνολο: ' + total + '%' + (total === 100 ? ' ✓' : ' (πρέπει να είναι 100%)');
         el.className = 'allocation-sum ' + (total === 100 ? 'sum-ok' : 'sum-bad');
         if (total === 100) {
-          document.getElementById('round-measures-section').style.display = 'block';
+          showFeedbackSections();
+        } else {
+          hideFeedbackSections();
         }
         updateContinueBtn();
       }
@@ -281,9 +337,11 @@
       function updateContinueBtn() {
         const btn = document.getElementById('round-next-btn');
         if (!btn) return;
+        const needsDisposition = getFocalAlloc() > 0;
+        const dispositionOk = !needsDisposition || document.querySelector('input[name="disposition"]:checked') !== null;
         const allFilled =
           getSum() === 100 &&
-          document.querySelector('input[name="disposition"]:checked') &&
+          dispositionOk &&
           document.querySelector('input[name="confidence"]:checked') &&
           document.querySelector('input[name="trust_round"]:checked') &&
           document.querySelector('input[name="control"]:checked') &&
@@ -330,15 +388,18 @@
         const trustRoundEl = document.querySelector('input[name="trust_round"]:checked');
         const controlEl = document.querySelector('input[name="control"]:checked');
         const complianceEl = document.querySelector('input[name="compliance"]:checked');
-        const dispositionEl = document.querySelector('input[name="disposition"]:checked');
 
-        if (!confidenceEl || !trustRoundEl || !controlEl || !complianceEl || !dispositionEl) return;
+        if (!confidenceEl || !trustRoundEl || !controlEl || !complianceEl) return;
 
         const confidence = parseInt(confidenceEl.value);
         const trustRound = parseInt(trustRoundEl.value);
         const control = parseInt(controlEl.value);
         const compliance = parseInt(complianceEl.value);
-        const disposition = dispositionEl.value;
+        const focalAlloc = getFocalAlloc();
+        const dispositionEl = document.querySelector('input[name="disposition"]:checked');
+        const disposition = focalAlloc > 0 ? (dispositionEl ? dispositionEl.value : null) : 'skipped';
+
+        if (focalAlloc > 0 && !dispositionEl) return;
 
         await window.SupabaseUtils.insertScenario2Round(pid, round.roundNumber, allocation, confidence, trustRound, control, compliance, disposition);
 
