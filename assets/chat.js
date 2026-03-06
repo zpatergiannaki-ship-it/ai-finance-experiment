@@ -25,14 +25,14 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
   const predefinedHtml = (Array.isArray(predefinedQuestions) && predefinedQuestions.length > 0)
     ? '<div class="chat-predefined-questions" id="chat-predefined-' + containerId + '">' +
         predefinedQuestions.map(function (q) {
-          return '<button class="btn btn-secondary chat-predefined-btn" data-question="' + escapeHtml(q) + '">' + escapeHtml(q) + '</button>';
+          return '<button class="chat-predefined-btn" data-question="' + escapeHtml(q) + '">' + escapeHtml(q) + '</button>';
         }).join('') +
       '</div>'
     : '';
 
   container.innerHTML =
-    predefinedHtml +
     '<div class="chat-messages" id="chat-messages-' + containerId + '"></div>' +
+    predefinedHtml +
     '<div class="chat-input-row">' +
       '<input type="text" id="chat-input-' + containerId + '" class="chat-input" placeholder="Κάντε μια ερώτηση στον βοηθό…" maxlength="500" />' +
       '<button id="chat-send-' + containerId + '" class="btn btn-primary chat-send-btn">Αποστολή</button>' +

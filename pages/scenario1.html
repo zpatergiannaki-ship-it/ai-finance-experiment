@@ -165,23 +165,7 @@
       <h2>Συνομιλία με τον Ψηφιακό Βοηθό</h2>
       <hr class="section-divider" />
 
-      <p style="margin-bottom:0.6rem;">Μπορείτε να επιλέξετε μία από τις παρακάτω ερωτήσεις για να λάβετε συμβουλή από τον ψηφιακό βοηθό ή να θέσετε τη δική σας.</p>
-
-      <p class="section-label">Επιλογή ερώτησης</p>
-      <div class="suggested-questions" id="suggested-questions">
-        <button type="button" class="suggested-question-btn" data-question="Ποια είναι η βασική διαφορά μεταξύ της πιστωτικής κάρτας και του προσωπικού δανείου;">
-          Ποια είναι η βασική διαφορά μεταξύ της πιστωτικής κάρτας και του προσωπικού δανείου σε αυτή την περίπτωση;
-        </button>
-        <button type="button" class="suggested-question-btn" data-question="Ποια επιλογή φαίνεται να είναι οικονομικά πιο συμφέρουσα με βάση τα επιτόκια και τις δόσεις;">
-          Ποια επιλογή φαίνεται να είναι οικονομικά πιο συμφέρουσα με βάση τα επιτόκια και τις δόσεις;
-        </button>
-        <button type="button" class="suggested-question-btn" data-question="Ποια επιλογή έχει μεγαλύτερο οικονομικό κίνδυνο ή αβεβαιότητα για εμένα;">
-          Ποια επιλογή έχει μεγαλύτερο οικονομικό κίνδυνο ή αβεβαιότητα για εμένα;
-        </button>
-        <button type="button" class="suggested-question-btn" data-question="Με βάση τις πληροφορίες που δίνονται, ποια επιλογή θα πρότεινε ένας οικονομικός σύμβουλος;">
-          Με βάση τις πληροφορίες που δίνονται, ποια επιλογή θα πρότεινε ένας οικονομικός σύμβουλος;
-        </button>
-      </div>
+      <p style="margin-bottom:0.6rem;">Μπορείτε να χρησιμοποιήσετε τις προτεινόμενες ερωτήσεις που βρίσκονται μέσα στον βοηθό παρακάτω ή να θέσετε τη δική σας.</p>
 
       <div id="chat-container" class="chat-widget"></div>
     </div>
@@ -263,25 +247,12 @@
       const nextBtn = document.getElementById('next-btn');
       const decisionSection = document.getElementById('decision-section');
 
-      window.ChatUtils.initChat('chat-container', 'scenario1', null);
-
-      // ── Suggested question buttons ──
-      const suggestedBtns = document.querySelectorAll('.suggested-question-btn');
-      suggestedBtns.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          const question = btn.getAttribute('data-question');
-          // Fill chat input and send
-          const inputEl = document.getElementById('chat-input-chat-container');
-          if (inputEl) {
-            inputEl.value = question;
-            const sendBtn = document.getElementById('chat-send-chat-container');
-            if (sendBtn) sendBtn.click();
-          }
-          // Highlight selected
-          suggestedBtns.forEach(function (b) { b.classList.remove('selected'); });
-          btn.classList.add('selected');
-        });
-      });
+      window.ChatUtils.initChat('chat-container', 'scenario1', null, [
+        'Ποια είναι η βασική διαφορά μεταξύ της πιστωτικής κάρτας και του προσωπικού δανείου;',
+        'Ποια επιλογή φαίνεται να είναι οικονομικά πιο συμφέρουσα με βάση τα επιτόκια και τις δόσεις;',
+        'Ποια επιλογή έχει μεγαλύτερο οικονομικό κίνδυνο ή αβεβαιότητα για εμένα;',
+        'Με βάση τις πληροφορίες που δίνονται, ποια επιλογή θα πρότεινε ένας οικονομικός σύμβουλος;'
+      ]);
 
       // ── Validation helper ──
       function checkNextEnabled() {
