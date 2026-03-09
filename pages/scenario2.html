@@ -180,7 +180,7 @@
       }).join('');
 
       // SECTION 2: AI recommendation text (reframed as risk management suggestion)
-      const recText = 'Για διαχείριση κινδύνου τον επόμενο γύρο, μια συνετή κατανομή θα ήταν: Μετρητά ' + rec.cash + '%, Ομόλογα ' + rec.bonds + '%, Μικτό Αμοιβαίο Κεφάλαιο ' + rec.balancedFund + '%, Μετοχικό ETF ' + rec.stocks + '%.';
+      const recText = 'Για διαχείριση κινδύνου τον επόμενο γύρο, μια πιθανή κατανομή για τον επόμενο γύρο θα μπορούσε να είναι: Μετρητά ' + rec.cash + '%, Ομόλογα ' + rec.bonds + '%, Μικτό Αμοιβαίο Κεφάλαιο ' + rec.balancedFund + '%, Μετοχικό ETF ' + rec.stocks + '%.';
 
       // Disposition question text (dynamically generated from focal asset data)
       const focalAssetReturn = mp[focal.focalAssetKey];
@@ -199,7 +199,7 @@
 
         // SECTION 1: Market Performance
         '<div class="card">' +
-          '<h2>Απόδοση αγοράς στον προηγούμενο γύρο</h2>' +
+          '<h2>Απόδοση αγοράς</h2>' +
           '<table>' +
             '<thead><tr><th>Επιλογή</th><th>Απόδοση</th></tr></thead>' +
             '<tbody>' + marketRows + '</tbody>' +
@@ -221,7 +221,7 @@
         // SECTION 3: Allocation Input
         '<div class="card" id="allocation-section">' +
           '<h2>Η δική σας κατανομή (€10.000)</h2>' +
-          '<p>Κατανείμετε το χαρτοφυλάκιό σας. Το σύνολο πρέπει να είναι 100%.</p>' +
+          '<p>Κατανείμετε τα χρήματά σας στις παρακάτω επιλογές. Το σύνολο πρέπει να είναι 100%.</p>' +
           '<div style="margin-bottom:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap;">' +
             '<button id="fill-equal-btn" class="btn btn-secondary">Συμπλήρωση ισόποσα (25%)</button>' +
             '<button id="fill-ai-btn" class="btn btn-secondary">Χρήση πρότασης AI</button>' +
@@ -266,10 +266,10 @@
 
         // Likert measures (hidden until allocation === 100%)
         '<div class="card" id="round-measures-section" style="display:none;">' +
-          renderLikert('confidence', 'Πόσο σίγουρος/η νιώθετε για αυτή την κατανομή;', '1 = Καθόλου σίγουρος/η', '7 = Πολύ σίγουρος/η') +
-          renderLikert('trust_round', 'Εμπιστεύομαι τη σύσταση του AI σε αυτόν τον γύρο.', '1 = Διαφωνώ απόλυτα', '7 = Συμφωνώ απόλυτα') +
+          renderLikert('confidence', 'Πόσο σίγουρος/η νιώθετε για την κατανομή που επιλέξατε;', '1 = Καθόλου σίγουρος/η', '7 = Πολύ σίγουρος/η') +
+          renderLikert('trust_round', 'Εμπιστεύομαι τη σύσταση του ψηφιακού βοηθού σε αυτόν τον γύρο.', '1 = Διαφωνώ απόλυτα', '7 = Συμφωνώ απόλυτα') +
           renderLikert('control', 'Νιώθω ότι έχω τον έλεγχο των επενδυτικών αποφάσεών μου αυτή τη στιγμή.', '1 = Διαφωνώ απόλυτα', '7 = Συμφωνώ απόλυτα') +
-          renderLikert('compliance', 'Ακολούθησα στενά τη σύσταση του AI σε αυτόν τον γύρο.', '1 = Διαφωνώ απόλυτα', '7 = Συμφωνώ απόλυτα') +
+          renderLikert('compliance', 'Ακολούθησα σε μεγάλο βαθμό τη σύσταση του ψηφιακού βοηθού σε αυτόν τον γύρο.', '1 = Διαφωνώ απόλυτα', '7 = Συμφωνώ απόλυτα') +
           '<button id="round-next-btn" class="btn btn-primary btn-full" style="margin-top:0.5rem;" disabled>' +
             nextRoundLabel +
           '</button>' +
