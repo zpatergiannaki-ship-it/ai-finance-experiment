@@ -136,11 +136,29 @@
         for (var i = 1; i <= 7; i++) {
           const td = document.createElement('td');
           const label = document.createElement('label');
+
+          // Number span BEFORE input (so it appears above on mobile)
+          const span = document.createElement('span');
+          span.textContent = i;
+          label.appendChild(span);
+
           const input = document.createElement('input');
           input.type = 'radio';
           input.name = q.name;
           input.value = i;
           label.appendChild(input);
+
+          // Anchor text AFTER input for columns 1 and 7
+          if (i === 1) {
+            const small = document.createElement('small');
+            small.textContent = ANCHORS.low;
+            label.appendChild(small);
+          } else if (i === 7) {
+            const small = document.createElement('small');
+            small.textContent = ANCHORS.high;
+            label.appendChild(small);
+          }
+
           td.appendChild(label);
           tr.appendChild(td);
         }
