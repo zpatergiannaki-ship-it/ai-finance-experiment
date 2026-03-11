@@ -48,6 +48,191 @@
       color: #9ca3af;
       margin-bottom: 0.4rem;
     }
+
+    /* ===========================
+       Data Tables
+       =========================== */
+    .data-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      background: #ffffff;
+    }
+    .data-table thead tr {
+      background: #f1f5f9;
+    }
+    .data-table thead th {
+      padding: 0.6rem 0.75rem;
+      font-weight: 700;
+      color: #374151;
+      text-align: left;
+      border-bottom: 2px solid #e2e8f0;
+      white-space: nowrap;
+    }
+    .data-table thead th:not(:first-child) {
+      text-align: center;
+    }
+    .data-table tbody tr:not(:last-child) td {
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .data-table tbody td {
+      padding: 0.55rem 0.75rem;
+      color: #1f2937;
+      text-align: left;
+    }
+    .data-table tbody td:not(:first-child) {
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+    .data-table tbody tr:hover {
+      background: #f9fafb;
+    }
+
+    /* ===========================
+       Allocation Section
+       =========================== */
+    .allocation-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 0.5rem 1rem;
+      margin-bottom: 1rem;
+    }
+    .allocation-grid .alloc-label {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #374151;
+    }
+    .allocation-grid .alloc-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .allocation-grid .alloc-input-wrap input[type="number"] {
+      width: 72px;
+      padding: 0.45rem 0.6rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 7px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1f2937;
+      background: #f9fafb;
+      text-align: right;
+      transition: border-color 0.15s, background 0.15s;
+      -moz-appearance: textfield;
+    }
+    .allocation-grid .alloc-input-wrap input[type="number"]::-webkit-inner-spin-button,
+    .allocation-grid .alloc-input-wrap input[type="number"]::-webkit-outer-spin-button {
+      opacity: 1;
+    }
+    .allocation-grid .alloc-input-wrap input[type="number"]:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: #ffffff;
+    }
+    .allocation-grid .alloc-input-wrap .pct-symbol {
+      font-size: 0.95rem;
+      color: #6b7280;
+      font-weight: 500;
+    }
+    .alloc-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.1rem;
+    }
+
+    /* ===========================
+       Allocation Sum Badge
+       =========================== */
+    .allocation-sum {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      border: 1.5px solid transparent;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .allocation-sum.sum-ok {
+      background: #f0fdf4;
+      border-color: #4ade80;
+      color: #15803d;
+    }
+    .allocation-sum.sum-bad {
+      background: #fff7ed;
+      border-color: #fdba74;
+      color: #c2410c;
+    }
+    .allocation-sum.sum-over {
+      background: #fef2f2;
+      border-color: #f87171;
+      color: #b91c1c;
+    }
+
+    /* ===========================
+       Portfolio Return Card
+       =========================== */
+    .portfolio-return-card {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1.1rem 1.25rem;
+      text-align: center;
+      margin: 0.75rem 0;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .portfolio-return-card.positive-bg {
+      background: #f0fdf4;
+      border-color: #86efac;
+    }
+    .portfolio-return-card.negative-bg {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+    .portfolio-return-figure {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 0.35rem;
+      transition: color 0.2s;
+    }
+    .portfolio-return-figure.positive { color: #16a34a; }
+    .portfolio-return-figure.negative { color: #dc2626; }
+    .portfolio-return-figure.neutral  { color: #374151; }
+    .portfolio-value-line {
+      font-size: 0.95rem;
+      color: #4b5563;
+      margin: 0;
+    }
+
+    /* ===========================
+       Action Buttons
+       =========================== */
+    .btn-action-secondary {
+      background: #f1f5f9;
+      color: #1e40af;
+      border: 1.5px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 0.55rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .btn-action-secondary:hover { background: #dbeafe; border-color: #93c5fd; }
+    .btn-action-secondary:disabled { opacity: 0.45; cursor: not-allowed; }
   </style>
 </head>
 <body>
@@ -200,7 +385,7 @@
         // SECTION 1: Market Performance
         '<div class="card">' +
           '<h2>Απόδοση αγοράς</h2>' +
-          '<table>' +
+          '<table class="data-table">' +
             '<thead><tr><th>Επιλογή</th><th>Απόδοση</th></tr></thead>' +
             '<tbody>' + marketRows + '</tbody>' +
           '</table>' +
@@ -222,25 +407,19 @@
         '<div class="card" id="allocation-section">' +
           '<h2>Η δική σας κατανομή (€10.000)</h2>' +
           '<p>Κατανείμετε τα χρήματά σας στις παρακάτω επιλογές. Το σύνολο πρέπει να είναι 100%.</p>' +
-          '<div style="margin-bottom:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap;">' +
-            '<button id="fill-equal-btn" class="btn btn-secondary">Συμπλήρωση ισόποσα (25%)</button>' +
-            '<button id="fill-ai-btn" class="btn btn-secondary">Χρήση πρότασης AI</button>' +
+          '<div class="alloc-actions">' +
+            '<button id="fill-equal-btn" class="btn-action-secondary">Συμπλήρωση ισόποσα (25%)</button>' +
+            '<button id="fill-ai-btn" class="btn-action-secondary">Χρήση πρότασης AI</button>' +
           '</div>' +
-          '<div class="allocation-row">' +
-            '<label for="alloc-cash">Μετρητά %</label>' +
-            '<input type="number" id="alloc-cash" min="0" max="100" value="" />' +
-          '</div>' +
-          '<div class="allocation-row">' +
-            '<label for="alloc-bonds">Ομόλογα %</label>' +
-            '<input type="number" id="alloc-bonds" min="0" max="100" value="" />' +
-          '</div>' +
-          '<div class="allocation-row">' +
-            '<label for="alloc-balanced">Μικτό Αμοιβαίο Κεφάλαιο %</label>' +
-            '<input type="number" id="alloc-balanced" min="0" max="100" value="" />' +
-          '</div>' +
-          '<div class="allocation-row">' +
-            '<label for="alloc-stocks">Μετοχικό ETF %</label>' +
-            '<input type="number" id="alloc-stocks" min="0" max="100" value="" />' +
+          '<div class="allocation-grid">' +
+            '<div class="alloc-label">Μετρητά</div>' +
+            '<div class="alloc-input-wrap"><input type="number" id="alloc-cash" min="0" max="100" value="" /><span class="pct-symbol">%</span></div>' +
+            '<div class="alloc-label">Ομόλογα</div>' +
+            '<div class="alloc-input-wrap"><input type="number" id="alloc-bonds" min="0" max="100" value="" /><span class="pct-symbol">%</span></div>' +
+            '<div class="alloc-label">Μικτό Αμοιβαίο Κεφάλαιο</div>' +
+            '<div class="alloc-input-wrap"><input type="number" id="alloc-balanced" min="0" max="100" value="" /><span class="pct-symbol">%</span></div>' +
+            '<div class="alloc-label">Μετοχικό ETF</div>' +
+            '<div class="alloc-input-wrap"><input type="number" id="alloc-stocks" min="0" max="100" value="" /><span class="pct-symbol">%</span></div>' +
           '</div>' +
           '<div class="allocation-sum sum-bad" id="alloc-sum">Σύνολο: 0% (πρέπει να είναι 100%)</div>' +
           '<p class="alloc-hint">Το σύνολο των ποσοστών πρέπει να ισούται με 100%.</p>' +
@@ -250,8 +429,10 @@
         '<div class="card" id="portfolio-feedback-section" style="display:none;">' +
           '<h2>Εκτιμώμενη επίδραση στο χαρτοφυλάκιό σας</h2>' +
           '<p>Με βάση την κατανομή που επιλέξατε και τις αποδόσεις της αγοράς σε αυτόν τον γύρο, η εκτιμώμενη μεταβολή του χαρτοφυλακίου σας είναι:</p>' +
-          '<div id="portfolio-return-display" style="font-size:1.5rem;font-weight:700;margin:0.75rem 0;text-align:center;"></div>' +
-          '<p id="portfolio-value-display" style="text-align:center;font-size:1rem;margin:0;"></p>' +
+          '<div class="portfolio-return-card" id="portfolio-return-card">' +
+            '<div class="portfolio-return-figure" id="portfolio-return-display"></div>' +
+            '<p class="portfolio-value-line" id="portfolio-value-display"></p>' +
+          '</div>' +
         '</div>' +
 
         // Sell/hold decision (after portfolio feedback, conditionally shown)
@@ -298,20 +479,36 @@
       }
 
       function updatePortfolioFeedback() {
-        const cashVal = parseInt(document.getElementById('alloc-cash').value) || 0;
-        const bondsVal = parseInt(document.getElementById('alloc-bonds').value) || 0;
+        const cashVal    = parseInt(document.getElementById('alloc-cash').value)     || 0;
+        const bondsVal   = parseInt(document.getElementById('alloc-bonds').value)    || 0;
         const balancedVal = parseInt(document.getElementById('alloc-balanced').value) || 0;
-        const stocksVal = parseInt(document.getElementById('alloc-stocks').value) || 0;
+        const stocksVal  = parseInt(document.getElementById('alloc-stocks').value)   || 0;
         const portfolioReturn =
-          (cashVal / 100) * mp.cash +
-          (bondsVal / 100) * mp.bonds +
+          (cashVal / 100)     * mp.cash +
+          (bondsVal / 100)    * mp.bonds +
           (balancedVal / 100) * mp.balancedFund +
-          (stocksVal / 100) * mp.stocks;
+          (stocksVal / 100)   * mp.stocks;
         const returnStr = (portfolioReturn >= 0 ? '+' : '') + portfolioReturn.toFixed(2) + '%';
         const portfolioValue = 10000 * (1 + portfolioReturn / 100);
         const valueStr = '€' + portfolioValue.toLocaleString('el-GR', { maximumFractionDigits: 0 });
-        document.getElementById('portfolio-return-display').textContent = returnStr;
-        document.getElementById('portfolio-value-display').textContent = 'Εκτιμώμενη αξία χαρτοφυλακίου: ' + valueStr;
+
+        const returnEl = document.getElementById('portfolio-return-display');
+        const cardEl   = document.getElementById('portfolio-return-card');
+        const valueEl  = document.getElementById('portfolio-value-display');
+
+        if (returnEl) {
+          returnEl.textContent = returnStr;
+          returnEl.classList.remove('positive', 'negative', 'neutral');
+          returnEl.classList.add(portfolioReturn > 0 ? 'positive' : portfolioReturn < 0 ? 'negative' : 'neutral');
+        }
+        if (cardEl) {
+          cardEl.classList.remove('positive-bg', 'negative-bg');
+          if (portfolioReturn > 0) cardEl.classList.add('positive-bg');
+          else if (portfolioReturn < 0) cardEl.classList.add('negative-bg');
+        }
+        if (valueEl) {
+          valueEl.textContent = 'Εκτιμώμενη αξία χαρτοφυλακίου: ' + valueStr;
+        }
       }
 
       function showFeedbackSections() {
@@ -341,11 +538,19 @@
       function updateSum() {
         const total = getSum();
         const el = document.getElementById('alloc-sum');
-        el.textContent = 'Σύνολο: ' + total + '%' + (total === 100 ? ' ✓' : ' (πρέπει να είναι 100%)');
-        el.className = 'allocation-sum ' + (total === 100 ? 'sum-ok' : 'sum-bad');
+        if (!el) return;
+        el.classList.remove('sum-ok', 'sum-bad', 'sum-over');
         if (total === 100) {
+          el.textContent = 'Σύνολο: 100% ✓';
+          el.classList.add('sum-ok');
           showFeedbackSections();
+        } else if (total > 100) {
+          el.textContent = 'Σύνολο: ' + total + '% ⚠ (υπέρβαση)';
+          el.classList.add('sum-over');
+          hideFeedbackSections();
         } else {
+          el.textContent = 'Σύνολο: ' + total + '% (πρέπει να είναι 100%)';
+          el.classList.add('sum-bad');
           hideFeedbackSections();
         }
         updateContinueBtn();
