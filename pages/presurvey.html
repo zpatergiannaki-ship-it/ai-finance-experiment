@@ -66,10 +66,25 @@
         padding: 0.2rem 0.3rem;
         min-width: 28px;
       }
-      .likert-matrix td label { flex-direction: column; font-size: 0.75rem; gap: 0.1rem; }
-      .likert-matrix tbody td:not(:first-child) label span,
+      .likert-matrix td label { flex-direction: column; align-items: center; font-size: 0.75rem; gap: 0.1rem; }
+      /* show number, hide anchor text by default */
       .likert-matrix tbody td:not(:first-child) label small {
         display: none;
+      }
+      /* show anchor text on first data column (td:nth-child(2)) and last (td:nth-child(8)) */
+      .likert-matrix tbody td:nth-child(2) label small,
+      .likert-matrix tbody td:nth-child(8) label small {
+        display: block;
+        font-size: 0.65rem;
+        text-align: center;
+        color: #6b7280;
+        white-space: normal;
+        max-width: 40px;
+        line-height: 1.2;
+      }
+      .likert-matrix tbody td:nth-child(2),
+      .likert-matrix tbody td:nth-child(8) {
+        min-width: 48px;
       }
     }
   </style>
@@ -189,53 +204,53 @@
             <tbody>
               <tr id="group-fin_lit_1">
                 <td>Β1.1. Κατανοώ καλά βασικές οικονομικές έννοιες.</td>
-                <td><label><input type="radio" name="fin_lit_1" value="1" /></label></td>
-                <td><label><input type="radio" name="fin_lit_1" value="2" /></label></td>
-                <td><label><input type="radio" name="fin_lit_1" value="3" /></label></td>
-                <td><label><input type="radio" name="fin_lit_1" value="4" /></label></td>
-                <td><label><input type="radio" name="fin_lit_1" value="5" /></label></td>
-                <td><label><input type="radio" name="fin_lit_1" value="6" /></label></td>
-                <td><label><input type="radio" name="fin_lit_1" value="7" /></label></td>
+                <td><label><input type="radio" name="fin_lit_1" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="fin_lit_1" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="fin_lit_1" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="fin_lit_1" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="fin_lit_1" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="fin_lit_1" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="fin_lit_1" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
               <tr id="group-fin_lit_2">
                 <td>Β1.2. Έχω βασικές γνώσεις σχετικά με τον επενδυτικό κίνδυνο και την απόδοση.</td>
-                <td><label><input type="radio" name="fin_lit_2" value="1" /></label></td>
-                <td><label><input type="radio" name="fin_lit_2" value="2" /></label></td>
-                <td><label><input type="radio" name="fin_lit_2" value="3" /></label></td>
-                <td><label><input type="radio" name="fin_lit_2" value="4" /></label></td>
-                <td><label><input type="radio" name="fin_lit_2" value="5" /></label></td>
-                <td><label><input type="radio" name="fin_lit_2" value="6" /></label></td>
-                <td><label><input type="radio" name="fin_lit_2" value="7" /></label></td>
+                <td><label><input type="radio" name="fin_lit_2" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="fin_lit_2" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="fin_lit_2" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="fin_lit_2" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="fin_lit_2" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="fin_lit_2" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="fin_lit_2" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
               <tr id="group-fin_lit_3">
                 <td>Β1.3. Μπορώ συνήθως να κρίνω αν μια οικονομική σύσταση είναι λογική.</td>
-                <td><label><input type="radio" name="fin_lit_3" value="1" /></label></td>
-                <td><label><input type="radio" name="fin_lit_3" value="2" /></label></td>
-                <td><label><input type="radio" name="fin_lit_3" value="3" /></label></td>
-                <td><label><input type="radio" name="fin_lit_3" value="4" /></label></td>
-                <td><label><input type="radio" name="fin_lit_3" value="5" /></label></td>
-                <td><label><input type="radio" name="fin_lit_3" value="6" /></label></td>
-                <td><label><input type="radio" name="fin_lit_3" value="7" /></label></td>
+                <td><label><input type="radio" name="fin_lit_3" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="fin_lit_3" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="fin_lit_3" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="fin_lit_3" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="fin_lit_3" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="fin_lit_3" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="fin_lit_3" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
               <tr id="group-fin_lit_4">
                 <td>Β1.4. Σε σύγκριση με τον μέσο άνθρωπο, θεωρώ ότι γνωρίζω αρκετά για τα προσωπικά οικονομικά.</td>
-                <td><label><input type="radio" name="fin_lit_4" value="1" /></label></td>
-                <td><label><input type="radio" name="fin_lit_4" value="2" /></label></td>
-                <td><label><input type="radio" name="fin_lit_4" value="3" /></label></td>
-                <td><label><input type="radio" name="fin_lit_4" value="4" /></label></td>
-                <td><label><input type="radio" name="fin_lit_4" value="5" /></label></td>
-                <td><label><input type="radio" name="fin_lit_4" value="6" /></label></td>
-                <td><label><input type="radio" name="fin_lit_4" value="7" /></label></td>
+                <td><label><input type="radio" name="fin_lit_4" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="fin_lit_4" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="fin_lit_4" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="fin_lit_4" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="fin_lit_4" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="fin_lit_4" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="fin_lit_4" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
               <tr id="group-fin_lit_5">
                 <td>Β1.5. Νιώθω ικανός/ή να αξιολογώ την ποιότητα των επενδυτικών συμβουλών.</td>
-                <td><label><input type="radio" name="fin_lit_5" value="1" /></label></td>
-                <td><label><input type="radio" name="fin_lit_5" value="2" /></label></td>
-                <td><label><input type="radio" name="fin_lit_5" value="3" /></label></td>
-                <td><label><input type="radio" name="fin_lit_5" value="4" /></label></td>
-                <td><label><input type="radio" name="fin_lit_5" value="5" /></label></td>
-                <td><label><input type="radio" name="fin_lit_5" value="6" /></label></td>
-                <td><label><input type="radio" name="fin_lit_5" value="7" /></label></td>
+                <td><label><input type="radio" name="fin_lit_5" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="fin_lit_5" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="fin_lit_5" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="fin_lit_5" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="fin_lit_5" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="fin_lit_5" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="fin_lit_5" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
             </tbody>
           </table>
@@ -261,53 +276,53 @@
             <tbody>
               <tr id="group-fin_se_1">
                 <td>Β2.1. Έχω εμπιστοσύνη στην ικανότητά μου να διαχειρίζομαι τα προσωπικά μου οικονομικά.</td>
-                <td><label><input type="radio" name="fin_se_1" value="1" /></label></td>
-                <td><label><input type="radio" name="fin_se_1" value="2" /></label></td>
-                <td><label><input type="radio" name="fin_se_1" value="3" /></label></td>
-                <td><label><input type="radio" name="fin_se_1" value="4" /></label></td>
-                <td><label><input type="radio" name="fin_se_1" value="5" /></label></td>
-                <td><label><input type="radio" name="fin_se_1" value="6" /></label></td>
-                <td><label><input type="radio" name="fin_se_1" value="7" /></label></td>
+                <td><label><input type="radio" name="fin_se_1" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="fin_se_1" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="fin_se_1" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="fin_se_1" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="fin_se_1" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="fin_se_1" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="fin_se_1" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
               <tr id="group-fin_se_2">
                 <td>Β2.2. Μπορώ να λαμβάνω σωστές οικονομικές αποφάσεις όταν χρειάζεται.</td>
-                <td><label><input type="radio" name="fin_se_2" value="1" /></label></td>
-                <td><label><input type="radio" name="fin_se_2" value="2" /></label></td>
-                <td><label><input type="radio" name="fin_se_2" value="3" /></label></td>
-                <td><label><input type="radio" name="fin_se_2" value="4" /></label></td>
-                <td><label><input type="radio" name="fin_se_2" value="5" /></label></td>
-                <td><label><input type="radio" name="fin_se_2" value="6" /></label></td>
-                <td><label><input type="radio" name="fin_se_2" value="7" /></label></td>
+                <td><label><input type="radio" name="fin_se_2" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="fin_se_2" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="fin_se_2" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="fin_se_2" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="fin_se_2" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="fin_se_2" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="fin_se_2" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
               <tr id="group-fin_se_3">
                 <td>Β2.3. Μπορώ να παραμένω συνεπής στους οικονομικούς μου στόχους ακόμη και όταν οι αποφάσεις είναι δύσκολες.</td>
-                <td><label><input type="radio" name="fin_se_3" value="1" /></label></td>
-                <td><label><input type="radio" name="fin_se_3" value="2" /></label></td>
-                <td><label><input type="radio" name="fin_se_3" value="3" /></label></td>
-                <td><label><input type="radio" name="fin_se_3" value="4" /></label></td>
-                <td><label><input type="radio" name="fin_se_3" value="5" /></label></td>
-                <td><label><input type="radio" name="fin_se_3" value="6" /></label></td>
-                <td><label><input type="radio" name="fin_se_3" value="7" /></label></td>
+                <td><label><input type="radio" name="fin_se_3" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="fin_se_3" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="fin_se_3" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="fin_se_3" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="fin_se_3" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="fin_se_3" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="fin_se_3" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
               <tr id="group-fin_se_4">
                 <td>Β2.4. Μπορώ να αξιολογώ οικονομικές επιλογές χωρίς να βασίζομαι πλήρως σε άλλους.</td>
-                <td><label><input type="radio" name="fin_se_4" value="1" /></label></td>
-                <td><label><input type="radio" name="fin_se_4" value="2" /></label></td>
-                <td><label><input type="radio" name="fin_se_4" value="3" /></label></td>
-                <td><label><input type="radio" name="fin_se_4" value="4" /></label></td>
-                <td><label><input type="radio" name="fin_se_4" value="5" /></label></td>
-                <td><label><input type="radio" name="fin_se_4" value="6" /></label></td>
-                <td><label><input type="radio" name="fin_se_4" value="7" /></label></td>
+                <td><label><input type="radio" name="fin_se_4" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="fin_se_4" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="fin_se_4" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="fin_se_4" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="fin_se_4" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="fin_se_4" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="fin_se_4" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
               <tr id="group-fin_se_5">
                 <td>Β2.5. Αν χρειαζόταν, θα μπορούσα να βελτιώσω την οικονομική μου κατάσταση μέσω των δικών μου αποφάσεων.</td>
-                <td><label><input type="radio" name="fin_se_5" value="1" /></label></td>
-                <td><label><input type="radio" name="fin_se_5" value="2" /></label></td>
-                <td><label><input type="radio" name="fin_se_5" value="3" /></label></td>
-                <td><label><input type="radio" name="fin_se_5" value="4" /></label></td>
-                <td><label><input type="radio" name="fin_se_5" value="5" /></label></td>
-                <td><label><input type="radio" name="fin_se_5" value="6" /></label></td>
-                <td><label><input type="radio" name="fin_se_5" value="7" /></label></td>
+                <td><label><input type="radio" name="fin_se_5" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="fin_se_5" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="fin_se_5" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="fin_se_5" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="fin_se_5" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="fin_se_5" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="fin_se_5" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
             </tbody>
           </table>
@@ -333,53 +348,53 @@
             <tbody>
               <tr id="group-risk_tol_1">
                 <td>Β3.1. Γενικά αισθάνομαι άνετα να αναλαμβάνω οικονομικό κίνδυνο για πιθανώς υψηλότερες αποδόσεις.</td>
-                <td><label><input type="radio" name="risk_tol_1" value="1" /></label></td>
-                <td><label><input type="radio" name="risk_tol_1" value="2" /></label></td>
-                <td><label><input type="radio" name="risk_tol_1" value="3" /></label></td>
-                <td><label><input type="radio" name="risk_tol_1" value="4" /></label></td>
-                <td><label><input type="radio" name="risk_tol_1" value="5" /></label></td>
-                <td><label><input type="radio" name="risk_tol_1" value="6" /></label></td>
-                <td><label><input type="radio" name="risk_tol_1" value="7" /></label></td>
+                <td><label><input type="radio" name="risk_tol_1" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="risk_tol_1" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="risk_tol_1" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="risk_tol_1" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="risk_tol_1" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="risk_tol_1" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="risk_tol_1" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
               <tr id="group-risk_tol_2">
                 <td>Β3.2. Προτιμώ πιο ασφαλείς οικονομικές επιλογές ακόμη και αν προσφέρουν χαμηλότερες αποδόσεις.</td>
-                <td><label><input type="radio" name="risk_tol_2" value="1" /></label></td>
-                <td><label><input type="radio" name="risk_tol_2" value="2" /></label></td>
-                <td><label><input type="radio" name="risk_tol_2" value="3" /></label></td>
-                <td><label><input type="radio" name="risk_tol_2" value="4" /></label></td>
-                <td><label><input type="radio" name="risk_tol_2" value="5" /></label></td>
-                <td><label><input type="radio" name="risk_tol_2" value="6" /></label></td>
-                <td><label><input type="radio" name="risk_tol_2" value="7" /></label></td>
+                <td><label><input type="radio" name="risk_tol_2" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="risk_tol_2" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="risk_tol_2" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="risk_tol_2" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="risk_tol_2" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="risk_tol_2" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="risk_tol_2" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
               <tr id="group-risk_tol_3">
                 <td>Β3.3. Μεγάλες αυξομειώσεις στην αξία μιας επένδυσης θα με έκαναν να νιώσω πολύ άβολα.</td>
-                <td><label><input type="radio" name="risk_tol_3" value="1" /></label></td>
-                <td><label><input type="radio" name="risk_tol_3" value="2" /></label></td>
-                <td><label><input type="radio" name="risk_tol_3" value="3" /></label></td>
-                <td><label><input type="radio" name="risk_tol_3" value="4" /></label></td>
-                <td><label><input type="radio" name="risk_tol_3" value="5" /></label></td>
-                <td><label><input type="radio" name="risk_tol_3" value="6" /></label></td>
-                <td><label><input type="radio" name="risk_tol_3" value="7" /></label></td>
+                <td><label><input type="radio" name="risk_tol_3" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="risk_tol_3" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="risk_tol_3" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="risk_tol_3" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="risk_tol_3" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="risk_tol_3" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="risk_tol_3" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
               <tr id="group-risk_tol_4">
                 <td>Β3.4. Είμαι πρόθυμος/η να εξετάσω επενδύσεις υψηλότερου κινδύνου εάν το μακροπρόθεσμο όφελος είναι σημαντικό.</td>
-                <td><label><input type="radio" name="risk_tol_4" value="1" /></label></td>
-                <td><label><input type="radio" name="risk_tol_4" value="2" /></label></td>
-                <td><label><input type="radio" name="risk_tol_4" value="3" /></label></td>
-                <td><label><input type="radio" name="risk_tol_4" value="4" /></label></td>
-                <td><label><input type="radio" name="risk_tol_4" value="5" /></label></td>
-                <td><label><input type="radio" name="risk_tol_4" value="6" /></label></td>
-                <td><label><input type="radio" name="risk_tol_4" value="7" /></label></td>
+                <td><label><input type="radio" name="risk_tol_4" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="risk_tol_4" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="risk_tol_4" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="risk_tol_4" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="risk_tol_4" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="risk_tol_4" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="risk_tol_4" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
               <tr id="group-risk_tol_5">
                 <td>Β3.5. Η αποφυγή ζημιών είναι για μένα πιο σημαντική από την επίτευξη κερδών.</td>
-                <td><label><input type="radio" name="risk_tol_5" value="1" /></label></td>
-                <td><label><input type="radio" name="risk_tol_5" value="2" /></label></td>
-                <td><label><input type="radio" name="risk_tol_5" value="3" /></label></td>
-                <td><label><input type="radio" name="risk_tol_5" value="4" /></label></td>
-                <td><label><input type="radio" name="risk_tol_5" value="5" /></label></td>
-                <td><label><input type="radio" name="risk_tol_5" value="6" /></label></td>
-                <td><label><input type="radio" name="risk_tol_5" value="7" /></label></td>
+                <td><label><input type="radio" name="risk_tol_5" value="1" /><span>1</span><small>Διαφωνώ απόλυτα</small></label></td>
+                <td><label><input type="radio" name="risk_tol_5" value="2" /><span>2</span></label></td>
+                <td><label><input type="radio" name="risk_tol_5" value="3" /><span>3</span></label></td>
+                <td><label><input type="radio" name="risk_tol_5" value="4" /><span>4</span></label></td>
+                <td><label><input type="radio" name="risk_tol_5" value="5" /><span>5</span></label></td>
+                <td><label><input type="radio" name="risk_tol_5" value="6" /><span>6</span></label></td>
+                <td><label><input type="radio" name="risk_tol_5" value="7" /><span>7</span><small>Συμφωνώ απόλυτα</small></label></td>
               </tr>
             </tbody>
           </table>
