@@ -43,6 +43,19 @@
       width: 1.15rem;
       height: 1.15rem;
     }
+    /* Desktop: hide the in-cell number/anchor spans — thead shows them */
+    .likert-matrix tbody td:not(:first-child) label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.15rem;
+      cursor: pointer;
+    }
+    .likert-matrix tbody td:not(:first-child) label span,
+    .likert-matrix tbody td:not(:first-child) label small {
+      display: none;
+    }
     @media (max-width: 600px) {
       .likert-matrix thead { display: none; }
       .likert-matrix tbody tr {
