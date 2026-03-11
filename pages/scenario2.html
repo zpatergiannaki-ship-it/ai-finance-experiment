@@ -233,6 +233,64 @@
     }
     .btn-action-secondary:hover { background: #dbeafe; border-color: #93c5fd; }
     .btn-action-secondary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* ===========================
+       Mobile: tables
+       =========================== */
+    @media (max-width: 600px) {
+      .data-table,
+      table {
+        font-size: 0.82rem;
+      }
+      .data-table thead th,
+      .data-table tbody td,
+      table th,
+      table td {
+        padding: 0.45rem 0.5rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .chat-widget {
+        height: 300px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+      }
+      .card {
+        padding: 1rem 0.875rem;
+      }
+      .allocation-grid {
+        grid-template-columns: 1fr auto;
+        gap: 0.4rem 0.5rem;
+      }
+      .allocation-grid .alloc-input-wrap input[type="number"] {
+        width: 60px;
+        font-size: 0.95rem;
+        padding: 0.4rem 0.5rem;
+      }
+      .allocation-grid .alloc-label {
+        font-size: 0.875rem;
+      }
+      .alloc-actions {
+        flex-direction: column;
+      }
+      .alloc-actions .btn-action-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+      .portfolio-return-figure {
+        font-size: 1.5rem;
+      }
+      .btn-full {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+      }
+    }
   </style>
 </head>
 <body>
