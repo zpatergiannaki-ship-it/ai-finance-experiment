@@ -670,6 +670,11 @@ th {
   .btn {
     padding: 0.6rem 1rem;
   }
+
+  /* hide numeric labels in standalone likert-options on mobile */
+  .likert-options label span {
+    display: none;
+  }
 }
 
 /* Preference quick-reply buttons */
