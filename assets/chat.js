@@ -20,8 +20,13 @@ function escapeHtml(str) {
 
 function injectPredefinedQuestions(messagesEl, questions, containerId) {
   if (!Array.isArray(questions) || questions.length === 0) return;
+
+  // Find the last assistant message row to attach buttons beneath it
+  const rows = messagesEl.querySelectorAll('.chat-message-row.assistant');
+  const targetRow = rows.length > 0 ? rows[rows.length - 1] : messagesEl;
+
   const div = document.createElement('div');
-  div.className = 'chat-preference-btns';
+  div.className = 'chat-quick-replies';
   div.id = 'chat-predefined-' + containerId;
   questions.forEach(function (q) {
     const btn = document.createElement('button');
@@ -30,7 +35,7 @@ function injectPredefinedQuestions(messagesEl, questions, containerId) {
     btn.textContent = q;
     div.appendChild(btn);
   });
-  messagesEl.appendChild(div);
+  targetRow.appendChild(div);
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
@@ -140,7 +145,7 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
       // Show preference question as assistant bubble
       appendBubble(messagesEl, 'assistant', prefConfig.question);
 
-      // Show quick-reply buttons
+      // Show quick-reply buttons beneath the assistant bubble
       const prefBtnsDiv = document.createElement('div');
       prefBtnsDiv.className = 'chat-preference-btns';
       prefBtnsDiv.id = 'chat-pref-btns-' + containerId;
@@ -192,7 +197,10 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
         });
         prefBtnsDiv.appendChild(btn);
       });
-      messagesEl.appendChild(prefBtnsDiv);
+      // Attach preference buttons beneath the last assistant bubble
+      const assistantRows = messagesEl.querySelectorAll('.chat-message-row.assistant');
+      const prefTarget = assistantRows.length > 0 ? assistantRows[assistantRows.length - 1] : messagesEl;
+      prefTarget.appendChild(prefBtnsDiv);
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
   } else {
@@ -203,16 +211,38 @@ function initChat(containerId, scenarioId, roundNumber, predefinedQuestions) {
   }
 }
 
+function showTypingIndicator(messagesEl) {
+  const row = document.createElement('div');
+  row.className = 'chat-message-row assistant';
+  row.id = 'chat-typing-row';
+  const typing = document.createElement('div');
+  typing.className = 'chat-typing';
+  typing.innerHTML = '<span></span><span></span><span></span>';
+  row.appendChild(typing);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return row;
+}
+
 async function sendMessage(message) {
   const messagesEl = document.getElementById('chat-messages-' + _chatContainerId);
-  const errorEl = document.getElementById('chat-error-' + _chatContainerId);
-  const sendBtn = document.getElementById('chat-send-' + _chatContainerId);
-  const inputEl = document.getElementById('chat-input-' + _chatContainerId);
+  const errorEl   = document.getElementById('chat-error-' + _chatContainerId);
+  const sendBtn   = document.getElementById('chat-send-' + _chatContainerId);
+  const inputEl   = document.getElementById('chat-input-' + _chatContainerId);
 
   if (!messagesEl) return;
 
   const participantId = window.AppUtils.getParticipantId();
   const condition = window.AppUtils.getCondition();
+
+  // Disable input while waiting
+  if (sendBtn) sendBtn.disabled = true;
+  if (inputEl) inputEl.disabled = true;
+  if (errorEl) errorEl.style.display = 'none';
+
+  // Remove predefined-question quick-reply buttons on first real send
+  const predefinedDiv = document.getElementById('chat-predefined-' + _chatContainerId);
+  if (predefinedDiv) predefinedDiv.remove();
 
   // Append user bubble
   appendBubble(messagesEl, 'user', message);
@@ -223,29 +253,15 @@ async function sendMessage(message) {
   }
   _chatQueryCount++;
 
-  // Disable input while waiting
-  if (sendBtn) sendBtn.disabled = true;
-  if (inputEl) inputEl.disabled = true;
-  const predefinedBtns = document.querySelectorAll('#chat-predefined-' + _chatContainerId + ' .chat-predefined-btn');
-  predefinedBtns.forEach(function (btn) { btn.disabled = true; });
-
-  // Show loading indicator
-  const loadingId = 'loading-' + Date.now();
-  const loadingEl = document.createElement('div');
-  loadingEl.id = loadingId;
-  loadingEl.className = 'chat-bubble assistant loading';
-  loadingEl.innerHTML = '<span class="dots"><span>.</span><span>.</span><span>.</span></span>';
-  messagesEl.appendChild(loadingEl);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
+  // Show typing indicator
+  const typingRow = showTypingIndicator(messagesEl);
 
   // Save user message to Supabase
   if (window.SupabaseUtils) {
     await window.SupabaseUtils.insertChatLog(participantId, _scenarioId, _roundNumber, 'user', message);
   }
 
-  // Hide previous error
-  if (errorEl) errorEl.style.display = 'none';
-
+  let responseText = null;
   try {
     const body = {
       participantId,
@@ -266,10 +282,6 @@ async function sendMessage(message) {
 
     const data = await response.json();
 
-    // Remove loading indicator
-    const loadingNode = document.getElementById(loadingId);
-    if (loadingNode) loadingNode.remove();
-
     if (!response.ok || data.error) {
       const errMsg = (data && data.error) ? data.error : 'Αποτυχία λήψης απάντησης από τον βοηθό. Δοκιμάστε ξανά.';
       if (errorEl) {
@@ -277,33 +289,38 @@ async function sendMessage(message) {
         errorEl.style.display = 'block';
       }
     } else {
-      const reply = data.reply || '';
-      appendBubble(messagesEl, 'assistant', reply);
-      _messageCount++;
-
-      // Save assistant message to Supabase
-      if (window.SupabaseUtils) {
-        await window.SupabaseUtils.insertChatLog(participantId, _scenarioId, _roundNumber, 'assistant', reply);
-      }
-
-      // Notify the page that a message has been sent (fire custom event)
-      document.dispatchEvent(new CustomEvent('chatMessageSent', { detail: { count: _messageCount } }));
+      responseText = data.reply || '';
     }
   } catch (err) {
-    const loadingNode = document.getElementById(loadingId);
-    if (loadingNode) loadingNode.remove();
     if (errorEl) {
       errorEl.textContent = 'Δεν ήταν δυνατή η επικοινωνία με τον βοηθό. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.';
       errorEl.style.display = 'block';
     }
-  } finally {
-    if (sendBtn) sendBtn.disabled = false;
-    if (inputEl) inputEl.disabled = false;
-    if (inputEl) inputEl.focus();
-    const predefinedBtns = document.querySelectorAll('#chat-predefined-' + _chatContainerId + ' .chat-predefined-btn');
-    predefinedBtns.forEach(function (btn) { btn.disabled = false; });
-    if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
   }
+
+  // Remove typing indicator
+  if (typingRow && typingRow.parentNode) typingRow.remove();
+
+  if (responseText !== null) {
+    appendBubble(messagesEl, 'assistant', responseText);
+    _messageCount++;
+
+    // Save assistant message to Supabase
+    if (window.SupabaseUtils) {
+      await window.SupabaseUtils.insertChatLog(participantId, _scenarioId, _roundNumber, 'assistant', responseText);
+    }
+
+    // Notify the page that a message has been sent (fire custom event)
+    document.dispatchEvent(new CustomEvent('chatMessageSent', { detail: { count: _messageCount } }));
+  }
+
+  // Re-enable input
+  if (sendBtn) sendBtn.disabled = false;
+  if (inputEl) {
+    inputEl.disabled = false;
+    inputEl.focus();
+  }
+  if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
 function markdownToHtml(text) {
@@ -348,16 +365,22 @@ function markdownToHtml(text) {
   return parts.join('');
 }
 
-function appendBubble(container, role, text) {
-  const div = document.createElement('div');
-  div.className = 'chat-bubble ' + role;
+function appendBubble(messagesEl, role, text) {
+  const row = document.createElement('div');
+  row.className = 'chat-message-row ' + role;
+
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble';
   if (role === 'assistant') {
-    div.innerHTML = markdownToHtml(text);
+    bubble.innerHTML = markdownToHtml(text);
   } else {
-    div.textContent = text;
+    bubble.textContent = text;
   }
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+  row.appendChild(bubble);
+
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return row;
 }
 
 function getMessageCount() {
